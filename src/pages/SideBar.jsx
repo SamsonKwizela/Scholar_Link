@@ -11,8 +11,8 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import { Center, Stack, Tooltip, UnstyledButton } from '@mantine/core';
-import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './SideBarMinimal.module.css';
+
 
 function SideBar({ icon: Icon, label, active, onClick }) {
   return (
