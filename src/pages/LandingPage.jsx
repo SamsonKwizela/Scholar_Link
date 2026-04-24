@@ -48,7 +48,7 @@ function LandingPage() {
       and build a better future.
     </Text>
 
-    <Group position="center" className="hero-buttons">
+    <Group justify="center" className="hero-buttons">
       <Button size="md" component={Link} to="/signup">
         Get Started
       </Button>

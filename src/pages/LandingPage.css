@@ -1,7 +1,7 @@
 /* Page background */
 .page {
   min-height: 100vh;
-  background: linear-gradient(to right, #f8f9fa, #eef1f5);
+  background: linear-gradient(to right, #1d4064, #56585a);
   font-family: Arial, sans-serif;
 }
 
@@ -42,6 +42,9 @@
 /* Buttons spacing */
 .hero-buttons {
   margin-top: 25px;
+  display: flex;
+  align-items: center;       
+  gap: 15px;                 
 }
 
 /* Make admin button stand out */
