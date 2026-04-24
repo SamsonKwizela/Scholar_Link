@@ -29,7 +29,7 @@ function LandingPage() {
   </Group>
 
   <Group spacing="md">
-    <Button variant="outline" component={Link} to="/signin">Sign In</Button>
+    <Button variant="outline" component={Link} to="/Login">Sign In</Button>
     <Button component={Link} to="/signup">Sign Up</Button>
     <Button className="admin-btn" component={Link} to="/admin/login">
       Admin Login
@@ -49,7 +49,7 @@ function LandingPage() {
     </Text>
 
     <Group position="center" className="hero-buttons">
-      <Button size="md" component={Link} to="/signup">
+      <Button size="md" component={Link} to="/Login">
         Get Started
       </Button>
 

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import { SideBarMinimal } from "./components/SideBar";
+import CreateUser from "./components/CreateUser";
 
 function DashboardLayout() {
   return (
@@ -20,8 +21,8 @@ function App() {
         {/* Public page */}
         <Route path="/" element={<LandingPage />} />
 
-        {/* Dashboard with sidebar layout */}
         <Route path="/dashboard" element={<DashboardLayout />} />
+        <Route path="/signup" element={<CreateUser />} />
       </Routes>
     </BrowserRouter>
   );
