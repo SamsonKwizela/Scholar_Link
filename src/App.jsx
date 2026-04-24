@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
-import { SideBarMinimal } from "./components/SideBar";
-import CreateUser from "./components/CreateUser";
+import { SideBarMinimal } from "./pages/components/SideBar";
+import CreateUser from "./pages/components/CreateUser";
 
 function DashboardLayout() {
   return (

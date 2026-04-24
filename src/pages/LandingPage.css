@@ -1,14 +1,14 @@
 /* Page background */
 .page {
   min-height: 100vh;
-  background: linear-gradient(to right, #f8f9fa, #eef1f5);
+  background: linear-gradient(to right, #1d4064, #56585a);
   font-family: Arial, sans-serif;
 }
 
 /* Navbar */
 .navbar {
   border-bottom: 1px solid #e0e0e0;
-  background: white;
+  background: rgb(25, 19, 56);
   padding: 20px 40px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
@@ -42,6 +42,9 @@
 /* Buttons spacing */
 .hero-buttons {
   margin-top: 25px;
+  display: flex;
+  align-items: center;       
+  gap: 15px;                 
 }
 
 /* Make admin button stand out */
