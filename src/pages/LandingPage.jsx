@@ -5,9 +5,12 @@ import {
   Title,
   Text,
   Box,
+  Grid,
 } from "@mantine/core";
 import { Link } from "react-router-dom";
 import "./LandingPage.css";
+import OpportunitiesCards from "../components/OpportunitiesCards";
+
 
 
 function LandingPage() {
@@ -47,8 +50,34 @@ function LandingPage() {
       ScholarLink helps students discover opportunities, apply faster,
       and build a better future.
     </Text>
+  </Container>
 
-    <Group position="center" className="hero-buttons">
+  {/* RECENT POSTED OPPORTUNITIES SECTION */}
+  <Container size="lg" py="xl">
+    <h1 className="opportunities-title">
+  RECENT POSTED OPPORTUNITIES
+</h1>
+      <Grid gutter="lg">
+        
+        {/* CARD 1 */}
+        <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
+          <OpportunitiesCards />
+        </Grid.Col>
+
+        {/* CARD 2 */}
+        <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
+          <OpportunitiesCards />
+        </Grid.Col>
+
+        {/* CARD 3 */}
+        <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
+          <OpportunitiesCards />
+        </Grid.Col>
+
+      </Grid>
+    </Container>
+
+  <Group justify="center" className="hero-buttons">
       <Button size="md" component={Link} to="/Login">
         Get Started
       </Button>
@@ -57,7 +86,6 @@ function LandingPage() {
         Learn More
       </Button>
     </Group>
-  </Container>
 </Box>
   );
 }
