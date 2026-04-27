@@ -1,9 +1,5 @@
 /* Page background */
-.page {
-  min-height: 100vh;
-  background: linear-gradient(to right, #1d4064, #56585a);
-  font-family: Arial, sans-serif;
-}
+.page { min-height: 100vh; background: linear-gradient(to right, #474969, #56585a); font-family: Arial, sans-serif; } i want the landing page to fit the space were the footer is
 
 /* Navbar */
 .navbar {

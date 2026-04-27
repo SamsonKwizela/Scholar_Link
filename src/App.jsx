@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import { SideBarMinimal } from "./components/SideBar";
 import CreateUser from "./auth/CreateUser"
+import { FooterCentered } from "./components/Footer";
 
 
 function DashboardLayout() {
@@ -20,10 +21,15 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Public page */}
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={
+  <>
+    <LandingPage />
+    <FooterCentered />
+  </>
+} />
 
         <Route path="/dashboard" element={<DashboardLayout />} />
-        <Route path="/signup" element={<CreateUser />} /> 
+        <Route path="/signup" element={<CreateUser />} />
 
       </Routes>
     </BrowserRouter>

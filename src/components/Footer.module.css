@@ -1,0 +1,41 @@
+.footer {
+  margin-top: 120px;
+  border-top: 1px solid #e0e0e0;
+
+  /* 🔵 Background goes here */
+  background: linear-gradient(135deg, #2c3e50, #4b6cb7);
+  color: white;
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  flex-wrap: wrap;
+}
+
+.links {
+  margin-top: 10px;
+}
+
+/* Responsive fix */
+@media (max-width: 768px) {
+  .inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .links {
+    margin-top: 15px;
+  }
+}
+
+.links a {
+  color: #d0d0d0;
+}
+
+.links a:hover {
+  color: white;
+}
