@@ -1,0 +1,44 @@
+/* Full page */
+.login-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+}
+
+/* Card */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 30px;
+}
+
+/* Title */
+.login-title {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+/* Subtitle */
+.login-subtitle {
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+}
+
+/* Button */
+.login-button {
+  margin-top: 10px;
+}
+
+/* Footer */
+.login-footer {
+  margin-top: 10px;
+}
+
+/* Link */
+.login-link {
+  color: #4c6ef5;
+  cursor: pointer;
+}

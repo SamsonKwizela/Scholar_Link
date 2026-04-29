@@ -3,6 +3,7 @@ import LandingPage from "./pages/LandingPage";
 import { SideBarMinimal } from "./components/SideBar";
 import CreateUser from "./auth/CreateUser"
 import { FooterCentered } from "./components/Footer";
+import Login from "./auth/Login";
 
 
 function DashboardLayout() {
@@ -30,7 +31,7 @@ function App() {
 
         <Route path="/dashboard" element={<DashboardLayout />} />
         <Route path="/signup" element={<CreateUser />} />
-
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
