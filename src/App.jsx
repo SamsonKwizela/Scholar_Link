@@ -4,6 +4,7 @@ import { SideBarMinimal } from "./components/SideBar";
 import CreateUser from "./auth/CreateUser"
 import { FooterCentered } from "./components/Footer";
 import Login from "./auth/Login";
+import ContactUs from "./pages/ContactUs";  
 
 
 function DashboardLayout() {
@@ -26,12 +27,14 @@ function App() {
   <>
     <LandingPage />
     <FooterCentered />
+    <ContactUs />
   </>
 } />
 
         <Route path="/dashboard" element={<DashboardLayout />} />
         <Route path="/signup" element={<CreateUser />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/contact" element={<ContactUs />} />
       </Routes>
     </BrowserRouter>
   );
