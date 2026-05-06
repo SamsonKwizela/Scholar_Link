@@ -1,5 +1,6 @@
 import { Button, Group, Paper, SimpleGrid, Text, Textarea, TextInput } from '@mantine/core';
 import './ContactUs.css';
+import { ContactIcons } from './ContactIcons';
 
 function ContactUs() {
     const handleSubmit = (event) => {
@@ -21,6 +22,7 @@ function ContactUs() {
           <Text fz="lg" fw={700} className="title" c="#fff">
             Contact information
           </Text>
+          <ContactIcons />
         </div>
 
         <form className="form" onSubmit={handleSubmit}>

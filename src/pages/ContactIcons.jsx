@@ -26,7 +26,7 @@ const MOCKDATA = [
   { title: 'Working hours', description: '8 a.m. – 11 p.m.', icon: IconSun },
 ];
 
-export function ContactIconsList() {
+export function ContactIcons() {
   const items = MOCKDATA.map((item, index) => <ContactIcon key={index} {...item} />);
   return <Stack>{items}</Stack>;
 }
