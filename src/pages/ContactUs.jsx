@@ -1,23 +1,30 @@
-import { Button, Group, Paper, SimpleGrid, Text, Textarea, TextInput } from '@mantine/core';
-import './ContactUs.css';
-import { ContactIcons } from './ContactIcons';
+import {
+  Button,
+  Group,
+  Paper,
+  SimpleGrid,
+  Text,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
+import "./ContactUs.css";
+import { ContactIcons } from "./ContactIcons";
 
 function ContactUs() {
-    const handleSubmit = (event) => {
-        event.preventDefault(); 
-        const formData = new FormData(event.target);
-        const data = {
-            name: formData.get('name'), 
-            email: formData.get('email'),
-            subject: formData.get('subject'),
-            message: formData.get('message'),
-        };
-        console.log('Form Data:', data);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      subject: formData.get("subject"),
+      message: formData.get("message"),
     };
+    console.log("Form Data:", data);
+  };
   return (
     <Paper shadow="md" radius="lg">
       <div className="wrapper">
-        
         <div className="contacts" style={{ backgroundColor: "#062a4e" }}>
           <Text fz="lg" fw={700} className="title" c="#fff">
             Contact information
@@ -33,7 +40,11 @@ function ContactUs() {
           <div className="fields">
             <SimpleGrid cols={{ base: 1, sm: 2 }}>
               <TextInput label="Your name" placeholder="Your name" />
-              <TextInput label="Your email" placeholder="racheal@gmail.com" required />
+              <TextInput
+                label="Your email"
+                placeholder="racheal@gmail.com"
+                required
+              />
             </SimpleGrid>
 
             <TextInput mt="md" label="Subject" placeholder="Subject" required />

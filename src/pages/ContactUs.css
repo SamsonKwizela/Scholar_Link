@@ -2,12 +2,12 @@
 .wrapper {
   display: flex;
   background: linear-gradient(135deg, #020617, #0f172a);
-  border-radius: 18px;
   padding: 6px;
   border: 1px solid #1e293b;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   height: 100vh;
+  
 }
 
 /* Responsive */
@@ -23,6 +23,9 @@
   padding: 2.5rem;
   padding-left: 3rem;
   background-color: #041057;
+  margin: auto;
+  border-radius: 10px;
+  height: 92.5vh;
 }
 
 /* Responsive */
@@ -34,7 +37,7 @@
 
 /* Fields */
 .fields {
-  margin-top: 10px;
+  margin:30px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -81,6 +84,7 @@
   color: #e5e7eb;
   display: flex;
   flex-direction: column;
+  margin: 20px;
   
 }
 
