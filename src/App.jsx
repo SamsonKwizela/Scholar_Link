@@ -4,25 +4,26 @@ import CreateUser from "./auth/CreateUser";
 import { FooterCentered } from "./components/Footer";
 import Login from "./auth/Login";
 import AboutUs from "./pages/AboutUs";
+import ContactUs from "./pages/ContactUs";  
 
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <LandingPage />
-              <FooterCentered />
-            </>
-          }
-        />
+        {/* Public page */}
+        <Route path="/" element={
+  <>
+    <LandingPage />
+    <FooterCentered />
+    <ContactUs />
+  </>
+} />
 
         <Route path="/signup" element={<CreateUser />} />
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<AboutUs />} /> 
+        <Route path="/contact" element={<ContactUs />} />
       </Routes>
     </BrowserRouter>
   );
