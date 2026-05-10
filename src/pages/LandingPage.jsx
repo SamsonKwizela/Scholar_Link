@@ -11,8 +11,6 @@ import { Link } from "react-router-dom";
 import "./LandingPage.css";
 import OpportunitiesCards from "../components/OpportunitiesCards";
 
-
-
 function LandingPage() {
   return (
     <Box className="page">
