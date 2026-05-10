@@ -27,7 +27,7 @@ export default function AboutUs() {
           <IconRocket size={40} />
         </ThemeIcon>
 
-        <Title ta="center" order={1}>
+       <Title ta="center" order={1}>
           About ScholarLink
         </Title>
 
