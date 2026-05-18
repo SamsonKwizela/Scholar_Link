@@ -53,7 +53,7 @@ function App() {
         />
 
         <Route
-          path="/scholarship-assessment"
+          path="/apply/:id"
           element={<ScholarshipAssessment />}
         />
 
