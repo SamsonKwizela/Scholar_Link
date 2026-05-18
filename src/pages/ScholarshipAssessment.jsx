@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMantineColorScheme } from "@mantine/core";
 
 import {
   Container,
@@ -14,7 +13,10 @@ import {
   Progress,
   Group,
   Badge,
+  Alert,
 } from "@mantine/core";
+
+import { IconAlertCircle } from "@tabler/icons-react";
 
 const questions = [
   {
@@ -66,13 +68,9 @@ const questions = [
 function ScholarshipAssessment() {
   const navigate = useNavigate();
 
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-
-  /* ---------------- HANDLERS ---------------- */
 
   const handleOptionChange = (id, value) => {
     setAnswers((prev) => ({
@@ -87,22 +85,6 @@ function ScholarshipAssessment() {
       [id]: value,
     }));
   };
-
-  /* ---------------- VALIDATION ---------------- */
-
-  const isComplete = () => {
-    return questions.every((q) => {
-      const answer = answers[q.id];
-
-      if (q.type === "text") {
-        return answer && answer.trim() !== "";
-      }
-
-      return answer !== undefined && answer !== "";
-    });
-  };
-
-  /* ---------------- SCORE ---------------- */
 
   const calculateScore = () => {
     let score = 0;
@@ -121,11 +103,14 @@ function ScholarshipAssessment() {
   const progress =
     (Object.keys(answers).length / questions.length) * 100;
 
-  /* ---------------- SUBMIT ---------------- */
-
+  // ✅ VALIDATION FIX
   const handleSubmit = () => {
-    if (!isComplete()) {
-      setError("⚠️ Please answer all questions before submitting.");
+    const unanswered = questions.filter(
+      (q) => !answers[q.id] || answers[q.id].trim() === ""
+    );
+
+    if (unanswered.length > 0) {
+      setError("Please answer all questions before submitting.");
       return;
     }
 
@@ -137,63 +122,42 @@ function ScholarshipAssessment() {
     }, 1500);
   };
 
-  /* ---------------- UI ---------------- */
-
   return (
     <Container size="md" py="xl">
 
-      {/* HEADER */}
       <Group justify="space-between" mb="lg">
         <div>
-          <Title order={2}>
-            Scholarship Assessment
-          </Title>
-
+          <Title order={2}>Scholarship Assessment</Title>
           <Text c="dimmed">
             Complete English, logic, and psychological questions.
           </Text>
         </div>
 
-        <Group>
-          <Button
-            variant="light"
-            onClick={toggleColorScheme}
-          >
-            {colorScheme === "dark" ? "Light Mode" : "Dark Mode"}
-          </Button>
-
-          <Badge size="lg" color="blue">
-            {Object.keys(answers).length} / {questions.length} Answered
-          </Badge>
-        </Group>
+        <Badge size="lg" color="blue">
+          {Object.keys(answers).length} / {questions.length} Answered
+        </Badge>
       </Group>
 
-      {/* ERROR MESSAGE */}
-      {error && (
-        <Text color="red" mb="md">
-          {error}
-        </Text>
-      )}
-
-      {/* PROGRESS */}
       <Progress value={progress} mb="xl" />
+
+      {/* ✅ ERROR MESSAGE */}
+      {error && (
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          color="red"
+          mb="md"
+        >
+          {error}
+        </Alert>
+      )}
 
       <Stack>
 
         {questions.map((q, index) => (
-          <Card
-            key={q.id}
-            shadow="sm"
-            radius="md"
-            padding="lg"
-            withBorder
-          >
+          <Card key={q.id} shadow="sm" radius="md" padding="lg" withBorder>
 
             <Group justify="space-between" mb="sm">
-              <Badge color="violet">
-                {q.category}
-              </Badge>
-
+              <Badge color="violet">{q.category}</Badge>
               <Text size="sm" c="dimmed">
                 Question {index + 1}
               </Text>
@@ -206,17 +170,11 @@ function ScholarshipAssessment() {
             {q.type === "multiple" && (
               <Radio.Group
                 value={answers[q.id] || ""}
-                onChange={(value) =>
-                  handleOptionChange(q.id, value)
-                }
+                onChange={(value) => handleOptionChange(q.id, value)}
               >
                 <Stack mt="sm">
                   {q.options.map((option) => (
-                    <Radio
-                      key={option}
-                      value={option}
-                      label={option}
-                    />
+                    <Radio key={option} value={option} label={option} />
                   ))}
                 </Stack>
               </Radio.Group>
@@ -237,11 +195,10 @@ function ScholarshipAssessment() {
         ))}
 
         {!submitted ? (
-          <Button
-            size="md"
-            onClick={handleSubmit}
-            disabled={!isComplete()}
-          >
+          <Button 
+          size="md" 
+          onClick={handleSubmit}
+          disabled={!isComplete()} >
             Submit Assessment
           </Button>
         ) : (
@@ -250,12 +207,10 @@ function ScholarshipAssessment() {
               Assessment Submitted
             </Title>
 
-            <Text>
-              Your score: {score} / 3
-            </Text>
+            <Text>Your score: {score}</Text>
 
             <Text c="dimmed" mt="sm">
-              Redirecting to confirmation page...
+              Redirecting...
             </Text>
           </Card>
         )}
