@@ -20,7 +20,7 @@ function ContactIcon({ icon: Icon, title, description, ...others }) {
 }
 
 const MOCKDATA = [
-  { title: 'Email', description: 'rm104789@students.cavendish.co.zm', icon: IconAt },
+  { title: 'Email', description: 'rm104719@students.cavendish.co.zm', icon: IconAt },
   { title: 'Phone', description: '+26 (097) 310 89 50', icon: IconPhone },
   { title: 'Address', description: 'GNR Glass Campus', icon: IconMapPin },
   { title: 'Working hours', description: '8 a.m. – 11 p.m.', icon: IconSun },

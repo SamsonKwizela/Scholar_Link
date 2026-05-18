@@ -1,29 +1,69 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import LandingPage from "./pages/LandingPage";
 import CreateUser from "./auth/CreateUser";
 import { FooterCentered } from "./components/Footer";
 import Login from "./auth/Login";
 import AboutUs from "./pages/AboutUs";
-import ContactUs from "./pages/ContactUs";  
-
+import ContactUs from "./pages/ContactUs";
+import ScholarshipDetails from "./pages/ScholarshipDetails";
+import ApplicationSuccess from "./pages/ApplicationSuccess";
+import ScholarshipAssessment from "./pages/ScholarshipAssessment";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Public page */}
-        <Route path="/" element={
-  <>
-    <LandingPage />
-    <FooterCentered />
-  </>
-} />
 
-        <Route path="/signup" element={<CreateUser />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/about" element={<AboutUs />} /> 
-        <Route path="/contact" element={<ContactUs />} />
+      <Routes>
+
+        {/* Public page */}
+        <Route
+          path="/"
+          element={
+            <>
+              <LandingPage />
+              <FooterCentered />
+            </>
+          }
+        />
+
+        <Route
+          path="/signup"
+          element={<CreateUser />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/about"
+          element={<AboutUs />}
+        />
+
+        <Route
+          path="/contact"
+          element={<ContactUs />}
+        />
+
+        <Route
+          path="/scholarship/details"
+          element={<ScholarshipDetails />}
+        />
+
+        <Route
+          path="/scholarship-assessment"
+          element={<ScholarshipAssessment />}
+        />
+
+        <Route
+          path="/application-success"
+          element={<ApplicationSuccess />}
+        />
+
       </Routes>
+
     </BrowserRouter>
   );
 }
