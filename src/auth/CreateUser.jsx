@@ -16,6 +16,8 @@ import "./CreateUser.css";
 
 function CreateUser() {
   const [active, setActive] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const form = useForm({
     mode: "uncontrolled",
@@ -30,36 +32,84 @@ function CreateUser() {
     },
   });
 
-  const nextStep = () =>
-    setActive((current) => (current < 3 ? current + 1 : current));
+  // NEXT STEP (with basic validation)
+  const nextStep = () => {
+    const values = form.getValues();
+
+    if (active === 0) {
+      if (!values.user.firstName || !values.user.lastName) {
+        setError("Please enter first and last name");
+        return;
+      }
+    }
+
+    if (active === 1) {
+      if (!values.email) {
+        setError("Email is required");
+        return;
+      }
+    }
+
+    setError("");
+    setActive((current) => (current < 2 ? current + 1 : current));
+  };
 
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
 
   const handleSubmit = async (values) => {
+    setLoading(true);
+    setError("");
+
     try {
-      const res = await fetch("http://localhost:5000/api/users", {
+      const name = `${values.user.firstName} ${values.user.lastName}`;
+
+      const userData = {
+        name,
+        email: values.email,
+        password: values.password,
+        role: "student",
+      };
+
+      const res = await fetch("http://localhost:5000/api/users/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(userData),
       });
 
       const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to create user");
+      }
+
       console.log("User created:", data);
+
+      form.reset();
+      setActive(0);
     } catch (err) {
-      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Box className="create-user-container">
       <Paper shadow="md" radius="lg" p="xl" className="form-card">
-        
+
         <Title order={2} ta="center" mb="lg" className="form-title">
           Create Account
         </Title>
+
+        {/* ERROR DISPLAY */}
+        {error && (
+          <div style={{ color: "red", textAlign: "center", marginBottom: 10 }}>
+            {error}
+          </div>
+        )}
 
         <Stepper active={active} onStepClick={setActive} className="stepper">
 
@@ -69,20 +119,17 @@ function CreateUser() {
               <TextInput
                 label="First name"
                 placeholder="Enter first name"
-                key={form.key("user.firstName")}
                 {...form.getInputProps("user.firstName")}
               />
 
               <TextInput
                 label="Last name"
                 placeholder="Enter last name"
-                key={form.key("user.lastName")}
                 {...form.getInputProps("user.lastName")}
               />
 
               <Checkbox
                 label="I accept terms and conditions"
-                key={form.key("terms")}
                 {...form.getInputProps("terms", { type: "checkbox" })}
               />
             </Stack>
@@ -94,7 +141,6 @@ function CreateUser() {
               <TextInput
                 label="Email address"
                 placeholder="you@email.com"
-                key={form.key("email")}
                 {...form.getInputProps("email")}
               />
             </Stack>
@@ -106,39 +152,37 @@ function CreateUser() {
               <PasswordInput
                 label="Password"
                 placeholder="Enter strong password"
-                key={form.key("password")}
                 {...form.getInputProps("password")}
               />
             </Stack>
           </Stepper.Step>
 
-          {/* FINAL */}
+          {/* DONE */}
           <Stepper.Completed>
             <Title order={4} ta="center">
-               All steps completed!
+              All steps completed!
             </Title>
           </Stepper.Completed>
 
         </Stepper>
 
-        {/* BUTTONS */}
+        {/* BUTTONS (UNCHANGED STYLE) */}
         <Group justify="space-between" mt="xl" className="button-group">
+
           <Button variant="default" onClick={prevStep}>
             Back
           </Button>
 
-          {active === 3 ? (
-            <Button
-              onClick={form.onSubmit(handleSubmit)}
-              className="submit-btn"
-            >
+          {active === 2 ? (
+            <Button onClick={form.onSubmit(handleSubmit)} loading={loading}>
               Submit
             </Button>
           ) : (
-            <Button onClick={nextStep} className="next-btn">
+            <Button onClick={nextStep}>
               Next
             </Button>
           )}
+
         </Group>
 
       </Paper>
