@@ -59,8 +59,8 @@ function ScholarshipDetails() {
         <Button
           mt="xl"
           size="md"
-          onClick={() => navigate("/scholarship-assessment")}
-        >
+          onClick={() => navigate(`/apply/${scholarship.id}`)}>
+        
           Apply Scholarship
         </Button>
 

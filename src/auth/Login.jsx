@@ -7,16 +7,29 @@ import {
   Title,
   Text,
   Stack,
+  Loader,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import "./Login.css"; // make sure this file exists in SAME folder
+import "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setError("");
+
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    setLoading(true);
+
     try {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
@@ -29,38 +42,48 @@ function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.error || "Login failed");
+        setError(data.error || "Login failed");
+        setLoading(false);
         return;
       }
 
+      // Save token
       localStorage.setItem("token", data.token);
 
-      alert("Login successful");
-      navigate("/dashboard");
+      // Redirect to HOME page
+      navigate("/");
     } catch (err) {
       console.error(err);
-      alert("Server error");
+      setError("Server error. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-page">
       <Paper shadow="md" radius="md" className="login-card">
-
         <Title order={2} className="login-title">
-          Sign In
+          Sign In to ScholarLink
         </Title>
 
         <Text className="login-subtitle">
-          Welcome back! Please login to continue
+          Welcome back! Login to continue learning
         </Text>
 
         <Stack mt="md">
+          {error && (
+            <Text color="red" size="sm">
+              {error}
+            </Text>
+          )}
+
           <TextInput
             label="Email"
             placeholder="Enter email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
           />
 
           <PasswordInput
@@ -68,17 +91,29 @@ function Login() {
             placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
           />
 
-          <Button fullWidth className="login-button" onClick={handleLogin}>
-            Login
+          <Button
+            fullWidth
+            className="login-button"
+            onClick={handleLogin}
+            disabled={loading}
+          >
+            {loading ? <Loader size="sm" color="white" /> : "Login"}
           </Button>
 
-          <Text size="sm" align="center" className="login-footer">
-            Don’t have an account? <span className="login-link">Sign up</span>
+          <Text size="sm" ta="center" className="login-footer">
+            Don’t have an account?{" "}
+            <span
+              className="login-link"
+              onClick={() => navigate("/register")}
+              style={{ cursor: "pointer" }}
+            >
+              Sign up
+            </span>
           </Text>
         </Stack>
-
       </Paper>
     </div>
   );

@@ -166,7 +166,6 @@ function CreateUser() {
 
         </Stepper>
 
-        {/* BUTTONS (UNCHANGED STYLE) */}
         <Group justify="space-between" mt="xl" className="button-group">
 
           <Button variant="default" onClick={prevStep}>
