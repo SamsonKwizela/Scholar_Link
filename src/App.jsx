@@ -9,6 +9,7 @@ import ContactUs from "./pages/ContactUs";
 import ScholarshipDetails from "./pages/ScholarshipDetails";
 import ApplicationSuccess from "./pages/ApplicationSuccess";
 import ScholarshipAssessment from "./pages/ScholarshipAssessment";
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -60,6 +61,11 @@ function App() {
         <Route
           path="/application-success"
           element={<ApplicationSuccess />}
+        />
+
+        <Route
+          path="/user-dashboard"
+          element={<Home/>}
         />
 
       </Routes>
