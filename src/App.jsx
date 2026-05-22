@@ -10,6 +10,11 @@ import ScholarshipDetails from "./pages/ScholarshipDetails";
 import ApplicationSuccess from "./pages/ApplicationSuccess";
 import ScholarshipAssessment from "./pages/ScholarshipAssessment";
 import Home from "./pages/Home";
+import Scholarships from "./pages/Scholarships";
+import FiledApplications from "./pages/FiledApplications";
+import Assessments from "./pages/Assessment";
+import Notifications from "./pages/Notifications";  
+import Settings from "./pages/Settiings"; 
 
 function App() {
   return (
@@ -67,6 +72,31 @@ function App() {
           path="/user-dashboard"
           element={<Home/>}
         />
+
+        <Route
+          path="/scholarships"
+          element={<Scholarships />}
+        />
+
+        <Route
+          path="/filed-applications"
+          element={<FiledApplications />}
+        />
+
+        <Route
+          path="/assessments"
+          element={<Assessments />}
+        />
+
+        <Route
+          path="/notifications"
+          element={<Notifications />}
+        />
+
+        <Route
+          path="/settings"
+          element={<Settings />}
+        />  
 
       </Routes>
 
