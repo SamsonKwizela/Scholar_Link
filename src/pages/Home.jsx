@@ -18,8 +18,10 @@ import {
   Table,
   Avatar,
   Progress,
+  Image,
+  TextInput,
+  Select,
 } from "@mantine/core";
-
 import {
   IconHome,
   IconSchool,
@@ -49,7 +51,11 @@ function Home() {
     { label: "Home", icon: IconHome, path: "/user-dashboard" },
     { label: "Scholarships", icon: IconSchool, path: "/scholarships" },
     { label: "Applications", icon: IconFileText, path: "/applications" },
-    { label: "Assessments", icon: IconChecklist, path: "/scholarship-assessment" },
+    {
+      label: "Assessments",
+      icon: IconChecklist,
+      path: "/scholarship-assessment",
+    },
     { label: "Notifications", icon: IconBell, path: "/notifications" },
     { label: "Profile", icon: IconUser, path: "/profile" },
     { label: "Settings", icon: IconSettings, path: "/settings" },
@@ -58,22 +64,33 @@ function Home() {
 
   const scholarships = [
     {
+      id: 1,
       title: "Women in Tech Scholarship",
       field: "Technology",
       deadline: "12 June 2026",
       status: "Open",
+      amount: "$5,000",
+      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
     },
+
     {
+      id: 2,
       title: "STEM Excellence Grant",
       field: "Engineering",
       deadline: "25 June 2026",
       status: "Closing Soon",
+      amount: "$8,000",
+      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3",
     },
+
     {
+      id: 3,
       title: "Global Leaders Program",
       field: "Business",
       deadline: "5 July 2026",
       status: "Open",
+      amount: "$10,000",
+      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644",
     },
   ];
 
@@ -94,8 +111,7 @@ function Home() {
       header={{ height: 70 }}
       styles={{
         main: {
-          backgroundColor:
-            colorScheme === "dark" ? "#1A1B1E" : "#F8F9FA",
+          backgroundColor: colorScheme === "dark" ? "#1A1B1E" : "#F8F9FA",
         },
       }}
     >
@@ -152,7 +168,7 @@ function Home() {
                 label={item.label}
                 leftSection={<item.icon size={18} />}
                 active={item.label === "Home"}
-                onClick={() => navigate(item.path)}   // ✅ FIXED HERE
+                onClick={() => navigate(item.path)} // ✅ FIXED HERE
               />
             ))}
           </Stack>
@@ -194,53 +210,100 @@ function Home() {
           {/* CARDS */}
           <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} mb="xl">
             <Card withBorder p="lg">
-              <Text size="sm" c="dimmed">Scholarships</Text>
+              <Text size="sm" c="dimmed">
+                Scholarships
+              </Text>
               <Title order={2}>24</Title>
             </Card>
 
             <Card withBorder p="lg">
-              <Text size="sm" c="dimmed">Applications</Text>
+              <Text size="sm" c="dimmed">
+                Applications
+              </Text>
               <Title order={2}>6</Title>
             </Card>
 
             <Card withBorder p="lg">
-              <Text size="sm" c="dimmed">Assessments</Text>
+              <Text size="sm" c="dimmed">
+                Assessments
+              </Text>
               <Title order={2}>2</Title>
             </Card>
 
             <Card withBorder p="lg">
-              <Text size="sm" c="dimmed">Notifications</Text>
+              <Text size="sm" c="dimmed">
+                Notifications
+              </Text>
               <Title order={2}>5</Title>
             </Card>
           </SimpleGrid>
 
           {/* SCHOLARSHIPS */}
-          <Title order={3} mb="md">
-            Recommended Scholarships
-          </Title>
+          <Group justify="space-between" mb="md">
+            <Title order={3}>Recommended Scholarships</Title>
+            <Group>
+              <TextInput placeholder="Search scholarship..." w={220} />
+              <Select
+                placeholder="Filter field"
+                data={["Technology", "Engineering", "Business"]}
+                w={180}
+              />
+            </Group>
+          </Group>
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
+            {scholarships.map((item) => (
+              <Card
+                key={item.id}
+                shadow="sm"
+                radius="xl"
+                p="0"
+                withBorder
+                style={{
+                  overflow: "hidden",
+                  transition: "0.3s",
+                }}
+              >
+                {/* IMAGE */}
+                <Image src={item.image} height={180} alt={item.title} />
 
-          <SimpleGrid cols={{ base: 1, md: 3 }} mb="xl">
-            {scholarships.map((item, index) => (
-              <Card key={index} shadow="sm" radius="lg" p="lg" withBorder>
-                <Group justify="space-between" mb="md">
-                  <Badge color="blue">{item.field}</Badge>
-                  <Badge color={item.status === "Open" ? "green" : "orange"}>
-                    {item.status}
-                  </Badge>
-                </Group>
+                {/* CONTENT */}
+                <Stack p="lg">
+                  <Group justify="space-between">
+                    <Badge color="blue">{item.field}</Badge>
 
-                <Title order={4}>{item.title}</Title>
-                <Text size="sm" c="dimmed" mb="md">
-                  Deadline: {item.deadline}
-                </Text>
+                    <Badge color={item.status === "Open" ? "green" : "orange"}>
+                      {item.status}
+                    </Badge>
+                  </Group>
 
-                <Button fullWidth onClick={() => navigate("/scholarship/1")}>
-                  Apply Now
-                </Button>
+                  <Title order={4}>{item.title}</Title>
+
+                  <Text size="sm" c="dimmed">
+                    Deadline: {item.deadline}
+                  </Text>
+
+                  <Text fw={700} size="lg">
+                    {item.amount}
+                  </Text>
+
+                  <Progress value={item.status === "Open" ? 70 : 90} />
+
+                  <Group grow mt="sm">
+                    <Button
+                      variant="light"
+                      onClick={() => navigate(`/scholarship/${item.id}`)}
+                    >
+                      View Details
+                    </Button>
+
+                    <Button onClick={() => navigate("/scholarship-assessment")}>
+                      Apply
+                    </Button>
+                  </Group>
+                </Stack>
               </Card>
             ))}
           </SimpleGrid>
-
           {/* APPLICATIONS */}
           <Card radius="lg" p="lg" withBorder>
             <Group justify="space-between" mb="md">
@@ -265,8 +328,8 @@ function Home() {
                           app.status === "Approved"
                             ? "green"
                             : app.status === "Pending"
-                            ? "yellow"
-                            : "blue"
+                              ? "yellow"
+                              : "blue"
                         }
                       >
                         {app.status}
