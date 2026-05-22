@@ -1,73 +1,129 @@
-import { IconHeart } from "@tabler/icons-react";
 import {
-  ActionIcon,
   Badge,
   Button,
   Card,
   Group,
-  Image,
   Text,
+  Title,
+  SimpleGrid,
+  ThemeIcon,
+  Stack,
+  Box,
 } from "@mantine/core";
 
-import classes from "./OpportunitiesCards.module.css"; // ✅ FIXED
+import {
+  IconBook2,
+  IconUsersGroup,
+  IconChartBar,
+  IconArrowRight,
+} from "@tabler/icons-react";
 
-const mockdata = {
-  image:
-    "https://images.unsplash.com/photo-1437719417032-8595fd9e9dc6?auto=format&fit=crop&w=600&q=80",
-  title: "Verudela Beach",
-  country: "Croatia",
-  description:
-    "Completely renovated for the season 2020, Arena Verudela Beach Apartments are modern 4-star self-service apartments.",
-  badges: [
-    { emoji: "☀️", label: "Sunny weather" },
-    { emoji: "🌊", label: "Sea" },
-    { emoji: "🌲", label: "Nature" },
-  ],
-};
+import classes from "./OpportunitiesCards.module.css";
 
-export default function OpportunitiesCards() { // ✅ FIXED EXPORT
-  const { image, title, description, country, badges } = mockdata;
+const features = [
+  {
+    icon: <IconBook2 size={26} stroke={1.8} />,
+    title: "Learning Resources",
+    description:
+      "Access notes, tutorials, research materials, and academic content shared by students and lecturers.",
+    color: "blue",
+    category: "Education",
+  },
 
-  const features = badges.map((badge) => (
-    <Badge key={badge.label} variant="light" leftSection={badge.emoji}>
-      {badge.label}
-    </Badge>
-  ));
+  {
+    icon: <IconUsersGroup size={26} stroke={1.8} />,
+    title: "Student Collaboration",
+    description:
+      "Connect with peers, build study groups, collaborate on projects, and exchange ideas seamlessly.",
+    color: "green",
+    category: "Community",
+  },
 
+  {
+    icon: <IconChartBar size={26} stroke={1.8} />,
+    title: "Career Development",
+    description:
+      "Discover internships, scholarships, and opportunities that support your academic and career journey.",
+    color: "orange",
+    category: "Growth",
+  },
+];
+
+export default function OpportunitiesCards() {
   return (
-    <Card withBorder radius="md" p="md" className={classes.card}>
-      <Card.Section>
-        <Image src={image} alt={title} height={180} />
-      </Card.Section>
+    <Box>
 
-      <Card.Section mt="md" className={classes.section}>
-        <Group justify="space-between">
-          <Text fw={500} size="lg">
-            {title}
-          </Text>
-          <Badge variant="light">{country}</Badge>
-        </Group>
+      <SimpleGrid
+        cols={{ base: 1, sm: 2, md: 3 }}
+        spacing="xl"
+      >
 
-        <Text size="sm" mt="xs">
-          {description}
-        </Text>
-      </Card.Section>
+        {features.map((feature, index) => (
+          <Card
+            key={index}
+            radius="xl"
+            padding="xl"
+            withBorder
+            className={classes.card}
+          >
 
-      <Card.Section className={classes.section}>
-        <Text c="dimmed" size="sm">
-          Perfect for you if you enjoy:
-        </Text>
+            {/* HEADER */}
+            <Group justify="space-between" mb="lg">
 
-        <Group mt={5}>{features}</Group>
-      </Card.Section>
+              <ThemeIcon
+                size={58}
+                radius="lg"
+                variant="light"
+                color={feature.color}
+              >
+                {feature.icon}
+              </ThemeIcon>
 
-      <Group mt="md">
-        <Button style={{ flex: 1 }}>Show details</Button>
+              <Badge
+                radius="sm"
+                variant="light"
+                color={feature.color}
+                className={classes.label}
+              >
+                {feature.category}
+              </Badge>
 
-        <ActionIcon variant="default" size={36}>
-          <IconHeart stroke={1.5} />
-        </ActionIcon>
-      </Group>
-    </Card>
+            </Group>
+
+            {/* CONTENT */}
+            <Stack gap="xs">
+
+              <Title order={4}>
+                {feature.title}
+              </Title>
+
+              <Text
+                size="sm"
+                c="dimmed"
+                className={classes.description}
+              >
+                {feature.description}
+              </Text>
+
+            </Stack>
+
+            {/* BUTTON */}
+            <Button
+              mt="xl"
+              radius="md"
+              variant="light"
+              color={feature.color}
+              rightSection={<IconArrowRight size={16} />}
+              fullWidth
+            >
+              Explore More
+            </Button>
+
+          </Card>
+        ))}
+
+      </SimpleGrid>
+
+    </Box>
   );
 }
