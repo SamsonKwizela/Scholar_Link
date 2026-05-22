@@ -24,7 +24,7 @@ function LandingPage() {
   <Title order={3} className="logo">ScholarLink</Title>
 
   <Group spacing="lg">
-    <Button variant="subtle" component={Link} to="/">Home</Button>
+    <Button variant="subtle" component={Link} to="/user-dashboard">Home</Button>
     <Button variant="subtle" component={Link} to="/about">About Us</Button>
     <Button variant="subtle" component={Link} to="/contact">Contact Us</Button>
   </Group>
