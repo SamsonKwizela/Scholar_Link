@@ -57,44 +57,47 @@ function CreateUser() {
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
 
-  const handleSubmit = async (values) => {
-    setLoading(true);
-    setError("");
+const handleSubmit = async (values) => {
+  setLoading(true);
+  setError("");
 
-    try {
-      const name = `${values.user.firstName} ${values.user.lastName}`;
-
-      const userData = {
-        name,
-        email: values.email,
-        password: values.password,
-        role: "student",
-      };
-
-      const res = await fetch("http://localhost:5000/api/users/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to create user");
-      }
-
-      console.log("User created:", data);
-
-      form.reset();
-      setActive(0);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+  try {
+    if (!values.terms) {
+      setError("You must accept terms and conditions");
+      return;
     }
-  };
+
+    const userData = {
+      name: `${values.user.firstName} ${values.user.lastName}`,
+      email: values.email,
+      password: values.password,
+      role: "student",
+    };
+
+    const res = await fetch("http://localhost:5000/api/users/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || data.message || "Failed to create user");
+    }
+
+    console.log("User created:", data);
+
+    form.reset();
+    setActive(0);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <Box className="create-user-container">
