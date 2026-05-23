@@ -50,12 +50,8 @@ function Home() {
   const navItems = [
     { label: "Home", icon: IconHome, path: "/user-dashboard" },
     { label: "Scholarships", icon: IconSchool, path: "/scholarships" },
-    { label: "Applications", icon: IconFileText, path: "/applications" },
-    {
-      label: "Assessments",
-      icon: IconChecklist,
-      path: "/scholarship-assessment",
-    },
+    { label: "Applications", icon: IconFileText, path: "/filed-applications" },
+    {label: "Assessments", icon: IconChecklist, path: "/assessments", },
     { label: "Notifications", icon: IconBell, path: "/notifications" },
     { label: "Profile", icon: IconUser, path: "/profile" },
     { label: "Settings", icon: IconSettings, path: "/settings" },
