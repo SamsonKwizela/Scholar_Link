@@ -15,6 +15,7 @@ import FiledApplications from "./pages/FiledApplications";
 import Assessments from "./pages/Assessment";
 import Notifications from "./pages/Notifications";  
 import Settings from "./pages/Settiings"; 
+import UserProfile from "./pages/UserProfile"; 
 
 function App() {
   return (
@@ -92,7 +93,10 @@ function App() {
           path="/notifications"
           element={<Notifications />}
         />
-
+        <Route
+          path="/UserProfile"
+          element={<UserProfile />}
+        />
         <Route
           path="/settings"
           element={<Settings />}
