@@ -53,7 +53,7 @@ function Home() {
     { label: "Applications", icon: IconFileText, path: "/filed-applications" },
     {label: "Assessments", icon: IconChecklist, path: "/assessments", },
     { label: "Notifications", icon: IconBell, path: "/notifications" },
-    { label: "Profile", icon: IconUser, path: "/profile" },
+    { label: "Profile", icon: IconUser, path: "/UserProfile" },
     { label: "Settings", icon: IconSettings, path: "/settings" },
     { label: "Logout", icon: IconLogout, path: "/login" },
   ];
