@@ -31,7 +31,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch("http://localhost:8000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,6 +40,7 @@ function Login() {
       });
 
       const data = await res.json();
+      console.log(data);
 
       if (!res.ok) {
         setError(data.error || "Login failed");
@@ -51,7 +52,7 @@ function Login() {
       localStorage.setItem("token", data.token);
 
       // Redirect to HOME page
-      navigate("/");
+      navigate("/user-dashboard");
     } catch (err) {
       console.error(err);
       setError("Server error. Please try again.");

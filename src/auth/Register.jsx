@@ -13,12 +13,14 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import "./Register.css";
+import { useNavigate } from "react-router-dom";
 
   const API_URL = "http://localhost:8000/api/auth/register"
 
 
 
 function Register() {
+  const navigate = useNavigate()
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -73,10 +75,7 @@ const handleSubmit = async (values) => {
   setError("");
 
   try {
-    if (!values.terms) {
-      setError("You must accept terms and conditions");
-      return;
-    }
+  
 
     const userData = {
       firstName: values.user.firstName,
@@ -95,6 +94,7 @@ const handleSubmit = async (values) => {
     });
 
     const data = await res.json();
+    console.log("login",data)
 
     if (!res.ok) {
       throw new Error(data.error || data.message || "Failed to create user");
@@ -103,7 +103,7 @@ const handleSubmit = async (values) => {
     console.log("User created:", data);
 
     form.reset();
-    setActive(0);
+    navigate("/login")
   } catch (err) {
     setError(err.message);
   } finally {
