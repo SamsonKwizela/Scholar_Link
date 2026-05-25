@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage";
-import CreateUser from "./auth/CreateUser";
+import Register from "./auth/Register";
 import { FooterCentered } from "./components/Footer";
 import Login from "./auth/Login";
 import AboutUs from "./pages/AboutUs";
@@ -36,7 +36,7 @@ function App() {
 
         <Route
           path="/signup"
-          element={<CreateUser />}
+          element={<Register />}
         />
 
         <Route

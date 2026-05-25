@@ -12,9 +12,13 @@ import {
   Stack,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import "./CreateUser.css";
+import "./Register.css";
 
-function CreateUser() {
+  const API_URL = "http://localhost:8000/api/auth/register"
+
+
+
+function Register() {
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -22,15 +26,22 @@ function CreateUser() {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      terms: false,
       user: {
         firstName: "",
         lastName: "",
       },
       email: "",
+      phoneNumber: "",
       password: "",
     },
   });
+
+  console.log(form)
+
+  
+
+
+
 
   // NEXT STEP (with basic validation)
   const nextStep = () => {
@@ -44,8 +55,8 @@ function CreateUser() {
     }
 
     if (active === 1) {
-      if (!values.email) {
-        setError("Email is required");
+      if (!values.email & !values.phoneNumber) {
+        setError("Email or phonenumber is required");
         return;
       }
     }
@@ -68,13 +79,14 @@ const handleSubmit = async (values) => {
     }
 
     const userData = {
-      name: `${values.user.firstName} ${values.user.lastName}`,
+      firstName: values.user.firstName,
+      lastName: values.user.lastName,
       email: values.email,
+      phoneNumber: values.phoneNumber,
       password: values.password,
-      role: "student",
     };
 
-    const res = await fetch("http://localhost:5000/api/users/create", {
+    const res = await fetch("http://localhost:8000/api/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -131,10 +143,7 @@ const handleSubmit = async (values) => {
                 {...form.getInputProps("user.lastName")}
               />
 
-              <Checkbox
-                label="I accept terms and conditions"
-                {...form.getInputProps("terms", { type: "checkbox" })}
-              />
+             
             </Stack>
           </Stepper.Step>
 
@@ -145,6 +154,13 @@ const handleSubmit = async (values) => {
                 label="Email address"
                 placeholder="you@email.com"
                 {...form.getInputProps("email")}
+              />
+            </Stack>
+             <Stack className="step-content">
+              <TextInput
+                label="PhoneNumber"
+                placeholder="phoneNumber"
+                {...form.getInputProps("phoneNumber")}
               />
             </Stack>
           </Stepper.Step>
@@ -192,4 +208,4 @@ const handleSubmit = async (values) => {
   );
 }
 
-export default CreateUser;
+export default Register;
