@@ -13,17 +13,17 @@ import Home from "./pages/Home";
 import Scholarships from "./pages/Scholarships";
 import FiledApplications from "./pages/FiledApplications";
 import Assessments from "./pages/Assessment";
-import Notifications from "./pages/Notifications";  
-import Settings from "./pages/Settiings"; 
-import UserProfile from "./pages/UserProfile"; 
+import Notifications from "./pages/Notifications";
+import Settings from "./pages/Settiings";
+import UserProfile from "./pages/UserProfile";
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
 
 function App() {
   return (
     <BrowserRouter>
-
       <Routes>
-
-        {/* Public page */}
+        {/* Public routes — accessible to everyone */}
         <Route
           path="/"
           element={
@@ -33,77 +33,29 @@ function App() {
             </>
           }
         />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/scholarship/details" element={<ScholarshipDetails />} />
 
-        <Route
-          path="/signup"
-          element={<Register />}
-        />
+        {/* Guest-only routes — redirect to dashboard if already logged in */}
+        <Route element={<PublicRoute />}>
+          <Route path="/signup" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
-        <Route
-          path="/about"
-          element={<AboutUs />}
-        />
-
-        <Route
-          path="/contact"
-          element={<ContactUs />}
-        />
-
-        <Route
-          path="/scholarship/details"
-          element={<ScholarshipDetails />}
-        />
-
-        <Route
-          path="/apply/:id"
-          element={<ScholarshipAssessment />}
-        />
-
-        <Route
-          path="/application-success"
-          element={<ApplicationSuccess />}
-        />
-
-        <Route
-          path="/user-dashboard"
-          element={<Home/>}
-        />
-
-        <Route
-          path="/scholarships"
-          element={<Scholarships />}
-        />
-
-        <Route
-          path="/filed-applications"
-          element={<FiledApplications />}
-        />
-
-        <Route
-          path="/assessments"
-          element={<Assessments />}
-        />
-
-        <Route
-          path="/notifications"
-          element={<Notifications />}
-        />
-        <Route
-          path="/UserProfile"
-          element={<UserProfile />}
-        />
-        <Route
-          path="/settings"
-          element={<Settings />}
-        />  
-
+        {/* Private routes — require authentication */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/user-dashboard" element={<Home />} />
+          <Route path="/scholarships" element={<Scholarships />} />
+          <Route path="/apply/:id" element={<ScholarshipAssessment />} />
+          <Route path="/application-success" element={<ApplicationSuccess />} />
+          <Route path="/filed-applications" element={<FiledApplications />} />
+          <Route path="/assessments" element={<Assessments />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/UserProfile" element={<UserProfile />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
       </Routes>
-
     </BrowserRouter>
   );
 }
