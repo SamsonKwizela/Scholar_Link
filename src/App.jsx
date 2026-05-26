@@ -10,6 +10,7 @@ import ScholarshipDetails from "./pages/ScholarshipDetails";
 import ApplicationSuccess from "./pages/ApplicationSuccess";
 import ScholarshipAssessment from "./pages/ScholarshipAssessment";
 import Home from "./pages/Home";
+import DashboardContent from "./pages/DashboardContent";
 import Scholarships from "./pages/Scholarships";
 import FiledApplications from "./pages/FiledApplications";
 import Assessments from "./pages/Assessment";
@@ -43,17 +44,22 @@ function App() {
           <Route path="/login" element={<Login />} />
         </Route>
 
-        {/* Private routes — require authentication */}
+        {/* Private routes — all rendered inside the Home layout (AppShell with sidebar) */}
         <Route element={<PrivateRoute />}>
-          <Route path="/user-dashboard" element={<Home />} />
-          <Route path="/scholarships" element={<Scholarships />} />
-          <Route path="/apply/:id" element={<ScholarshipAssessment />} />
-          <Route path="/application-success" element={<ApplicationSuccess />} />
-          <Route path="/filed-applications" element={<FiledApplications />} />
-          <Route path="/assessments" element={<Assessments />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/UserProfile" element={<UserProfile />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route element={<Home />}>
+            <Route path="/user-dashboard" element={<DashboardContent />} />
+            <Route path="/scholarships" element={<Scholarships />} />
+            <Route path="/apply/:id" element={<ScholarshipAssessment />} />
+            <Route
+              path="/application-success"
+              element={<ApplicationSuccess />}
+            />
+            <Route path="/filed-applications" element={<FiledApplications />} />
+            <Route path="/assessments" element={<Assessments />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/UserProfile" element={<UserProfile />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
