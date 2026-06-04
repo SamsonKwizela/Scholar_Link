@@ -19,6 +19,7 @@ import Settings from "./pages/Settiings";
 import UserProfile from "./pages/UserProfile";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
+import Internships from "./pages/Internships";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/UserProfile" element={<UserProfile />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/Internships" element={<Internships />}/>
           </Route>
         </Route>
       </Routes>

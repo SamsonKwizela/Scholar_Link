@@ -24,9 +24,11 @@ import {
   IconUser,
   IconSun,
   IconMoon,
+  IconBriefcase
 } from "@tabler/icons-react";
-
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
@@ -41,6 +43,7 @@ function Home() {
   const navItems = [
     { label: "Home", icon: IconHome, path: "/user-dashboard" },
     { label: "Scholarships", icon: IconSchool, path: "/scholarships" },
+    { label: "Internship", icon: IconBriefcase, path: "/internship" },
     { label: "Applications", icon: IconFileText, path: "/filed-applications" },
     { label: "Assessments", icon: IconChecklist, path: "/assessments" },
     { label: "Notifications", icon: IconBell, path: "/notifications" },
