@@ -43,7 +43,7 @@ function Home() {
   const navItems = [
     { label: "Home", icon: IconHome, path: "/user-dashboard" },
     { label: "Scholarships", icon: IconSchool, path: "/scholarships" },
-    { label: "Internship", icon: IconBriefcase, path: "/internship" },
+    { label: "Internship", icon: IconBriefcase, path: "/internships" },
     { label: "Applications", icon: IconFileText, path: "/filed-applications" },
     { label: "Assessments", icon: IconChecklist, path: "/assessments" },
     { label: "Notifications", icon: IconBell, path: "/notifications" },
