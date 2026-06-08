@@ -121,7 +121,7 @@ const handleSubmit = async (values) => {
 
         {/* ERROR DISPLAY */}
         {error && (
-          <div style={{ color: "red", textAlign: "center", marginBottom: 10 }}>
+          <div className="error-msg">
             {error}
           </div>
         )}

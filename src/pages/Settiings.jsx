@@ -56,7 +56,7 @@ export default function SettingsPage() {
   const isDirty = form.isDirty();
 
   return (
-    <Box style={{ minHeight: "100vh", background: "#f4f7fb", padding: 30 }}>
+    <Box className="app-page">
       <Container size="lg">
 
         {/* HEADER */}

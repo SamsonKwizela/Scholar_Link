@@ -25,8 +25,8 @@ function ContactUs() {
   return (
     <Paper shadow="md" radius="lg">
       <div className="wrapper">
-        <div className="contacts" style={{ backgroundColor: "#062a4e" }}>
-          <Text fz="lg" fw={700} className="title" c="#fff">
+        <div className="contacts">
+          <Text fz="lg" fw={700} className="title">
             Contact information
           </Text>
           <ContactIcons />

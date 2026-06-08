@@ -14,7 +14,8 @@ import {
   TextInput,
   Select,
 } from "@mantine/core";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
+import { useNavigate } from "react-router-dom";
 
 const scholarships = [
   {
@@ -54,7 +55,7 @@ const applications = [
 
 export default function DashboardContent() {
   const navigate = useNavigate();
-  const { colorScheme } = useOutletContext();
+  const { isDark } = useTheme();
 
   return (
     <Container fluid>
@@ -64,7 +65,7 @@ export default function DashboardContent() {
         p="xl"
         mb="xl"
         withBorder
-        bg={colorScheme === "dark" ? "dark.6" : "blue.0"}
+        className="card-welcome"
       >
         <Group justify="space-between">
           <div>
@@ -131,10 +132,7 @@ export default function DashboardContent() {
             radius="xl"
             p="0"
             withBorder
-            style={{
-              overflow: "hidden",
-              transition: "0.3s",
-            }}
+            className="card-smooth"
           >
             <Image src={item.image} height={180} alt={item.title} />
 

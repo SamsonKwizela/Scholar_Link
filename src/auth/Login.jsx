@@ -109,7 +109,6 @@ function Login() {
             <span
               className="login-link"
               onClick={() => navigate("/register")}
-              style={{ cursor: "pointer" }}
             >
               Sign up
             </span>

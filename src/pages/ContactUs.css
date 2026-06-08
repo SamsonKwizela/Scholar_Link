@@ -1,13 +1,12 @@
 /* Wrapper */
 .wrapper {
   display: flex;
-  background: linear-gradient(135deg, #020617, #0f172a);
+  background: var(--bg);
   padding: 6px;
-  border: 1px solid #1e293b;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
   overflow: hidden;
   height: 100vh;
-  
 }
 
 /* Responsive */
@@ -22,7 +21,7 @@
   flex: 1;
   padding: 2.5rem;
   padding-left: 3rem;
-  background-color: #041057;
+  background-color: var(--surface);
   margin: auto;
   border-radius: 10px;
   height: 92.5vh;
@@ -37,7 +36,7 @@
 
 /* Fields */
 .fields {
-  margin:30px;
+  margin: 30px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -77,15 +76,14 @@
   box-sizing: border-box;
   position: relative;
   border-radius: 10px;
-  background: linear-gradient(135deg, #06328f, #1f2937);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--surface-strong);
+  border-right: 1px solid var(--border);
   padding: 2.5rem;
   flex: 0 0 300px;
-  color: #e5e7eb;
+  color: var(--text);
   display: flex;
   flex-direction: column;
   margin: 20px;
-  
 }
 
 /* Responsive */
@@ -98,21 +96,19 @@
 
 /* Title */
 .title {
-  
   font-family: Outfit, sans-serif;
   font-size: 1.3rem;
   font-weight: 600;
-  color: #f9fafb;
+  color: var(--text);
   letter-spacing: 0.5px;
   margin: 100px;
   text-align: center;
-  
 }
 
 /* Button */
 .control {
   border-radius: 10px;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  background: var(--accent);
   color: white;
   transition: all 0.25s ease;
 }
@@ -120,7 +116,7 @@
 /* Hover */
 .control:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Mobile button */

@@ -122,16 +122,11 @@ const handleCvUpload = (file) => {
 };
 
   return (
-    <Box style={{ minHeight: "100vh", background: "#f4f7fb", padding: 30 }}>
+    <Box className="app-page">
       <Container size="xl">
 
         {/* ================= HEADER ================= */}
-        <Card radius="xl" shadow="sm" withBorder p="xl" mb="xl"
-          style={{
-            background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)",
-            color: "white",
-          }}
-        >
+        <Card radius="xl" shadow="sm" withBorder p="xl" mb="xl" className="profile-header">
           <Grid align="center">
 
             {/* AVATAR */}

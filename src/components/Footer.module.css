@@ -1,10 +1,8 @@
 .footer {
   margin-top: 120px;
-  border-top: 1px solid #e0e0e0;
-
-  /* 🔵 Background goes here */
-  background: linear-gradient(135deg, #2c3e50, #4b6cb7);
-  color: white;
+  border-top: 1px solid var(--border);
+  background: var(--surface-strong);
+  color: var(--text);
 }
 
 .inner {
@@ -33,9 +31,9 @@
 }
 
 .links a {
-  color: #d0d0d0;
+  color: var(--text-muted);
 }
 
 .links a:hover {
-  color: white;
+  color: var(--text);
 }

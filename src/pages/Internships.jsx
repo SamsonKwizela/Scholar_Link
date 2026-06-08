@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Container,
   Title,
@@ -14,6 +14,8 @@ import {
   ThemeIcon,
   Stack,
   Divider,
+  TextInput,
+  SegmentedControl,
 } from "@mantine/core";
 
 import {
@@ -21,22 +23,25 @@ import {
   IconMapPin,
   IconCalendar,
   IconAlertCircle,
+  IconSearch,
 } from "@tabler/icons-react";
 
 export default function Internships() {
   const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [applyingId, setApplyingId] = useState(null);
+  const [fetchError, setFetchError] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  // ---------------------------
-  // FETCH INTERNSHIPS
-  // ---------------------------
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchInternships = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8000/api/internships"
-        );
+        const response = await fetch("http://localhost:8000/api/internships", {
+          signal: controller.signal,
+        });
 
         const data = await response.json();
 
@@ -44,37 +49,81 @@ export default function Internships() {
           throw new Error(data.message || "Failed to fetch internships");
         }
 
-        setInternships(
-          Array.isArray(data.internships) ? data.internships : []
-        );
+        setInternships(Array.isArray(data.internships) ? data.internships : []);
+        setFetchError("");
       } catch (error) {
-        console.error("Error fetching internships:", error);
-        setInternships([]);
+        if (error.name !== "AbortError") {
+          console.error("Error fetching internships:", error);
+          setFetchError("Could not load internships right now. Please try again later.");
+          setInternships([]);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchInternships();
+    return () => controller.abort();
   }, []);
 
-  // ---------------------------
-  // APPLY HANDLER
-  // ---------------------------
+  const openCount = internships.filter((item) => item.isActive).length;
+
+  const visibleInternships = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    return internships.filter((item) => {
+      const searchMatch =
+        !query ||
+        [item?.title, item?.company, item?.description]
+          .filter(Boolean)
+          .some((value) => value.toLowerCase().includes(query));
+
+      const statusMatch =
+        statusFilter === "all" ||
+        (statusFilter === "open" && item?.isActive) ||
+        (statusFilter === "closed" && !item?.isActive);
+
+      return searchMatch && statusMatch;
+    });
+  }, [internships, search, statusFilter]);
+
   const handleApply = async (id, url) => {
+    if (!url?.trim()) {
+      return;
+    }
+
     setApplyingId(id);
 
     try {
-      await new Promise((res) => setTimeout(res, 800));
-
-      if (url && url.trim() !== "") {
-        window.open(url, "_blank", "noopener,noreferrer");
-      } else {
-        alert("No application link available.");
-      }
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      window.open(url.trim(), "_blank", "noopener,noreferrer");
     } finally {
       setApplyingId(null);
     }
+  };
+
+  const formatLocation = (location) => {
+    if (!location) {
+      return "Remote";
+    }
+
+    if (typeof location === "string") {
+      return location;
+    }
+
+    const parts = [location.city, location.country].filter(Boolean);
+    return parts.length > 0 ? parts.join(", ") : "Remote";
+  };
+
+  const formatDeadline = (deadline) => {
+    if (!deadline) {
+      return "No deadline";
+    }
+
+    const date = new Date(deadline);
+    return Number.isNaN(date.getTime())
+      ? "No deadline"
+      : date.toLocaleDateString();
   };
 
   // ---------------------------
@@ -90,32 +139,64 @@ export default function Internships() {
 
   return (
     <Container size="lg" py="xl">
-      {/* HEADER */}
-      <Group justify="space-between" mb="xl">
+      <Group justify="space-between" mb="xl" align="flex-start">
         <div>
           <Title order={2}>Internships</Title>
           <Text size="sm" c="dimmed">
-            Explore available internship opportunities
+            Explore available internship opportunities.
           </Text>
         </div>
 
         <Badge size="lg" color="blue" variant="light">
-          {internships.length} Openings
+          {openCount} Open / {internships.length} Total
         </Badge>
       </Group>
 
-      {/* EMPTY STATE */}
-      {internships.length === 0 ? (
+      <Group mb="xl" align="flex-end" spacing="sm" wrap="wrap">
+        <TextInput
+          value={search}
+          onChange={(event) => setSearch(event.currentTarget.value)}
+          placeholder="Search by title, company, or description"
+          icon={<IconSearch size={16} />}
+          sx={{ minWidth: 260, flex: "1 1 360px" }}
+        />
+
+        <SegmentedControl
+          value={statusFilter}
+          onChange={setStatusFilter}
+          data={[
+            { label: "All", value: "all" },
+            { label: "Open", value: "open" },
+            { label: "Closed", value: "closed" },
+          ]}
+          fullWidth
+        />
+      </Group>
+
+      {fetchError && (
         <Alert
           icon={<IconAlertCircle size={18} />}
-          title="No Internships Available"
+          title="Unable to load internships"
+          color="red"
+          mb="xl"
+        >
+          {fetchError}
+        </Alert>
+      )}
+
+      {visibleInternships.length === 0 ? (
+        <Alert
+          icon={<IconAlertCircle size={18} />}
+          title={internships.length > 0 ? "No matches found" : "No Internships Available"}
           color="blue"
         >
-          There are currently no internship postings.
+          {internships.length > 0
+            ? "Try adjusting your search or filter to see more internships."
+            : "There are currently no internship postings."}
         </Alert>
       ) : (
         <Grid>
-          {internships.map((item) => (
+          {visibleInternships.map((item) => (
             <Grid.Col
               key={item._id}
               span={{ base: 12, sm: 6, md: 4 }}
@@ -158,24 +239,12 @@ export default function Internships() {
                 <Stack gap="xs">
                   <Group gap="xs">
                     <IconMapPin size={16} />
-                    <Text size="sm">
-                      {item.location
-                        ? typeof item.location === "object"
-                          ? `${item.location.city || ""}, ${
-                              item.location.country || ""
-                            }`
-                          : item.location
-                        : "Remote"}
-                    </Text>
+                    <Text size="sm">{formatLocation(item.location)}</Text>
                   </Group>
 
                   <Group gap="xs">
                     <IconCalendar size={16} />
-                    <Text size="sm">
-                      {item.deadline
-                        ? new Date(item.deadline).toLocaleDateString()
-                        : "No deadline"}
-                    </Text>
+                    <Text size="sm">{formatDeadline(item.deadline)}</Text>
                   </Group>
                 </Stack>
 
@@ -198,11 +267,14 @@ export default function Internships() {
                   fullWidth
                   mt="xl"
                   loading={applyingId === item._id}
-                  onClick={() =>
-                    handleApply(item._id, item.applicationUrl)
-                  }
+                  disabled={!item.isActive || !item.applicationUrl?.trim()}
+                  onClick={() => handleApply(item._id, item.applicationUrl)}
                 >
-                  Apply Now
+                  {item.isActive
+                    ? item.applicationUrl?.trim()
+                      ? "Apply Now"
+                      : "No Link"
+                    : "Closed"}
                 </Button>
 
               </Card>

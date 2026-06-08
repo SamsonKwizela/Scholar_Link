@@ -24,21 +24,19 @@ import {
   IconUser,
   IconSun,
   IconMoon,
-  IconBriefcase
+  IconBriefcase,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 function Home() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [opened, setOpened] = useState(false);
-  const [colorScheme, setColorScheme] = useState("light");
-
-  const toggleColorScheme = () =>
-    setColorScheme((prev) => (prev === "dark" ? "light" : "dark"));
+  const { isDark, toggleDark } = useTheme();
 
   const navItems = [
     { label: "Home", icon: IconHome, path: "/user-dashboard" },
@@ -101,8 +99,16 @@ function Home() {
       header={{ height: 70 }}
       styles={{
         main: {
-          backgroundColor: colorScheme === "dark" ? "#1A1B1E" : "#F8F9FA",
+          backgroundColor: 'var(--bg)',
         },
+        header: {
+          background: 'var(--surface)',
+          borderBottom: '1px solid var(--border)'
+        },
+        navbar: {
+          background: 'var(--surface)',
+          borderRight: '1px solid var(--border)'
+        }
       }}
     >
       {/* HEADER */}
@@ -124,16 +130,16 @@ function Home() {
           <Group>
             <Button
               variant="light"
-              onClick={toggleColorScheme}
+              onClick={toggleDark}
               leftSection={
-                colorScheme === "dark" ? (
+                isDark ? (
                   <IconSun size={18} />
                 ) : (
                   <IconMoon size={18} />
                 )
               }
             >
-              {colorScheme === "dark" ? "Light Mode" : "Dark Mode"}
+              {isDark ? "Light Mode" : "Dark Mode"}
             </Button>
 
             <Avatar radius="xl" color="blue">
@@ -150,7 +156,7 @@ function Home() {
           <Badge color="green">Online</Badge>
         </Group>
 
-        <ScrollArea style={{ flex: 1 }}>
+        <ScrollArea className="sidebar-scroll">
           <Stack gap="xs">
             {navItems.map((item, i) => (
               <NavLink
@@ -174,7 +180,7 @@ function Home() {
 
       {/* MAIN */}
       <AppShell.Main>
-        <Outlet context={{ colorScheme }} />
+        <Outlet />
       </AppShell.Main>
     </AppShell>
   );

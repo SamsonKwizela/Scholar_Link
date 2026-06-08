@@ -60,7 +60,7 @@ function App() {
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/UserProfile" element={<UserProfile />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/Internships" element={<Internships />}/>
+            <Route path="/internships" element={<Internships />} />
           </Route>
         </Route>
       </Routes>

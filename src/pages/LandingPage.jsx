@@ -22,6 +22,7 @@ import {
 import { Link } from "react-router-dom";
 
 import OpportunitiesCards from "../components/OpportunitiesCards";
+import { DarkModeToggle } from "../components/DarkModeToggle";
 
 import "./LandingPage.css";
 
@@ -57,6 +58,8 @@ function LandingPage() {
             </Group>
 
             <Group gap="sm">
+
+              <DarkModeToggle />
 
               <Button
                 variant="outline"

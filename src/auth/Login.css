@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  background: var(--bg);
 }
 
 /* Card */
@@ -18,12 +18,13 @@
 .login-title {
   text-align: center;
   margin-bottom: 5px;
+  color: var(--text);
 }
 
 /* Subtitle */
 .login-subtitle {
   text-align: center;
-  color: #777;
+  color: var(--text-muted);
   font-size: 14px;
 }
 
@@ -39,6 +40,6 @@
 
 /* Link */
 .login-link {
-  color: #4c6ef5;
+  color: var(--accent);
   cursor: pointer;
 }
