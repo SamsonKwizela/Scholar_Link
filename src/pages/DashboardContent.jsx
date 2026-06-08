@@ -53,6 +53,50 @@ const applications = [
   { scholarship: "Africa Education Fund", status: "Approved" },
 ];
 
+const assessments = [
+  { id: 1, title: "STEM Excellence Grant Assessment", deadline: "10 June 2026", status: "In Progress" },
+  { id: 2, title: "Global Leaders Program Assessment", deadline: "15 June 2026", status: "Pending" },
+];
+
+const internships = [
+  {
+    id: 1,
+    title: "Frontend Developer Intern",
+    company: "Tech Corp",
+    location: "Remote",
+    deadline: "20 June 2026",
+    status: "Open",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978",
+  },
+  {
+    id: 2,
+    title: "Data Science Intern",
+    company: "Data Solutions",
+    location: "Lagos, Nigeria",
+    deadline: "15 June 2026",
+    status: "Closing Soon",
+    image: "https://images.unsplash.com/photo-1460925895917-aae19e938282",
+  },
+  {
+    id: 3,
+    title: "UX Design Intern",
+    company: "Design Studio",
+    location: "Remote",
+    deadline: "25 June 2026",
+    status: "Open",
+    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5",
+  },
+  {
+    id: 4,
+    title: "Backend Developer Intern",
+    company: "Web Services Ltd",
+    location: "Accra, Ghana",
+    deadline: "30 June 2026",
+    status: "Open",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97",
+  },
+];
+
 export default function DashboardContent() {
   const navigate = useNavigate();
   const { isDark } = useTheme();
@@ -87,28 +131,28 @@ export default function DashboardContent() {
           <Text size="sm" c="dimmed">
             Scholarships
           </Text>
-          <Title order={2}>24</Title>
+          <Title order={2}>{scholarships.length}</Title>
         </Card>
 
         <Card withBorder p="lg">
           <Text size="sm" c="dimmed">
             Applications
           </Text>
-          <Title order={2}>6</Title>
+          <Title order={2}>{applications.length}</Title>
         </Card>
 
         <Card withBorder p="lg">
           <Text size="sm" c="dimmed">
             Assessments
           </Text>
-          <Title order={2}>2</Title>
+          <Title order={2}>{assessments.length}</Title>
         </Card>
 
         <Card withBorder p="lg">
           <Text size="sm" c="dimmed">
-            Notifications
+            Internships
           </Text>
-          <Title order={2}>5</Title>
+          <Title order={2}>{internships.length}</Title>
         </Card>
       </SimpleGrid>
 

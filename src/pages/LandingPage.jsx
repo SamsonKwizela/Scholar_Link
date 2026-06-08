@@ -43,15 +43,15 @@ function LandingPage() {
 
             <Group gap="sm" visibleFrom="md">
 
-              <Button variant="subtle" color="gray" component={Link} to="/user-dashboard">
+              <Button variant="subtle" color="blue" component={Link} to="/user-dashboard">
                 Home
               </Button>
 
-              <Button variant="subtle" color="gray" component={Link} to="/about">
+              <Button variant="subtle" color="blue" component={Link} to="/about">
                 About
               </Button>
 
-              <Button variant="subtle" color="gray" component={Link} to="/contact">
+              <Button variant="subtle" color="blue" component={Link} to="/contact">
                 Contact
               </Button>
 
