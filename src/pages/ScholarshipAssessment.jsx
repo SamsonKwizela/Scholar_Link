@@ -13,6 +13,7 @@ import {
   Group,
   Badge,
 } from "@mantine/core";
+import { useNotifications } from "../context/NotificationContext";
 
 const questions = [
   {
@@ -61,6 +62,7 @@ const questions = [
 function ScholarshipAssessment() {
   const { id } = useParams(); // scholarship ID
   const navigate = useNavigate();
+  const { addNotification } = useNotifications();
 
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -95,6 +97,12 @@ function ScholarshipAssessment() {
 
     console.log("Scholarship ID:", id);
     console.log("Answers:", answers);
+
+    addNotification({
+      title: "Assessment Submitted",
+      message: "Your scholarship assessment has been successfully submitted.",
+      type: "success",
+    });
 
     setTimeout(() => {
       navigate("/application-success");

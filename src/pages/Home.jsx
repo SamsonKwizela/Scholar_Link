@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AppShell,
   Burger,
@@ -30,6 +30,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { useNotifications } from "../context/NotificationContext";
 
 function Home() {
   const navigate = useNavigate();
@@ -37,6 +38,26 @@ function Home() {
 
   const [opened, setOpened] = useState(false);
   const { isDark, toggleDark } = useTheme();
+  const { unreadCount, markAllAsRead } = useNotifications();
+
+  // Load profile avatar from localStorage
+  const [avatar, setAvatar] = useState(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    return savedProfile ? JSON.parse(savedProfile).avatar : "https://i.pravatar.cc/300?img=12";
+  });
+
+  // Update avatar when localStorage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const savedProfile = localStorage.getItem('userProfile');
+      if (savedProfile) {
+        setAvatar(JSON.parse(savedProfile).avatar);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const navItems = [
     { label: "Home", icon: IconHome, path: "/user-dashboard" },
@@ -44,10 +65,10 @@ function Home() {
     { label: "Internship", icon: IconBriefcase, path: "/internships" },
     { label: "Applications", icon: IconFileText, path: "/filed-applications" },
     { label: "Assessments", icon: IconChecklist, path: "/assessments" },
-    { label: "Notifications", icon: IconBell, path: "/notifications" },
+    { label: "Notifications", icon: IconBell, path: "/notifications", hasBadge: true },
     { label: "Profile", icon: IconUser, path: "/UserProfile" },
     { label: "Settings", icon: IconSettings, path: "/settings" },
-    { label: "Logout", icon: IconLogout, path: "/login" },
+    { label: "Logout", icon: IconLogout, path: "/login", isLogout: true },
   ];
 
   const scholarships = [
@@ -142,9 +163,11 @@ function Home() {
               {isDark ? "Light Mode" : "Dark Mode"}
             </Button>
 
-            <Avatar radius="xl" color="blue">
-              R
-            </Avatar>
+            <Avatar 
+              radius="xl" 
+              src={avatar}
+              alt="Profile"
+            />
           </Group>
         </Group>
       </AppShell.Header>
@@ -163,8 +186,27 @@ function Home() {
                 key={i}
                 label={item.label}
                 leftSection={<item.icon size={18} />}
+                rightSection={
+                  item.hasBadge && unreadCount > 0 ? (
+                    <Badge size="xs" color="red" variant="filled">
+                      {unreadCount}
+                    </Badge>
+                  ) : null
+                }
                 active={location.pathname === item.path}
-                onClick={() => navigate(item.path)}
+                onClick={() => {
+                  if (item.isLogout) {
+                    // Clear authentication token
+                    localStorage.removeItem('token');
+                    // Navigate to login
+                    navigate('/login');
+                  } else {
+                    if (item.path === "/notifications") {
+                      markAllAsRead();
+                    }
+                    navigate(item.path);
+                  }
+                }}
               />
             ))}
           </Stack>

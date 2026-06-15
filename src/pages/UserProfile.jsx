@@ -30,22 +30,28 @@ import {
   IconCamera,
 } from "@tabler/icons-react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNotifications } from "../context/NotificationContext";
 
 export default function UserProfile() {
   /* ================= STATE ================= */
 
+  const { addNotification } = useNotifications();
   const [isEditing, setIsEditing] = useState(false);
 
-  const [profile, setProfile] = useState({
-    name: "Samson Kwizela",
-    role: "Computer Science Student",
-    email: "samson@example.com",
-    location: "Lusaka, Zambia",
-    university: "Cavendish University Zambia",
-    about:
-      "Passionate computing student focused on software engineering, networking, and building digital solutions.",
-    avatar: "https://i.pravatar.cc/300",
+  // Load profile from localStorage or use default
+  const [profile, setProfile] = useState(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    return savedProfile ? JSON.parse(savedProfile) : {
+      name: "Samson Kwizela",
+      role: "Computer Science Student",
+      email: "samson@example.com",
+      location: "Lusaka, Zambia",
+      university: "Cavendish University Zambia",
+      about:
+        "Passionate computing student focused on software engineering, networking, and building digital solutions.",
+      avatar: "https://i.pravatar.cc/300?img=12",
+    };
   });
 
   const [skills, setSkills] = useState([
@@ -54,10 +60,23 @@ export default function UserProfile() {
     { name: "MongoDB", level: 75, color: "orange" },
   ]);
 
+  // Save profile to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('userProfile', JSON.stringify(profile));
+  }, [profile]);
+
   /* ================= HANDLERS ================= */
 
   const handleProfileChange = (field, value) => {
     setProfile({ ...profile, [field]: value });
+  };
+
+  const handleSaveProfile = () => {
+    addNotification({
+      title: "Profile Updated",
+      message: "Your profile has been successfully updated.",
+      type: "success",
+    });
   };
 
   const handleSkillChange = (index, field, value) => {
@@ -72,6 +91,11 @@ export default function UserProfile() {
     const reader = new FileReader();
     reader.onload = () => {
       setProfile({ ...profile, avatar: reader.result });
+      addNotification({
+        title: "Profile Picture Updated",
+        message: "Your profile picture has been successfully changed.",
+        type: "success",
+      });
     };
     reader.readAsDataURL(file);
   };
@@ -119,6 +143,29 @@ const handleCvUpload = (file) => {
 
   const url = URL.createObjectURL(file);
   setCvUrl(url);
+  
+  addNotification({
+    title: "CV Uploaded",
+    message: "Your CV has been successfully uploaded.",
+    type: "success",
+  });
+};
+
+const [coverLetterFile, setCoverLetterFile] = useState(null);
+const [coverLetterUrl, setCoverLetterUrl] = useState(null);
+const handleCoverLetterUpload = (file) => {
+  if (!file) return;
+
+  setCoverLetterFile(file);
+
+  const url = URL.createObjectURL(file);
+  setCoverLetterUrl(url);
+  
+  addNotification({
+    title: "Cover Letter Uploaded",
+    message: "Your cover letter has been successfully uploaded.",
+    type: "success",
+  });
 };
 
   return (
@@ -231,7 +278,12 @@ const handleCvUpload = (file) => {
                 <Group mt="sm">
                   <Button
                     leftSection={<IconEdit size={16} />}
-                    onClick={() => setIsEditing((prev) => !prev)}
+                    onClick={() => {
+                      if (isEditing) {
+                        handleSaveProfile();
+                      }
+                      setIsEditing((prev) => !prev);
+                    }}
                   >
                     {isEditing ? "Save Changes" : "Edit Profile"}
                   </Button>
@@ -433,6 +485,77 @@ const handleCvUpload = (file) => {
       <Card mt="md" withBorder radius="md" p="sm">
         <Text size="sm" c="dimmed">
           CV uploaded successfully. You can view or download it anytime.
+        </Text>
+      </Card>
+    )}
+
+  </Card>
+</Grid.Col>
+
+    {/* COVER LETTER */}
+    {/* ================= COVER LETTER ================= */}
+<Grid.Col span={12}>
+  <Card withBorder radius="lg" p="lg">
+
+    <Group justify="space-between" align="flex-start" wrap="wrap">
+
+      <div>
+        <Title order={5}>Cover Letter</Title>
+        <Text size="sm" c="dimmed">
+          Upload and manage your cover letter
+        </Text>
+
+        {coverLetterFile && (
+          <Text size="xs" mt="xs" c="blue">
+            📄 {coverLetterFile.name}
+          </Text>
+        )}
+      </div>
+
+      <Group wrap="wrap">
+
+        {/* UPLOAD BUTTON */}
+        <Button component="label">
+          Upload Cover Letter
+          <input
+            type="file"
+            hidden
+            accept=".pdf,.doc,.docx"
+            onChange={(e) =>
+              handleCoverLetterUpload(e.target.files[0])
+            }
+          />
+        </Button>
+
+        {/* VIEW BUTTON (ONLY IF COVER LETTER EXISTS) */}
+        <Button
+          variant="outline"
+          disabled={!coverLetterUrl}
+          onClick={() => window.open(coverLetterUrl, "_blank")}
+        >
+          View Cover Letter
+        </Button>
+
+        {/* DOWNLOAD BUTTON */}
+        <Button
+          variant="light"
+          disabled={!coverLetterUrl}
+          component="a"
+          href={coverLetterUrl}
+          download={coverLetterFile?.name || "cover-letter.pdf"}
+        >
+          Download
+        </Button>
+
+      </Group>
+
+    </Group>
+
+    {/* MOBILE PREVIEW TIP */}
+    {coverLetterUrl && (
+      <Card mt="md" withBorder radius="md" p="sm">
+        <Text size="sm" c="dimmed">
+          Cover letter uploaded successfully. You can view or download it anytime.
         </Text>
       </Card>
     )}

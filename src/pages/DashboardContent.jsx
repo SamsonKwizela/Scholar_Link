@@ -96,10 +96,60 @@ const internships = [
     image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97",
   },
 ];
+import { useState, useEffect } from "react";
 
 export default function DashboardContent() {
   const navigate = useNavigate();
+
+
+ 
   const { isDark } = useTheme();
+
+  const [stats, setStats] = useState({
+    scholarships: 0,
+    applications: 0,
+    assessments: 0,
+    internships: 0,
+  });
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const [
+          scholarshipsRes,
+          applicationsRes,
+          assessmentsRes,
+          internshipsRes,
+        ] = await Promise.all([
+          fetch("http://localhost:8000/api/scholarships"),
+          fetch("http://localhost:8000/api/applications"),
+          fetch("http://localhost:8000/api/assessments"),
+          fetch("http://localhost:8000/api/internships"),
+        ]);
+
+        const scholarshipsData = await scholarshipsRes.json();
+        const applicationsData = await applicationsRes.json();
+        const assessmentsData = await assessmentsRes.json();
+        const internshipsData = await internshipsRes.json();
+
+        setStats({
+          scholarships:
+            scholarshipsData.scholarships?.length || 0,
+          applications:
+            applicationsData.applications?.length || 0,
+          assessments:
+            assessmentsData.assessments?.length || 0,
+          internships:
+            internshipsData.internships?.length || 0,
+        });
+      } catch (error) {
+        console.error("Error loading dashboard stats:", error);
+      }
+    };
+
+    fetchCounts();
+  }, []);
+
 
   return (
     <Container fluid>
@@ -272,4 +322,7 @@ export default function DashboardContent() {
       </Card>
     </Container>
   );
+ 
+ 
+    
 }
