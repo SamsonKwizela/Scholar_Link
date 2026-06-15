@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Title,
@@ -11,38 +11,40 @@ import {
 } from "@mantine/core";
 import { TestModal } from "../components/TestModal";
 import { assessmentQuestionsDB } from "../data/assessmentQuestions";
-
-const initialAssessments = [
-  {
-    id: 1,
-    title: "Scholarship Eligibility Test",
-    type: "Aptitude",
-    status: "Not Started",
-    duration: "30 mins",
-    score: null,
-  },
-  {
-    id: 2,
-    title: "English Proficiency Assessment",
-    type: "Language",
-    status: "Not Started",
-    duration: "45 mins",
-    score: null,
-  },
-  {
-    id: 3,
-    title: "General Knowledge Test",
-    type: "Quiz",
-    status: "Not Started",
-    duration: "20 mins",
-    score: null,
-  },
-];
+import { useDataManager } from "../utils/dataManager";
 
 export default function Assessments() {
-  const [assessments, setAssessments] = useState(initialAssessments);
+  const { assessments: assessmentsManager } = useDataManager();
+  const [assessments, setAssessments] = useState([]);
   const [testModalOpened, setTestModalOpened] = useState(false);
   const [selectedAssessmentId, setSelectedAssessmentId] = useState(null);
+
+  useEffect(() => {
+    const loadAssessments = () => {
+      try {
+        const data = assessmentsManager.getAll();
+        setAssessments(data);
+      } catch (error) {
+        console.error("Error loading assessments:", error);
+        setAssessments([]);
+      }
+    };
+
+    loadAssessments();
+
+    // Listen for data changes
+    const handleDataChange = () => {
+      loadAssessments();
+    };
+
+    window.addEventListener('dataChange', handleDataChange);
+    window.addEventListener('storage', handleDataChange);
+
+    return () => {
+      window.removeEventListener('dataChange', handleDataChange);
+      window.removeEventListener('storage', handleDataChange);
+    };
+  }, []);
 
   const handleStartTest = (assessmentId) => {
     setSelectedAssessmentId(assessmentId);

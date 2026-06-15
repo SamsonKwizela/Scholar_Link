@@ -25,8 +25,10 @@ import {
   IconAlertCircle,
   IconSearch,
 } from "@tabler/icons-react";
+import { useDataManager } from "../utils/dataManager";
 
 export default function Internships() {
+  const { internships: internshipsManager } = useDataManager();
   const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [applyingId, setApplyingId] = useState(null);
@@ -35,35 +37,34 @@ export default function Internships() {
   const [statusFilter, setStatusFilter] = useState("all");
 
   useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchInternships = async () => {
+    const loadInternships = () => {
       try {
-        const response = await fetch("http://localhost:8000/api/internships", {
-          signal: controller.signal,
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch internships");
-        }
-
-        setInternships(Array.isArray(data.internships) ? data.internships : []);
+        const data = internshipsManager.getAll();
+        setInternships(data);
         setFetchError("");
       } catch (error) {
-        if (error.name !== "AbortError") {
-          console.error("Error fetching internships:", error);
-          setFetchError("Could not load internships right now. Please try again later.");
-          setInternships([]);
-        }
+        console.error("Error loading internships:", error);
+        setFetchError("Could not load internships right now. Please try again later.");
+        setInternships([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchInternships();
-    return () => controller.abort();
+    loadInternships();
+
+    // Listen for data changes
+    const handleDataChange = () => {
+      loadInternships();
+    };
+
+    window.addEventListener('dataChange', handleDataChange);
+    window.addEventListener('storage', handleDataChange);
+
+    return () => {
+      window.removeEventListener('dataChange', handleDataChange);
+      window.removeEventListener('storage', handleDataChange);
+    };
   }, []);
 
   const openCount = internships.filter((item) => item.isActive).length;

@@ -29,8 +29,10 @@ import {
 } from "@tabler/icons-react";
 
 import { useEffect, useState } from "react";
+import { useDataManager } from "../utils/dataManager";
 
 export default function Scholarships() {
+  const { scholarships: scholarshipsManager, applications } = useDataManager();
   const [scholarships, setScholarships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
@@ -72,30 +74,32 @@ export default function Scholarships() {
   // FETCH DATA
   // -----------------------------
   useEffect(() => {
-    const fetchScholarships = async () => {
+    const loadScholarships = () => {
       try {
-        const response = await fetch(
-          "http://localhost:8000/api/scholarships"
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(`HTTP Error ${response.status}`);
-        }
-
-        setScholarships(
-          Array.isArray(data?.scholarships) ? data.scholarships : []
-        );
+        const data = scholarshipsManager.getAll();
+        setScholarships(data);
       } catch (error) {
-        console.error("Error fetching scholarships:", error);
+        console.error("Error loading scholarships:", error);
         setScholarships([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchScholarships();
+    loadScholarships();
+
+    // Listen for data changes
+    const handleDataChange = () => {
+      loadScholarships();
+    };
+
+    window.addEventListener('dataChange', handleDataChange);
+    window.addEventListener('storage', handleDataChange);
+
+    return () => {
+      window.removeEventListener('dataChange', handleDataChange);
+      window.removeEventListener('storage', handleDataChange);
+    };
   }, []);
 
  
@@ -106,6 +110,17 @@ export default function Scholarships() {
 
     try {
       await new Promise((res) => setTimeout(res, 800));
+
+      // Add application to localStorage
+      const scholarship = scholarships.find(s => s.id === id);
+      if (scholarship) {
+        applications.add({
+          scholarship: scholarship.title,
+          status: "Pending",
+          date: new Date().toISOString().split('T')[0],
+          scholarshipId: id,
+        });
+      }
 
       if (url && url.trim() !== "") {
         window.open(url, "_blank", "noopener,noreferrer");

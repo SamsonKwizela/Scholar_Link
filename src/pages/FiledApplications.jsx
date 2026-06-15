@@ -13,38 +13,40 @@ import {
   Alert,
 } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
+import { useDataManager } from "../utils/dataManager";
 
 export default function FiledApplications() {
+  const { applications: applicationsManager } = useDataManager();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchApplications = async () => {
+    const loadApplications = () => {
       try {
-        const response = await fetch(
-          "http://localhost:8000/api/applications"
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch applications");
-        }
-
-        setApplications(
-          Array.isArray(data.applications)
-            ? data.applications
-            : []
-        );
+        const data = applicationsManager.getAll();
+        setApplications(data);
       } catch (error) {
-        console.error("Error fetching applications:", error);
+        console.error("Error loading applications:", error);
         setApplications([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchApplications();
+    loadApplications();
+
+    // Listen for data changes
+    const handleDataChange = () => {
+      loadApplications();
+    };
+
+    window.addEventListener('dataChange', handleDataChange);
+    window.addEventListener('storage', handleDataChange);
+
+    return () => {
+      window.removeEventListener('dataChange', handleDataChange);
+      window.removeEventListener('storage', handleDataChange);
+    };
   }, []);
 
   if (loading) {
