@@ -150,16 +150,6 @@ export function TestModal({ opened, onClose, assessmentId, onComplete }) {
               >
                 Close
               </Button>
-              <Button
-                onClick={() => {
-                  setShowResults(false);
-                  setCurrentQuestionIndex(0);
-                  setAnswers({});
-                  setResult(null);
-                }}
-              >
-                Retake Test
-              </Button>
             </Group>
           </Stack>
         </Container>
