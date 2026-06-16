@@ -41,27 +41,22 @@ export default function UserProfile() {
   const { addNotification } = useNotifications();
   const [isEditing, setIsEditing] = useState(false);
 
-  // Load profile from localStorage or use default
+  // Load profile from localStorage or use empty state
   const [profile, setProfile] = useState(() => {
     const savedProfile = localStorage.getItem('userProfile');
     return savedProfile ? JSON.parse(savedProfile) : {
-      name: "Samson Kwizela",
-      role: "Computer Science Student",
-      email: "samson@example.com",
-      location: "Lusaka, Zambia",
-      university: "Cavendish University Zambia",
-      about:
-        "Passionate computing student focused on software engineering, networking, and building digital solutions.",
-      avatar: "https://i.pravatar.cc/300?img=12",
-      interests: ["Web Development", "Networking", "Chess", "Forex Trading", "Reading"],
+      name: "",
+      role: "",
+      email: "",
+      location: "",
+      university: "",
+      about: "",
+      avatar: "",
+      interests: [],
     };
   });
 
-  const [skills, setSkills] = useState([
-    { name: "React.js", level: 90, color: "blue" },
-    { name: "Node.js", level: 80, color: "green" },
-    { name: "MongoDB", level: 75, color: "orange" },
-  ]);
+  const [skills, setSkills] = useState([]);
 
   const [editingInterest, setEditingInterest] = useState(null);
   const [editingInterestValue, setEditingInterestValue] = useState("");
