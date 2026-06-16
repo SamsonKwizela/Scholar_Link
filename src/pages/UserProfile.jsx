@@ -16,6 +16,8 @@ import {
   ThemeIcon,
   Title,
   Select,
+  ActionIcon,
+  Tooltip,
 } from "@mantine/core";
 
 import {
@@ -30,7 +32,7 @@ import {
   IconCamera,
 } from "@tabler/icons-react";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNotifications } from "../context/NotificationContext";
 
 export default function UserProfile() {
@@ -51,6 +53,7 @@ export default function UserProfile() {
       about:
         "Passionate computing student focused on software engineering, networking, and building digital solutions.",
       avatar: "https://i.pravatar.cc/300?img=12",
+      interests: ["Web Development", "Networking", "Chess", "Forex Trading", "Reading"],
     };
   });
 
@@ -60,9 +63,15 @@ export default function UserProfile() {
     { name: "MongoDB", level: 75, color: "orange" },
   ]);
 
+  const [editingInterest, setEditingInterest] = useState(null);
+  const [editingInterestValue, setEditingInterestValue] = useState("");
+  const interestInputRef = useRef(null);
+
   // Save profile to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('userProfile', JSON.stringify(profile));
+    // Dispatch custom event to notify other components of profile changes
+    window.dispatchEvent(new CustomEvent('profileChange', { detail: profile }));
   }, [profile]);
 
   /* ================= HANDLERS ================= */
@@ -96,6 +105,8 @@ export default function UserProfile() {
         message: "Your profile picture has been successfully changed.",
         type: "success",
       });
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new CustomEvent('profileChange', { detail: { avatar: reader.result } }));
     };
     reader.readAsDataURL(file);
   };
@@ -567,20 +578,211 @@ const handleCoverLetterUpload = (file) => {
       <Card withBorder radius="lg" p="lg">
 
         <Group justify="space-between" mb="sm">
-          <Title order={5}>Interests</Title>
+          <div>
+            <Title order={5}>Interests</Title>
+            <Text size="xs" c="dimmed">
+              {profile.interests?.length || 0} interests added
+            </Text>
+          </div>
 
-          <Button size="xs" variant="light">
-            Edit
-          </Button>
+          <Group gap="xs">
+            {isEditing && profile.interests && profile.interests.length > 0 && (
+              <Button
+                size="xs"
+                variant="light"
+                color="red"
+                onClick={() => {
+                  if (confirm('Are you sure you want to clear all interests?')) {
+                    setProfile({ ...profile, interests: [] });
+                  }
+                }}
+              >
+                Clear All
+              </Button>
+            )}
+            <Button
+              size="xs"
+              variant={isEditing ? "filled" : "light"}
+              onClick={() => setIsEditing(!isEditing)}
+            >
+              {isEditing ? "Done" : "Edit"}
+            </Button>
+          </Group>
         </Group>
 
-        <Group>
-          <Badge size="lg">Web Development</Badge>
-          <Badge size="lg" color="green">Networking</Badge>
-          <Badge size="lg" color="orange">Chess</Badge>
-          <Badge size="lg" color="red">Forex Trading</Badge>
-          <Badge size="lg" color="violet">Reading</Badge>
-        </Group>
+        {isEditing ? (
+          <Stack>
+            <TextInput
+              ref={interestInputRef}
+              label="Add Interest"
+              placeholder="Type an interest and press Enter"
+              description="Press Enter to add, or click the + button"
+              rightSection={
+                <ActionIcon
+                  size="sm"
+                  color="blue"
+                  onClick={() => {
+                    if (interestInputRef.current && interestInputRef.current.value.trim()) {
+                      const currentInterests = profile.interests || [];
+                      setProfile({
+                        ...profile,
+                        interests: [...currentInterests, interestInputRef.current.value.trim()]
+                      });
+                      interestInputRef.current.value = '';
+                    }
+                  }}
+                >
+                  +
+                </ActionIcon>
+              }
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && e.target.value.trim()) {
+                  const currentInterests = profile.interests || [];
+                  setProfile({
+                    ...profile,
+                    interests: [...currentInterests, e.target.value.trim()]
+                  });
+                  e.target.value = '';
+                }
+              }}
+            />
+            <SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 5 }}>
+              {profile.interests && profile.interests.map((interest, index) => (
+                <Badge
+                  key={index}
+                  size="lg"
+                  variant="light"
+                  color={["blue", "green", "orange", "red", "violet", "cyan", "pink", "yellow"][index % 8]}
+                  style={{ 
+                    paddingRight: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    height: 'auto',
+                    minHeight: '32px'
+                  }}
+                  rightSection={
+                    <Group gap={2} style={{ marginLeft: '4px' }}>
+                      <Tooltip label="Edit">
+                        <ActionIcon
+                          size="xs"
+                          variant="transparent"
+                          color="blue"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingInterest(index);
+                            setEditingInterestValue(interest);
+                          }}
+                        >
+                          <IconEdit size={12} />
+                        </ActionIcon>
+                      </Tooltip>
+                      <Tooltip label="Delete">
+                        <ActionIcon
+                          size="xs"
+                          variant="transparent"
+                          color="red"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setProfile({
+                              ...profile,
+                              interests: profile.interests.filter((_, i) => i !== index)
+                            });
+                          }}
+                        >
+                          ×
+                        </ActionIcon>
+                      </Tooltip>
+                    </Group>
+                  }
+                >
+                  {editingInterest === index ? (
+                    <TextInput
+                      size="xs"
+                      defaultValue={editingInterestValue}
+                      autoFocus
+                      onBlur={(e) => {
+                        const newValue = e.target.value.trim();
+                        if (newValue) {
+                          const updatedInterests = [...profile.interests];
+                          updatedInterests[index] = newValue;
+                          setProfile({
+                            ...profile,
+                            interests: updatedInterests
+                          });
+                        }
+                        setEditingInterest(null);
+                        setEditingInterestValue("");
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const newValue = e.target.value.trim();
+                          if (newValue) {
+                            const updatedInterests = [...profile.interests];
+                            updatedInterests[index] = newValue;
+                            setProfile({
+                              ...profile,
+                              interests: updatedInterests
+                            });
+                          }
+                          setEditingInterest(null);
+                          setEditingInterestValue("");
+                        }
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ width: '120px', minWidth: '80px' }}
+                    />
+                  ) : (
+                    interest
+                  )}
+                </Badge>
+              ))}
+            </SimpleGrid>
+            {(!profile.interests || profile.interests.length === 0) && (
+              <Card p="md" withBorder style={{ backgroundColor: 'var(--mantine-color-gray-light)' }}>
+                <Stack align="center" spacing="xs">
+                  <Text c="dimmed" size="sm" ta="center">
+                    No interests added yet
+                  </Text>
+                  <Text size="xs" c="dimmed" ta="center">
+                    Add your interests above to showcase your passions!
+                  </Text>
+                </Stack>
+              </Card>
+            )}
+          </Stack>
+        ) : (
+          <Stack>
+            <SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 5 }}>
+              {profile.interests && profile.interests.map((interest, index) => (
+                <Badge
+                  key={index}
+                  size="lg"
+                  variant="filled"
+                  color={["blue", "green", "orange", "red", "violet", "cyan", "pink", "yellow"][index % 8]}
+                  style={{ 
+                    height: 'auto',
+                    minHeight: '32px'
+                  }}
+                >
+                  {interest}
+                </Badge>
+              ))}
+            </SimpleGrid>
+            {(!profile.interests || profile.interests.length === 0) && (
+              <Card p="md" withBorder style={{ backgroundColor: 'var(--mantine-color-gray-light)' }}>
+                <Stack align="center" spacing="xs">
+                  <Text c="dimmed" size="sm" ta="center">
+                    No interests added yet
+                  </Text>
+                  <Text size="xs" c="dimmed" ta="center">
+                    Click Edit to add your interests and showcase your passions!
+                  </Text>
+                </Stack>
+              </Card>
+            )}
+          </Stack>
+        )}
 
       </Card>
     </Grid.Col>

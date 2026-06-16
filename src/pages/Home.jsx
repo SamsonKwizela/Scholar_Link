@@ -46,7 +46,7 @@ function Home() {
     return savedProfile ? JSON.parse(savedProfile).avatar : "https://i.pravatar.cc/300?img=12";
   });
 
-  // Update avatar when localStorage changes
+  // Update avatar when localStorage changes or profile is updated
   useEffect(() => {
     const handleStorageChange = () => {
       const savedProfile = localStorage.getItem('userProfile');
@@ -55,8 +55,18 @@ function Home() {
       }
     };
 
+    const handleProfileChange = (event) => {
+      if (event.detail && event.detail.avatar) {
+        setAvatar(event.detail.avatar);
+      }
+    };
+
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('profileChange', handleProfileChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('profileChange', handleProfileChange);
+    };
   }, []);
 
   const navItems = [
@@ -163,10 +173,12 @@ function Home() {
               {isDark ? "Light Mode" : "Dark Mode"}
             </Button>
 
-            <Avatar 
-              radius="xl" 
+            <Avatar
+              radius="xl"
               src={avatar}
               alt="Profile"
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate("/UserProfile")}
             />
           </Group>
         </Group>
