@@ -19,7 +19,7 @@ import {
   IconBook2,
 } from "@tabler/icons-react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import OpportunitiesCards from "../components/OpportunitiesCards";
 import { DarkModeToggle } from "../components/DarkModeToggle";
@@ -27,6 +27,7 @@ import { DarkModeToggle } from "../components/DarkModeToggle";
 import "./LandingPage.css";
 
 function LandingPage() {
+  const navigate = useNavigate();
   return (
     <Box className="page">
 
@@ -43,15 +44,42 @@ function LandingPage() {
 
             <Group gap="sm" visibleFrom="md">
 
-              <Button variant="subtle" color="blue" component={Link} to="/user-dashboard">
+              <Button 
+                variant="subtle" 
+                color="blue" 
+                component={Link} 
+                to="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/");
+                }}
+              >
                 Home
               </Button>
 
-              <Button variant="subtle" color="blue" component={Link} to="/about">
+              <Button 
+                variant="subtle" 
+                color="blue" 
+                component={Link} 
+                to="/about"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/about");
+                }}
+              >
                 About
               </Button>
 
-              <Button variant="subtle" color="blue" component={Link} to="/contact">
+              <Button 
+                variant="subtle" 
+                color="blue" 
+                component={Link} 
+                to="/contact"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/contact");
+                }}
+              >
                 Contact
               </Button>
 
@@ -66,6 +94,10 @@ function LandingPage() {
                 radius="md"
                 component={Link}
                 to="/login"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/login");
+                }}
               >
                 Sign In
               </Button>
@@ -74,6 +106,10 @@ function LandingPage() {
                 radius="md"
                 component={Link}
                 to="/signup"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/signup");
+                }}
               >
                 Sign Up
               </Button>
@@ -124,6 +160,10 @@ function LandingPage() {
                   leftSection={<IconRocket size={18} />}
                   component={Link}
                   to="/login"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/login");
+                  }}
                 >
                   Get Started
                 </Button>
@@ -134,6 +174,10 @@ function LandingPage() {
                   variant="outline"
                   component={Link}
                   to="/about"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/about");
+                  }}
                 >
                   Learn More
                 </Button>
@@ -299,6 +343,10 @@ function LandingPage() {
               color="dark"
               component={Link}
               to="/signup"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/signup");
+              }}
             >
               Create Account
             </Button>

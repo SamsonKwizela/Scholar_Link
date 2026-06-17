@@ -108,7 +108,7 @@ function Login() {
             Don’t have an account?{" "}
             <span
               className="login-link"
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/signup")}
             >
               Sign up
             </span>

@@ -18,6 +18,7 @@ import {
   IconArrowRight,
 } from "@tabler/icons-react";
 
+import { Link } from "react-router-dom";
 import classes from "./OpportunitiesCards.module.css";
 
 const features = [
@@ -115,6 +116,8 @@ export default function OpportunitiesCards() {
               color={feature.color}
               rightSection={<IconArrowRight size={16} />}
               fullWidth
+              component={Link}
+              to="/login"
             >
               Explore More
             </Button>

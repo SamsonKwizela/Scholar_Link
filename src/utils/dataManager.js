@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 // Data Management Utility for localStorage-based "database"
 // This simulates a database using localStorage for the frontend-only application
 
@@ -84,10 +86,10 @@ export const internshipsManager = {
 
 // Export for use in components
 export const useDataManager = () => {
-  return {
+  return useMemo(() => ({
     scholarships: scholarshipsManager,
     applications: applicationsManager,
     assessments: assessmentsManager,
     internships: internshipsManager,
-  };
+  }), []);
 };

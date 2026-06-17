@@ -123,7 +123,8 @@ export default function Assessments() {
                 fullWidth
                 mt="md"
                 variant={item.status === "Completed" ? "light" : "filled"}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   if (item.status === "Completed") {
                     handleViewResult(item);
                   } else {

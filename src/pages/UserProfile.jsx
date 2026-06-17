@@ -294,7 +294,13 @@ const handleCoverLetterUpload = (file) => {
                     {isEditing ? "Save Changes" : "Edit Profile"}
                   </Button>
 
-                  <Button variant="outline">
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      // Preview functionality - could open a modal or navigate to a preview page
+                      alert("Preview feature coming soon!");
+                    }}
+                  >
                     Preview
                   </Button>
                 </Group>

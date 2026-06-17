@@ -224,7 +224,16 @@ export default function FiledApplications() {
                 )}
               </Stack>
 
-              <Button variant="light" fullWidth mt="md">
+              <Button 
+                variant="light" 
+                fullWidth 
+                mt="md"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedApplication(app);
+                  setModalOpened(true);
+                }}
+              >
                 View Details
               </Button>
             </Card>

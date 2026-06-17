@@ -5,11 +5,12 @@ import {
 } from "@tabler/icons-react";
 
 import { ActionIcon, Anchor, Group, Text } from "@mantine/core";
+import { Link } from "react-router-dom";
 import classes from "./Footer.module.css";
 
 const links = [
-  { link: "#", label: "Contact" },
-  { link: "#", label: "Privacy" },
+  { link: "/contact", label: "Contact" },
+  { link: "/about", label: "About" },
   { link: "#", label: "Blog" },
   { link: "#", label: "Store" },
   { link: "#", label: "Careers" },
@@ -20,9 +21,9 @@ export function FooterCentered() {
     <Anchor
       c="dimmed"
       key={link.label}
-      href={link.link}
+      component={Link}
+      to={link.link}
       lh={1}
-      onClick={(event) => event.preventDefault()}
       size="sm"
     >
       {link.label}

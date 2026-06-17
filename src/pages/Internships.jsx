@@ -269,7 +269,10 @@ export default function Internships() {
                   mt="xl"
                   loading={applyingId === item._id}
                   disabled={!item.isActive || !item.applicationUrl?.trim()}
-                  onClick={() => handleApply(item._id, item.applicationUrl)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleApply(item._id, item.applicationUrl);
+                  }}
                 >
                   {item.isActive
                     ? item.applicationUrl?.trim()

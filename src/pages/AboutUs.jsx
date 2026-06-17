@@ -17,6 +17,7 @@ import {
   IconUsers,
   IconRocket,
 } from "@tabler/icons-react";
+import { Link } from "react-router-dom";
 
 export default function AboutUs() {
   return (
@@ -38,11 +39,11 @@ export default function AboutUs() {
         </Text>
 
         <Group mt="md">
-          <Button radius="xl" size="md">
+          <Button radius="xl" size="md" component={Link} to="/login">
             Explore Opportunities
           </Button>
 
-          <Button variant="light" radius="xl" size="md">
+          <Button variant="light" radius="xl" size="md" component={Link} to="/contact">
             Learn More
           </Button>
         </Group>

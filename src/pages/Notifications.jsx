@@ -21,10 +21,16 @@ export default function Notifications() {
         <Group>
           {notifications.length > 0 && (
             <>
-              <Button size="xs" variant="light" onClick={markAllAsRead}>
+              <Button size="xs" variant="light" onClick={(e) => {
+                e.preventDefault();
+                markAllAsRead();
+              }}>
                 Mark All as Read
               </Button>
-              <Button size="xs" variant="outline" color="red" onClick={clearNotifications}>
+              <Button size="xs" variant="outline" color="red" onClick={(e) => {
+                e.preventDefault();
+                clearNotifications();
+              }}>
                 Clear All
               </Button>
             </>
@@ -88,7 +94,10 @@ export default function Notifications() {
                   <Button 
                     size="xs" 
                     variant="light"
-                    onClick={() => markAsRead(note.id)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      markAsRead(note.id);
+                    }}
                   >
                     Mark as read
                   </Button>

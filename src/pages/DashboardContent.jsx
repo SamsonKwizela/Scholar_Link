@@ -15,7 +15,9 @@ import {
   Select,
   Modal,
   Divider,
+  Alert,
 } from "@mantine/core";
+import { IconAlertCircle, IconSearch, IconFilter } from "@tabler/icons-react";
 import { useTheme } from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -163,184 +165,216 @@ export default function DashboardContent() {
       {/* WELCOME CARD */}
       <Card
         radius="lg"
-        p="xl"
+        p={{ base: "md", sm: "xl" }}
         mb="xl"
         withBorder
         className="card-welcome"
       >
-        <Group justify="space-between">
-          <div>
-            <Title order={2}>Welcome back 👋</Title>
-            <Text mt="sm" c="dimmed">
+        <Group justify="space-between" align={{ base: "flex-start", sm: "center" }}>
+          <div style={{ flex: 1 }}>
+            <Title order={{ base: 3, sm: 2 }}>Welcome back 👋</Title>
+            <Text mt="sm" c="dimmed" size={{ base: "sm", sm: "md" }}>
               Explore scholarships and complete your assessments.
             </Text>
           </div>
 
-          <Button onClick={() => navigate("/scholarships")}>
+          <Button 
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/scholarships");
+            }} 
+            mt={{ base: "sm", sm: 0 }}
+            size="sm"
+          >
             Explore Scholarships
           </Button>
         </Group>
       </Card>
 
-      {/* STATS CARDS */}
-      <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} mb="xl">
-        <Card withBorder p="lg">
-          <Text size="sm" c="dimmed">
-            Scholarships
-          </Text>
-          <Title order={2}>{stats.scholarships}</Title>
-        </Card>
-
-        <Card withBorder p="lg">
-          <Text size="sm" c="dimmed">
-            Applications
-          </Text>
-          <Title order={2}>{stats.applications}</Title>
-        </Card>
-
-        <Card withBorder p="lg">
-          <Text size="sm" c="dimmed">
-            Assessments
-          </Text>
-          <Title order={2}>{stats.assessments}</Title>
-        </Card>
-
-        <Card withBorder p="lg">
-          <Text size="sm" c="dimmed">
-            Internships
-          </Text>
-          <Title order={2}>{stats.internships}</Title>
-        </Card>
-      </SimpleGrid>
-
       {/* SCHOLARSHIPS */}
       <Group justify="space-between" mb="md">
         <Title order={3}>Recommended Scholarships</Title>
         <Group>
-          <TextInput placeholder="Search scholarship..." w={220} />
+          <TextInput 
+            placeholder="Search scholarship..." 
+            w={{ base: 150, sm: 220 }} 
+            leftSection={<IconSearch size={16} />}
+            display={{ base: "none", sm: "block" }}
+          />
           <Select
             placeholder="Filter field"
+            leftSection={<IconFilter size={16} />}
             data={["Technology", "Engineering", "Business"]}
-            w={180}
+            w={{ base: 130, sm: 180 }}
+            display={{ base: "none", sm: "block" }}
           />
         </Group>
       </Group>
-      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
-        {data.scholarships.map((item) => (
-          <Card
-            key={item.id}
-            shadow="sm"
-            radius="xl"
-            p="0"
-            withBorder
-            className="card-smooth"
-          >
-            <Image src={item.image} height={180} alt={item.title} />
+      {data.scholarships.length === 0 ? (
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          title="No Scholarships Available"
+          color="blue"
+          variant="light"
+          mb="xl"
+        >
+          No scholarships are currently available in the database. Check back later for new opportunities.
+        </Alert>
+      ) : (
+        <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
+          {data.scholarships.map((item) => (
+            <Card
+              key={item.id}
+              shadow="sm"
+              radius="xl"
+              p="0"
+              withBorder
+              className="card-smooth"
+            >
+              <Image src={item.image} height={{ base: 140, sm: 180 }} alt={item.title} />
 
-            <Stack p="lg">
-              <Group justify="space-between">
-                <Badge color="blue">{item.field}</Badge>
+              <Stack p={{ base: "md", sm: "lg" }}>
+                <Group justify="space-between">
+                  <Badge color="blue" size={{ base: "xs", sm: "sm" }}>{item.field}</Badge>
 
-                <Badge color={item.status === "Open" ? "green" : "orange"}>
-                  {item.status}
-                </Badge>
-              </Group>
+                  <Badge color={item.status === "Open" ? "green" : "orange"} size={{ base: "xs", sm: "sm" }}>
+                    {item.status}
+                  </Badge>
+                </Group>
 
-              <Title order={4}>{item.title}</Title>
+                <Title order={{ base: 5, sm: 4 }}>{item.title}</Title>
 
-              <Text size="sm" c="dimmed">
-                Deadline: {item.deadline}
-              </Text>
+                <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
+                  Deadline: {item.deadline}
+                </Text>
 
-              <Text fw={700} size="lg">
-                {item.amount}
-              </Text>
+                <Text fw={700} size={{ base: "md", sm: "lg" }}>
+                  {item.amount}
+                </Text>
 
-              <Progress value={item.status === "Open" ? 70 : 90} />
+                <Progress value={item.status === "Open" ? 70 : 90} size="sm" />
 
-              <Group grow mt="sm">
-                <Button
-                  variant="light"
-                  onClick={() => navigate("/scholarships")}
-                >
-                  View Details
-                </Button>
+                <Group grow mt="sm">
+                  <Button
+                    variant="light"
+                    size="sm"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate("/scholarships");
+                    }}
+                  >
+                    View Details
+                  </Button>
 
-                <Button
-                  onClick={() => handleApply(item)}
-                  loading={applyingFor === item.id}
-                  disabled={applyingFor !== null && applyingFor !== item.id}
-                >
-                  {applyingFor === item.id ? 'Submitting...' : 'Apply'}
-                </Button>
-              </Group>
-            </Stack>
-          </Card>
-        ))}
-      </SimpleGrid>
+                  <Button
+                    size="sm"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleApply(item);
+                    }}
+                    loading={applyingFor === item.id}
+                    disabled={applyingFor !== null && applyingFor !== item.id}
+                  >
+                    {applyingFor === item.id ? 'Submitting...' : 'Apply'}
+                  </Button>
+                </Group>
+              </Stack>
+            </Card>
+          ))}
+        </SimpleGrid>
+      )}
 
 
 
       {/* INTERNSHIPS */}
       <Group justify="space-between" mb="md" mt="xl">
         <Title order={3}>Recommended Internships</Title>
-        <Button variant="light" onClick={() => navigate("/internships")}>
+        <Button 
+          variant="light" 
+          size="sm"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/internships");
+          }}
+        >
           View All Internships
         </Button>
       </Group>
-      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
-        {data.internships.map((item) => (
-          <Card
-            key={item.id}
-            shadow="sm"
-            radius="xl"
-            p="0"
-            withBorder
-            className="card-smooth"
-          >
-            <Image src={item.image} height={180} alt={item.title} />
+      {data.internships.length === 0 ? (
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          title="No Internships Available"
+          color="blue"
+          variant="light"
+          mb="xl"
+        >
+          No internships are currently available in the database. Check back later for new opportunities.
+        </Alert>
+      ) : (
+        <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
+          {data.internships.map((item) => (
+            <Card
+              key={item.id}
+              shadow="sm"
+              radius="xl"
+              p="0"
+              withBorder
+              className="card-smooth"
+            >
+              <Image src={item.image} height={{ base: 140, sm: 180 }} alt={item.title} />
 
-            <Stack p="lg">
-              <Group justify="space-between">
-                <Badge color="blue">{item.company}</Badge>
+              <Stack p={{ base: "md", sm: "lg" }}>
+                <Group justify="space-between">
+                  <Badge color="blue" size={{ base: "xs", sm: "sm" }}>{item.company}</Badge>
 
-                <Badge color={item.status === "Open" ? "green" : "orange"}>
-                  {item.status}
-                </Badge>
-              </Group>
+                  <Badge color={item.status === "Open" ? "green" : "orange"} size={{ base: "xs", sm: "sm" }}>
+                    {item.status}
+                  </Badge>
+                </Group>
 
-              <Title order={4}>{item.title}</Title>
+                <Title order={{ base: 5, sm: 4 }}>{item.title}</Title>
 
-              <Text size="sm" c="dimmed">
-                Location: {item.location}
-              </Text>
+                <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
+                  Location: {item.location}
+                </Text>
 
-              <Text size="sm" c="dimmed">
-                Deadline: {item.deadline}
-              </Text>
+                <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
+                  Deadline: {item.deadline}
+                </Text>
 
-              <Group grow mt="sm">
-                <Button
-                  variant="light"
-                  onClick={() => navigate(`/internship/${item.id}`)}
-                >
-                  View Details
-                </Button>
+                <Group grow mt="sm">
+                  <Button
+                    variant="light"
+                    size="sm"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(`/internship/${item.id}`);
+                    }}
+                  >
+                    View Details
+                  </Button>
 
-                <Button onClick={() => navigate("/internships")}>
-                  Apply
-                </Button>
-              </Group>
-            </Stack>
-          </Card>
-        ))}
-      </SimpleGrid>
+                  <Button 
+                    size="sm" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate("/internships");
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </Group>
+              </Stack>
+            </Card>
+          ))}
+        </SimpleGrid>
+      )}
 
             {/* APPLICATIONS */}
       {data.applications.length > 0 && (
-        <Card radius="lg" p="lg" withBorder>
+        <Card radius="lg" p={{ base: "md", sm: "lg" }} withBorder>
           <Group justify="space-between" mb="md">
-            <Title order={4}>Application Status</Title>
+            <Title order={{ base: 5, sm: 4 }}>Application Status</Title>
           </Group>
 
           <Table striped highlightOnHover>
@@ -371,6 +405,7 @@ export default function DashboardContent() {
                           ? "yellow"
                           : "blue"
                       }
+                      size={{ base: "xs", sm: "sm" }}
                     >
                       {app.status}
                     </Badge>
@@ -383,16 +418,16 @@ export default function DashboardContent() {
       )}
 
       {/* PROFILE COMPLETION */}
-      <Card radius="lg" p="lg" withBorder>
+      <Card radius="lg" p={{ base: "md", sm: "lg" }} withBorder>
         <Group justify="space-between" mb="md">
           <div>
-            <Title order={4}>Profile Completion</Title>
-            <Text size="sm" c="dimmed">
+            <Title order={{ base: 5, sm: 4 }}>Profile Completion</Title>
+            <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
               Complete your profile to improve matches.
             </Text>
           </div>
 
-          <Badge>{calculateProfileCompletion()}%</Badge>
+          <Badge size={{ base: "xs", sm: "sm" }}>{calculateProfileCompletion()}%</Badge>
         </Group>
 
         <Progress value={calculateProfileCompletion()} size="lg" />

@@ -247,16 +247,20 @@ export default function Scholarships() {
 
                 {/* BUTTONS */}
                 <Group grow mt="xl">
-                  <Button onClick={() => setSelected(item)}>
+                  <Button onClick={(e) => {
+                    e.preventDefault();
+                    setSelected(item);
+                  }}>
                     View Details
                   </Button>
 
                   <Button
                     loading={applyingId === item._id}
                     disabled={applyingId !== null}
-                    onClick={() =>
-                      handleApply(item._id, item.applicationUrl)
-                    }
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleApply(item._id, item.applicationUrl);
+                    }}
                   >
                     Apply
                   </Button>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   AppShell,
   Burger,
@@ -9,9 +9,10 @@ import {
   Button,
   Stack,
   Title,
-  ScrollArea,
   Divider,
   Avatar,
+  SimpleGrid,
+  Card,
 } from "@mantine/core";
 import {
   IconHome,
@@ -31,6 +32,9 @@ import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { useNotifications } from "../context/NotificationContext";
+import { useDataManager } from "../utils/dataManager";
+import { UniversalHeader } from "../components/UniversalHeader";
+import { UniversalFooter } from "../components/UniversalFooter";
 
 function Home() {
   const navigate = useNavigate();
@@ -39,19 +43,45 @@ function Home() {
   const [opened, setOpened] = useState(false);
   const { isDark, toggleDark } = useTheme();
   const { unreadCount, markAllAsRead } = useNotifications();
+  const dataManager = useDataManager();
 
-  // Load profile avatar from localStorage
+  // Load profile data from localStorage
   const [avatar, setAvatar] = useState(() => {
     const savedProfile = localStorage.getItem('userProfile');
-    return savedProfile ? JSON.parse(savedProfile).avatar : "https://i.pravatar.cc/300?img=12";
+    return savedProfile ? JSON.parse(savedProfile).avatar : "";
   });
 
-  // Update avatar when localStorage changes or profile is updated
+  const [userName, setUserName] = useState(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    return savedProfile ? JSON.parse(savedProfile).name : "Student";
+  });
+
+  // Load statistics from real data
+  const [stats, setStats] = useState({
+    scholarships: 0,
+    applications: 0,
+    assessments: 0,
+    internships: 0,
+  });
+
+  // Load statistics from real data
+  const loadStats = useCallback(() => {
+    setStats({
+      scholarships: dataManager.scholarships.getCount(),
+      applications: dataManager.applications.getCount(),
+      assessments: dataManager.assessments.getCount(),
+      internships: dataManager.internships.getCount(),
+    });
+  }, [dataManager]);
+
+  // Update avatar and user data when localStorage changes or profile is updated
   useEffect(() => {
     const handleStorageChange = () => {
       const savedProfile = localStorage.getItem('userProfile');
       if (savedProfile) {
-        setAvatar(JSON.parse(savedProfile).avatar);
+        const profile = JSON.parse(savedProfile);
+        setAvatar(profile.avatar);
+        setUserName(profile.name || "Student");
       }
     };
 
@@ -59,20 +89,29 @@ function Home() {
       if (event.detail && event.detail.avatar) {
         setAvatar(event.detail.avatar);
       }
+      if (event.detail && event.detail.name) {
+        setUserName(event.detail.name);
+      }
     };
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('profileChange', handleProfileChange);
+    window.addEventListener('dataChange', loadStats);
+
+    // Initial load
+    loadStats();
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('profileChange', handleProfileChange);
+      window.removeEventListener('dataChange', loadStats);
     };
-  }, []);
+  }, [loadStats]);
 
   const navItems = [
-    { label: "Home", icon: IconHome, path: "/user-dashboard" },
+    { label: "Dashboard", icon: IconHome, path: "/user-dashboard" },
     { label: "Scholarships", icon: IconSchool, path: "/scholarships" },
-    { label: "Internship", icon: IconBriefcase, path: "/internships" },
+    { label: "Internships", icon: IconBriefcase, path: "/internships" },
     { label: "Applications", icon: IconFileText, path: "/filed-applications" },
     { label: "Assessments", icon: IconChecklist, path: "/assessments" },
     { label: "Notifications", icon: IconBell, path: "/notifications", hasBadge: true },
@@ -81,118 +120,83 @@ function Home() {
     { label: "Logout", icon: IconLogout, path: "/login", isLogout: true },
   ];
 
-  const scholarships = [
-    {
-      id: 1,
-      title: "Women in Tech Scholarship",
-      field: "Technology",
-      deadline: "12 June 2026",
-      status: "Open",
-      amount: "$5,000",
-      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
-    },
-
-    {
-      id: 2,
-      title: "STEM Excellence Grant",
-      field: "Engineering",
-      deadline: "25 June 2026",
-      status: "Closing Soon",
-      amount: "$8,000",
-      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3",
-    },
-
-    {
-      id: 3,
-      title: "Global Leaders Program",
-      field: "Business",
-      deadline: "5 July 2026",
-      status: "Open",
-      amount: "$10,000",
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644",
-    },
-  ];
-
-  const applications = [
-    { scholarship: "Women in Tech Scholarship", status: "Pending" },
-    { scholarship: "STEM Excellence Grant", status: "Assessment Required" },
-    { scholarship: "Africa Education Fund", status: "Approved" },
-  ];
-
   return (
     <AppShell
       padding="md"
       navbar={{
-        width: 280,
+        width: 300,
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
-      header={{ height: 70 }}
+      header={{ height: 64 }}
       styles={{
         main: {
-          backgroundColor: 'var(--bg)',
+          backgroundColor: 'var(--mantine-color-body)',
         },
         header: {
-          background: 'var(--surface)',
-          borderBottom: '1px solid var(--border)'
+          background: 'var(--mantine-color-body)',
+          borderBottom: '1px solid var(--mantine-color-default-border)'
         },
         navbar: {
-          background: 'var(--surface)',
-          borderRight: '1px solid var(--border)'
+          background: 'var(--mantine-color-body)',
+          borderRight: '1px solid var(--mantine-color-default-border)'
         }
       }}
     >
       {/* HEADER */}
       <AppShell.Header px="md">
-        <Group justify="space-between" h="100%">
-          <Group>
-            <Burger
-              opened={opened}
-              onClick={() => setOpened((o) => !o)}
-              hiddenFrom="sm"
-              size="sm"
-            />
-
-            <Title order={3} c="blue">
-              ScholarLink
-            </Title>
-          </Group>
-
-          <Group>
-            <Button
-              variant="light"
-              onClick={toggleDark}
-              leftSection={
-                isDark ? (
-                  <IconSun size={18} />
-                ) : (
-                  <IconMoon size={18} />
-                )
-              }
-            >
-              {isDark ? "Light Mode" : "Dark Mode"}
-            </Button>
-
-            <Avatar
-              radius="xl"
-              src={avatar}
-              alt="Profile"
-              style={{ cursor: 'pointer' }}
-              onClick={() => navigate("/UserProfile")}
-            />
-          </Group>
-        </Group>
+        <UniversalHeader opened={opened} setOpened={setOpened} showBurger={true} />
       </AppShell.Header>
 
       {/* SIDEBAR */}
       <AppShell.Navbar p="md">
-        <Group justify="space-between" mb="lg">
-          <Text fw={700}>Student Panel</Text>
-          <Badge color="green">Online</Badge>
-        </Group>
+        <Stack gap="md">
+          {/* User Info Card */}
+          <Card withBorder p="sm" radius="md">
+            <Group gap="sm">
+              <Avatar
+                size="md"
+                radius="xl"
+                src={avatar}
+                alt="Profile"
+                style={{ cursor: 'pointer' }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/UserProfile");
+                }}
+              />
+              <div style={{ flex: 1 }}>
+                <Text fw={600} size="sm" lineClamp={1}>{userName}</Text>
+                <Text size="xs" c="dimmed">Student</Text>
+              </div>
+            </Group>
+          </Card>
 
-        <ScrollArea className="sidebar-scroll">
+          {/* Statistics Cards */}
+          <SimpleGrid cols={2} gap="xs">
+            <Card withBorder p="xs" radius="sm">
+              <Text size="xs" c="dimmed">Scholarships</Text>
+              <Text fw={700} size="lg" c="blue">{stats.scholarships}</Text>
+            </Card>
+            <Card withBorder p="xs" radius="sm">
+              <Text size="xs" c="dimmed">Applications</Text>
+              <Text fw={700} size="lg" c="green">{stats.applications}</Text>
+            </Card>
+            <Card withBorder p="xs" radius="sm">
+              <Text size="xs" c="dimmed">Assessments</Text>
+              <Text fw={700} size="lg" c="orange">{stats.assessments}</Text>
+            </Card>
+            <Card withBorder p="xs" radius="sm">
+              <Text size="xs" c="dimmed">Internships</Text>
+              <Text fw={700} size="lg" c="violet">{stats.internships}</Text>
+            </Card>
+          </SimpleGrid>
+
+          <Divider />
+
+          {/* Navigation */}
           <Stack gap="xs">
+            <Text size="sm" fw={600} c="dimmed">MENU</Text>
             {navItems.map((item, i) => (
               <NavLink
                 key={i}
@@ -206,7 +210,8 @@ function Home() {
                   ) : null
                 }
                 active={location.pathname === item.path}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   if (item.isLogout) {
                     // Clear authentication token
                     localStorage.removeItem('token');
@@ -219,22 +224,19 @@ function Home() {
                     navigate(item.path);
                   }
                 }}
+                style={{ cursor: 'pointer' }}
               />
             ))}
           </Stack>
-        </ScrollArea>
-
-        <Divider my="md" />
-
-        <Text size="sm" c="dimmed">
-          Logged in as
-        </Text>
-        <Text fw={600}>Student User</Text>
+        </Stack>
       </AppShell.Navbar>
 
       {/* MAIN */}
       <AppShell.Main>
-        <Outlet />
+        <Stack style={{ minHeight: '100vh' }}>
+          <Outlet />
+          <UniversalFooter />
+        </Stack>
       </AppShell.Main>
     </AppShell>
   );

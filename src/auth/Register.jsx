@@ -103,7 +103,7 @@ const handleSubmit = async (values) => {
     console.log("User created:", data);
 
     form.reset();
-    navigate("/login")
+    navigate("/login");
   } catch (err) {
     setError(err.message);
   } finally {
