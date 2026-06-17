@@ -202,7 +202,7 @@ export default function Internships() {
               key={item._id}
               span={{ base: 12, sm: 6, md: 4 }}
             >
-              <Card shadow="md" radius="lg" padding="lg" withBorder>
+              <Card shadow="md" radius="lg" padding="lg" withBorder style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
 
                 {/* ICON + TITLE */}
                 <Group justify="space-between" mb="sm">

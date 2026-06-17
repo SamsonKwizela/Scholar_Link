@@ -116,7 +116,7 @@ export default function UserProfile() {
   const isEditing = activeEdit === id;
 
   return (
-    <Card withBorder radius="lg" p="lg">
+    <Card withBorder radius="lg" p="lg" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
 
       <Group justify="space-between" mb="sm">
         <Title order={5}>{title}</Title>
@@ -179,7 +179,7 @@ const handleCoverLetterUpload = (file) => {
       <Container size="xl">
 
         {/* ================= HEADER ================= */}
-        <Card radius="xl" shadow="sm" withBorder p="xl" mb="xl" className="profile-header">
+        <Card radius="xl" shadow="sm" withBorder p="xl" mb="xl" className="profile-header" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
           <Grid align="center">
 
             {/* AVATAR */}

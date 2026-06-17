@@ -35,7 +35,7 @@ export function UniversalHeader({ opened, setOpened, showBurger = true }) {
   }, []);
 
   return (
-    <Group justify="space-between" h="100%" px="md">
+    <Group justify="space-between" h="100%" px="md" style={{ transition: 'background-color 0.3s ease' }}>
       <Group>
         {showBurger && (
           <Burger

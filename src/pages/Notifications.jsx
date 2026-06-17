@@ -54,7 +54,8 @@ export default function Notifications() {
               radius="md"
               withBorder
               style={{ 
-                backgroundColor: note.status === 'unread' ? 'var(--mantine-color-blue-0)' : 'transparent'
+                backgroundColor: note.status === 'unread' ? 'var(--mantine-color-blue-0)' : 'transparent',
+                transition: 'background-color 0.3s ease, border-color 0.3s ease'
               }}
             >
               <Group justify="space-between" mb="xs">

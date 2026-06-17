@@ -169,6 +169,7 @@ export default function DashboardContent() {
         mb="xl"
         withBorder
         className="card-welcome"
+        style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}
       >
         <Group justify="space-between" align={{ base: "flex-start", sm: "center" }}>
           <div style={{ flex: 1 }}>
@@ -230,6 +231,7 @@ export default function DashboardContent() {
               p="0"
               withBorder
               className="card-smooth"
+              style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}
             >
               <Image src={item.image} height={{ base: 140, sm: 180 }} alt={item.title} />
 
@@ -320,6 +322,7 @@ export default function DashboardContent() {
               p="0"
               withBorder
               className="card-smooth"
+              style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}
             >
               <Image src={item.image} height={{ base: 140, sm: 180 }} alt={item.title} />
 
@@ -372,7 +375,7 @@ export default function DashboardContent() {
 
             {/* APPLICATIONS */}
       {data.applications.length > 0 && (
-        <Card radius="lg" p={{ base: "md", sm: "lg" }} withBorder>
+        <Card radius="lg" p={{ base: "md", sm: "lg" }} withBorder style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
           <Group justify="space-between" mb="md">
             <Title order={{ base: 5, sm: 4 }}>Application Status</Title>
           </Group>
@@ -418,7 +421,7 @@ export default function DashboardContent() {
       )}
 
       {/* PROFILE COMPLETION */}
-      <Card radius="lg" p={{ base: "md", sm: "lg" }} withBorder>
+      <Card radius="lg" p={{ base: "md", sm: "lg" }} withBorder style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
         <Group justify="space-between" mb="md">
           <div>
             <Title order={{ base: 5, sm: 4 }}>Profile Completion</Title>

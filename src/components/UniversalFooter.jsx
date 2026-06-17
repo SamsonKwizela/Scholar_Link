@@ -8,7 +8,8 @@ export function UniversalFooter() {
       background: 'var(--mantine-color-body)',
       borderTop: '1px solid var(--mantine-color-default-border)',
       padding: '2rem 0',
-      marginTop: 'auto'
+      marginTop: 'auto',
+      transition: 'background-color 0.3s ease, border-color 0.3s ease',
     }}>
       <Container size="xl">
         <Stack gap="md">

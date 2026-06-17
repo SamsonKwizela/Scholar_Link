@@ -4,13 +4,24 @@
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
-    border-color 0.25s ease;
+    border-color 0.25s ease,
+    background-color 0.3s ease;
   box-shadow: var(--shadow-sm);
   height: 100%;
 }
 
+[data-theme="dark"] .card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
 .card:hover {
   transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+}
+
+[data-theme="dark"] .card:hover {
   border-color: var(--accent);
   box-shadow: var(--shadow);
 }
@@ -21,9 +32,11 @@
   font-weight: 700;
   letter-spacing: 1px;
   color: var(--text-muted);
+  transition: color 0.3s ease;
 }
 
 .description {
   line-height: 1.7;
   color: var(--text);
+  transition: color 0.3s ease;
 }

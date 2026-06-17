@@ -181,7 +181,7 @@ export default function FiledApplications() {
               padding="lg"
               radius="md"
               withBorder
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', transition: 'background-color 0.3s ease, border-color 0.3s ease' }}
               onClick={() => {
                 setSelectedApplication(app);
                 setModalOpened(true);

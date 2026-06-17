@@ -7,6 +7,12 @@
   box-shadow: var(--shadow);
   overflow: hidden;
   height: 100vh;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .wrapper {
+  background: var(--bg);
+  border-color: var(--border);
 }
 
 /* Responsive */
@@ -25,6 +31,11 @@
   margin: auto;
   border-radius: 10px;
   height: 92.5vh;
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .form {
+  background-color: var(--surface);
 }
 
 /* Responsive */
@@ -84,6 +95,13 @@
   display: flex;
   flex-direction: column;
   margin: 20px;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] .contacts {
+  background: var(--surface-strong);
+  border-color: var(--border);
+  color: var(--text);
 }
 
 /* Responsive */
@@ -103,6 +121,7 @@
   letter-spacing: 0.5px;
   margin: 100px;
   text-align: center;
+  transition: color 0.3s ease;
 }
 
 /* Button */
@@ -111,6 +130,11 @@
   background: var(--accent);
   color: white;
   transition: all 0.25s ease;
+}
+
+[data-theme="dark"] .control {
+  background: var(--accent);
+  color: #0f172a;
 }
 
 /* Hover */

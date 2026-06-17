@@ -171,7 +171,7 @@ export default function Scholarships() {
         <Grid>
           {scholarships.map((item) => (
             <Grid.Col key={item._id} span={{ base: 12, sm: 6, lg: 4 }}>
-              <Card shadow="md" radius="lg" padding="lg" withBorder h="100%">
+              <Card shadow="md" radius="lg" padding="lg" withBorder h="100%" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
                 {/* HEADER */}
                 <Group justify="space-between" mb="md">
                   <Group>

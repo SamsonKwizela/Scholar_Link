@@ -15,6 +15,9 @@ export function ThemeProvider({ children }) {
     // Update document attribute and localStorage
     document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
     localStorage.setItem("theme", isDark ? "dark" : "light");
+    
+    // Add smooth transition to body
+    document.body.style.transition = "background-color 0.3s ease, color 0.3s ease";
   }, [isDark]);
 
   const toggleDark = () => setIsDark(!isDark);

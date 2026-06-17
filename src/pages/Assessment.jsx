@@ -93,7 +93,7 @@ export default function Assessments() {
       <Grid>
         {assessments.map((item) => (
           <Grid.Col key={item.id} span={{ base: 12, sm: 6, md: 4 }}>
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Card shadow="sm" padding="lg" radius="md" withBorder style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
               <Group justify="space-between" mb="xs">
                 <Text fw={600}>{item.title}</Text>
 

@@ -132,14 +132,17 @@ function Home() {
       styles={{
         main: {
           backgroundColor: 'var(--mantine-color-body)',
+          transition: 'background-color 0.3s ease',
         },
         header: {
           background: 'var(--mantine-color-body)',
-          borderBottom: '1px solid var(--mantine-color-default-border)'
+          borderBottom: '1px solid var(--mantine-color-default-border)',
+          transition: 'background-color 0.3s ease, border-color 0.3s ease',
         },
         navbar: {
           background: 'var(--mantine-color-body)',
-          borderRight: '1px solid var(--mantine-color-default-border)'
+          borderRight: '1px solid var(--mantine-color-default-border)',
+          transition: 'background-color 0.3s ease, border-color 0.3s ease',
         }
       }}
     >
@@ -152,7 +155,7 @@ function Home() {
       <AppShell.Navbar p="md">
         <Stack gap="md">
           {/* User Info Card */}
-          <Card withBorder p="sm" radius="md">
+          <Card withBorder p="sm" radius="md" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
             <Group gap="sm">
               <Avatar
                 size="md"
@@ -174,19 +177,19 @@ function Home() {
 
           {/* Statistics Cards */}
           <SimpleGrid cols={2} gap="xs">
-            <Card withBorder p="xs" radius="sm">
+            <Card withBorder p="xs" radius="sm" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
               <Text size="xs" c="dimmed">Scholarships</Text>
               <Text fw={700} size="lg" c="blue">{stats.scholarships}</Text>
             </Card>
-            <Card withBorder p="xs" radius="sm">
+            <Card withBorder p="xs" radius="sm" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
               <Text size="xs" c="dimmed">Applications</Text>
               <Text fw={700} size="lg" c="green">{stats.applications}</Text>
             </Card>
-            <Card withBorder p="xs" radius="sm">
+            <Card withBorder p="xs" radius="sm" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
               <Text size="xs" c="dimmed">Assessments</Text>
               <Text fw={700} size="lg" c="orange">{stats.assessments}</Text>
             </Card>
-            <Card withBorder p="xs" radius="sm">
+            <Card withBorder p="xs" radius="sm" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
               <Text size="xs" c="dimmed">Internships</Text>
               <Text fw={700} size="lg" c="violet">{stats.internships}</Text>
             </Card>
