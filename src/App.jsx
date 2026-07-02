@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Notifications } from "@mantine/notifications";
 
 import LandingPage from "./pages/LandingPage";
 import Register from "./auth/Register";
@@ -16,7 +15,7 @@ import Scholarships from "./pages/Scholarships";
 import FiledApplications from "./pages/FiledApplications";
 import Assessments from "./pages/Assessment";
 import Notifications from "./pages/Notifications";
-import Settings from "./pages/Settiings";
+import Settings from "./pages/Settings";
 import UserProfile from "./pages/UserProfile";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";

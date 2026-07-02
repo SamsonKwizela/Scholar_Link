@@ -9,12 +9,14 @@ import {
   Group,
   Loader,
   Center,
-  Modal,
+  Alert,
+  ThemeIcon,
   Stack,
   Divider,
-  ThemeIcon,
-  Alert,
-  SimpleGrid,
+  TextInput,
+  SegmentedControl,
+  Modal,
+  Notification,
 } from "@mantine/core";
 
 import {
@@ -30,13 +32,18 @@ import {
 
 import { useEffect, useState } from "react";
 import { useDataManager } from "../utils/dataManager";
+import { useNotifications } from "../context/NotificationContext";
+import { applyToOpportunity } from "../utils/api";
 
 export default function Scholarships() {
   const { scholarships: scholarshipsManager, applications } = useDataManager();
+  const { addNotification } = useNotifications();
   const [scholarships, setScholarships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [applyingId, setApplyingId] = useState(null);
+  const [confirmModalOpened, setConfirmModalOpened] = useState(false);
+  const [opportunityToApply, setOpportunityToApply] = useState(null);
 
   // -----------------------------
   // SAFE FORMATTERS
@@ -104,14 +111,27 @@ export default function Scholarships() {
 
  
   // APPLY FUNCTION
- 
-  const handleApply = async (id, url) => {
+  
+  const openConfirmModal = (id, url) => {
+    setOpportunityToApply({ id, url });
+    setConfirmModalOpened(true);
+  };
+
+  const handleApply = async () => {
+    if (!opportunityToApply) return;
+
+    const { id, url } = opportunityToApply;
     setApplyingId(id);
+    setConfirmModalOpened(false);
 
     try {
-      await new Promise((res) => setTimeout(res, 800));
+      // Call the backend API
+      const response = await applyToOpportunity({
+        scholarshipId: id,
+        type: 'scholarship'
+      });
 
-      // Add application to localStorage
+      // Add application to localStorage for tracking
       const scholarship = scholarships.find(s => s.id === id);
       if (scholarship) {
         applications.add({
@@ -122,13 +142,27 @@ export default function Scholarships() {
         });
       }
 
+      // Show success notification
+      addNotification({
+        title: "Application Submitted Successfully",
+        message: "Your profile information, CV, assessment results, and documents have been sent for review.",
+        type: "success",
+      });
+
+      // Open external URL if available
       if (url && url.trim() !== "") {
         window.open(url, "_blank", "noopener,noreferrer");
-      } else {
-        alert("Application link not available.");
       }
+    } catch (error) {
+      // Show error notification
+      addNotification({
+        title: "Application Failed",
+        message: error.message || "Failed to submit application. Please try again.",
+        type: "error",
+      });
     } finally {
       setApplyingId(null);
+      setOpportunityToApply(null);
     }
   };
 
@@ -256,10 +290,10 @@ export default function Scholarships() {
 
                   <Button
                     loading={applyingId === item._id}
-                    disabled={applyingId !== null}
+                    disabled={applyingId !== null || !item.isActive}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleApply(item._id, item.applicationUrl);
+                      openConfirmModal(item._id, item.applicationUrl);
                     }}
                   >
                     Apply
@@ -345,13 +379,50 @@ export default function Scholarships() {
               mt="md"
               rightSection={<IconWorld size={18} />}
               onClick={() =>
-                handleApply(selected._id, selected.applicationUrl)
+                openConfirmModal(selected._id, selected.applicationUrl)
               }
             >
               Apply Now
             </Button>
           </Stack>
         )}
+      </Modal>
+
+      {/* Confirmation Modal */}
+      <Modal
+        opened={confirmModalOpened}
+        onClose={() => {
+          setConfirmModalOpened(false);
+          setOpportunityToApply(null);
+        }}
+        title="Confirm Application"
+        centered
+        size="md"
+      >
+        <Stack gap="md">
+          <Text>
+            Are you sure you want to apply for this scholarship?
+          </Text>
+          <Group justify="flex-end" gap="sm">
+            <Button
+              variant="default"
+              onClick={() => {
+                setConfirmModalOpened(false);
+                setOpportunityToApply(null);
+              }}
+              disabled={applyingId !== null}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleApply}
+              loading={applyingId !== null}
+              disabled={applyingId !== null}
+            >
+              Confirm
+            </Button>
+          </Group>
+        </Stack>
       </Modal>
     </Container>
   );

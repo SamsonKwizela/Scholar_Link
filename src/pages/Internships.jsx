@@ -16,6 +16,7 @@ import {
   Divider,
   TextInput,
   SegmentedControl,
+  Modal,
 } from "@mantine/core";
 
 import {
@@ -26,15 +27,20 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import { useDataManager } from "../utils/dataManager";
+import { useNotifications } from "../context/NotificationContext";
+import { applyToOpportunity } from "../utils/api";
 
 export default function Internships() {
   const { internships: internshipsManager } = useDataManager();
+  const { addNotification } = useNotifications();
   const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [applyingId, setApplyingId] = useState(null);
   const [fetchError, setFetchError] = useState("");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [confirmModalOpened, setConfirmModalOpened] = useState(false);
+  const [opportunityToApply, setOpportunityToApply] = useState(null);
 
   useEffect(() => {
     const loadInternships = () => {
@@ -88,18 +94,46 @@ export default function Internships() {
     });
   }, [internships, search, statusFilter]);
 
-  const handleApply = async (id, url) => {
-    if (!url?.trim()) {
-      return;
-    }
+  const openConfirmModal = (id, url) => {
+    setOpportunityToApply({ id, url });
+    setConfirmModalOpened(true);
+  };
 
+  const handleApply = async () => {
+    if (!opportunityToApply) return;
+
+    const { id, url } = opportunityToApply;
     setApplyingId(id);
+    setConfirmModalOpened(false);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      window.open(url.trim(), "_blank", "noopener,noreferrer");
+      // Call the backend API
+      const response = await applyToOpportunity({
+        internshipId: id,
+        type: 'internship'
+      });
+
+      // Show success notification
+      addNotification({
+        title: "Application Submitted Successfully",
+        message: "Your profile information, CV, assessment results, and documents have been sent for review.",
+        type: "success",
+      });
+
+      // Open external URL if available
+      if (url && url.trim() !== "") {
+        window.open(url.trim(), "_blank", "noopener,noreferrer");
+      }
+    } catch (error) {
+      // Show error notification
+      addNotification({
+        title: "Application Failed",
+        message: error.message || "Failed to submit application. Please try again.",
+        type: "error",
+      });
     } finally {
       setApplyingId(null);
+      setOpportunityToApply(null);
     }
   };
 
@@ -268,10 +302,10 @@ export default function Internships() {
                   fullWidth
                   mt="xl"
                   loading={applyingId === item._id}
-                  disabled={!item.isActive || !item.applicationUrl?.trim()}
+                  disabled={!item.isActive || !item.applicationUrl?.trim() || applyingId !== null}
                   onClick={(e) => {
                     e.preventDefault();
-                    handleApply(item._id, item.applicationUrl);
+                    openConfirmModal(item._id, item.applicationUrl);
                   }}
                 >
                   {item.isActive
@@ -286,6 +320,43 @@ export default function Internships() {
           ))}
         </Grid>
       )}
+      
+      {/* Confirmation Modal */}
+      <Modal
+        opened={confirmModalOpened}
+        onClose={() => {
+          setConfirmModalOpened(false);
+          setOpportunityToApply(null);
+        }}
+        title="Confirm Application"
+        centered
+        size="md"
+      >
+        <Stack gap="md">
+          <Text>
+            Are you sure you want to apply for this internship?
+          </Text>
+          <Group justify="flex-end" gap="sm">
+            <Button
+              variant="default"
+              onClick={() => {
+                setConfirmModalOpened(false);
+                setOpportunityToApply(null);
+              }}
+              disabled={applyingId !== null}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleApply}
+              loading={applyingId !== null}
+              disabled={applyingId !== null}
+            >
+              Confirm
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Container>
   );
 }
