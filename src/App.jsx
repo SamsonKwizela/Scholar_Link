@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Notifications } from "@mantine/notifications";
 
 import LandingPage from "./pages/LandingPage";
 import Register from "./auth/Register";
@@ -20,6 +21,10 @@ import UserProfile from "./pages/UserProfile";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
 import Internships from "./pages/Internships";
+import AdminAssessments from "./pages/AdminAssessments";
+import StudentAssessments from "./pages/StudentAssessments";
+import AssessmentTaking from "./pages/AssessmentTaking";
+import AssessmentResult from "./pages/AssessmentResult";
 
 function App() {
   return (
@@ -56,7 +61,10 @@ function App() {
               element={<ApplicationSuccess />}
             />
             <Route path="/filed-applications" element={<FiledApplications />} />
-            <Route path="/assessments" element={<Assessments />} />
+            <Route path="/assessments" element={<StudentAssessments />} />
+            <Route path="/admin-assessments" element={<AdminAssessments />} />
+            <Route path="/assessment/:attemptId" element={<AssessmentTaking />} />
+            <Route path="/assessment-result/:attemptId" element={<AssessmentResult />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/UserProfile" element={<UserProfile />} />
             <Route path="/settings" element={<Settings />} />
