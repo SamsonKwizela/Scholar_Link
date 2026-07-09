@@ -181,39 +181,94 @@ const [coverLetterFile, setCoverLetterFile] = useState(null);
   };
 
   return (
-    <Box className="app-page">
+    <Box className="app-page" style={{ background: 'var(--bg-primary)' }}>
       <Container size="xl">
 
         {/* ================= HEADER ================= */}
-        <Card radius="xl" shadow="sm" withBorder p="xl" mb="xl" className="profile-header" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
+        <Card 
+          radius="2xl" 
+          shadow="lg" 
+          withBorder 
+          p="xl" 
+          mb="xl" 
+          className="profile-header animate-fade-in"
+          style={{ 
+            background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-800) 100%)',
+            border: 'none',
+            overflow: 'hidden',
+            position: 'relative'
+          }}
+        >
+          {/* Decorative elements */}
+          <div style={{
+            position: 'absolute',
+            top: '-50%',
+            right: '-10%',
+            width: '400px',
+            height: '400px',
+            background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+            pointerEvents: 'none'
+          }} />
+          
           <Grid align="center">
-
             {/* AVATAR */}
             <Grid.Col span={{ base: 12, md: 3 }}>
-              <Stack align="center">
+              <Stack align="center" gap="md">
 
-                <Avatar src={profile.avatar} size={150} radius={150} />
+                <div style={{ position: 'relative' }}>
+                  <Avatar 
+                    src={profile.avatar} 
+                    size={150} 
+                    radius="xl"
+                    style={{
+                      border: '4px solid rgba(255, 255, 255, 0.3)',
+                      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)'
+                    }}
+                  />
 
-                {isEditing && (
-                  <Button
-                    size="xs"
-                    leftSection={<IconCamera size={14} />}
-                    component="label"
-                  >
-                    Change Photo
-                    <input
-                      type="file"
-                      hidden
-                      accept="image/*"
-                      onChange={(e) =>
-                        handleAvatarChange(e.target.files[0])
-                      }
-                    />
-                  </Button>
-                )}
+                  {isEditing && (
+                    <Button
+                      size="xs"
+                      leftSection={<IconCamera size={14} />}
+                      component="label"
+                      style={{
+                        position: 'absolute',
+                        bottom: '8px',
+                        right: '8px',
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        color: 'var(--primary-700)',
+                        fontWeight: 600,
+                        '&:hover': {
+                          background: 'white',
+                          transform: 'scale(1.05)'
+                        }
+                      }}
+                    >
+                      Change
+                      <input
+                        type="file"
+                        hidden
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleAvatarChange(e.target.files[0])
+                        }
+                      />
+                    </Button>
+                  )}
+                </div>
 
-                <Badge color="green" size="lg">
-                  ONLINE
+                <Badge 
+                  color="green" 
+                  size="lg"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    color: 'white',
+                    fontWeight: 600,
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)'
+                  }}
+                >
+                  ● ONLINE
                 </Badge>
               </Stack>
             </Grid.Col>
@@ -230,6 +285,21 @@ const [coverLetterFile, setCoverLetterFile] = useState(null);
                       onChange={(e) =>
                         handleProfileChange("name", e.target.value)
                       }
+                      styles={{
+                        input: {
+                          background: 'rgba(255, 255, 255, 0.95)',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          color: 'var(--text-primary)',
+                          '&:focus': {
+                            borderColor: 'white',
+                            boxShadow: '0 0 0 3px rgba(255, 255, 255, 0.2)'
+                          }
+                        },
+                        label: {
+                          color: 'rgba(255, 255, 255, 0.9)',
+                          fontWeight: 600
+                        }
+                      }}
                     />
 
                     <TextInput
@@ -238,6 +308,21 @@ const [coverLetterFile, setCoverLetterFile] = useState(null);
                       onChange={(e) =>
                         handleProfileChange("role", e.target.value)
                       }
+                      styles={{
+                        input: {
+                          background: 'rgba(255, 255, 255, 0.95)',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          color: 'var(--text-primary)',
+                          '&:focus': {
+                            borderColor: 'white',
+                            boxShadow: '0 0 0 3px rgba(255, 255, 255, 0.2)'
+                          }
+                        },
+                        label: {
+                          color: 'rgba(255, 255, 255, 0.9)',
+                          fontWeight: 600
+                        }
+                      }}
                     />
 
                     <Group grow>
@@ -247,6 +332,21 @@ const [coverLetterFile, setCoverLetterFile] = useState(null);
                         onChange={(e) =>
                           handleProfileChange("email", e.target.value)
                         }
+                        styles={{
+                          input: {
+                            background: 'rgba(255, 255, 255, 0.95)',
+                            border: '1px solid rgba(255, 255, 255, 0.3)',
+                            color: 'var(--text-primary)',
+                            '&:focus': {
+                              borderColor: 'white',
+                              boxShadow: '0 0 0 3px rgba(255, 255, 255, 0.2)'
+                            }
+                          },
+                          label: {
+                            color: 'rgba(255, 255, 255, 0.9)',
+                            fontWeight: 600
+                          }
+                        }}
                       />
 
                       <TextInput
@@ -255,6 +355,21 @@ const [coverLetterFile, setCoverLetterFile] = useState(null);
                         onChange={(e) =>
                           handleProfileChange("location", e.target.value)
                         }
+                        styles={{
+                          input: {
+                            background: 'rgba(255, 255, 255, 0.95)',
+                            border: '1px solid rgba(255, 255, 255, 0.3)',
+                            color: 'var(--text-primary)',
+                            '&:focus': {
+                              borderColor: 'white',
+                              boxShadow: '0 0 0 3px rgba(255, 255, 255, 0.2)'
+                            }
+                          },
+                          label: {
+                            color: 'rgba(255, 255, 255, 0.9)',
+                            fontWeight: 600
+                          }
+                        }}
                       />
                     </Group>
 
@@ -264,6 +379,21 @@ const [coverLetterFile, setCoverLetterFile] = useState(null);
                       onChange={(e) =>
                         handleProfileChange("university", e.target.value)
                       }
+                      styles={{
+                        input: {
+                          background: 'rgba(255, 255, 255, 0.95)',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          color: 'var(--text-primary)',
+                          '&:focus': {
+                            borderColor: 'white',
+                            boxShadow: '0 0 0 3px rgba(255, 255, 255, 0.2)'
+                          }
+                        },
+                        label: {
+                          color: 'rgba(255, 255, 255, 0.9)',
+                          fontWeight: 600
+                        }
+                      }}
                     />
 
                     <Textarea
@@ -273,41 +403,102 @@ const [coverLetterFile, setCoverLetterFile] = useState(null);
                       onChange={(e) =>
                         handleProfileChange("about", e.target.value)
                       }
+                      styles={{
+                        input: {
+                          background: 'rgba(255, 255, 255, 0.95)',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          color: 'var(--text-primary)',
+                          '&:focus': {
+                            borderColor: 'white',
+                            boxShadow: '0 0 0 3px rgba(255, 255, 255, 0.2)'
+                          }
+                        },
+                        label: {
+                          color: 'rgba(255, 255, 255, 0.9)',
+                          fontWeight: 600
+                        }
+                      }}
                     />
                   </>
                 ) : (
                   <>
-                    <Title order={2}>{profile.name}</Title>
-                    <Text>{profile.role}</Text>
-                    <Text size="sm">{profile.email}</Text>
-                    <Text size="sm">{profile.location}</Text>
-                    <Text size="sm">{profile.university}</Text>
-                    <Text c="dimmed">{profile.about}</Text>
+                    <Title order={2} style={{ color: 'white', fontWeight: 800, letterSpacing: '-0.02em' }}>
+                      {profile.name || 'Your Name'}
+                    </Title>
+                    <Text style={{ color: 'rgba(255, 255, 255, 0.9)', fontSize: '1.1rem', fontWeight: 500 }}>
+                      {profile.role || 'Your Role'}
+                    </Text>
+                    <Group gap="md">
+                      <Group gap="xs">
+                        <IconMail size={16} style={{ color: 'rgba(255, 255, 255, 0.8)' }} />
+                        <Text size="sm" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>{profile.email || 'your@email.com'}</Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconMapPin size={16} style={{ color: 'rgba(255, 255, 255, 0.8)' }} />
+                        <Text size="sm" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>{profile.location || 'Your Location'}</Text>
+                      </Group>
+                    </Group>
+                    <Group gap="xs">
+                      <IconSchool size={16} style={{ color: 'rgba(255, 255, 255, 0.8)' }} />
+                      <Text size="sm" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>{profile.university || 'Your University'}</Text>
+                    </Group>
+                    <Text c="dimmed" style={{ color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.6, maxWidth: '600px' }}>
+                      {profile.about || 'Tell us about yourself...'}
+                    </Text>
                   </>
                 )}
 
                 {/* BUTTON TOGGLE */}
-                <Group mt="sm">
+                <Group mt="lg" gap="sm">
                   <Button
-                    leftSection={<IconEdit size={16} />}
+                    size="md"
+                    radius="lg"
+                    leftSection={<IconEdit size={18} />}
                     onClick={() => {
                       if (isEditing) {
                         handleSaveProfile();
                       }
                       setIsEditing((prev) => !prev);
                     }}
+                    styles={{
+                      root: {
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        color: 'var(--primary-700)',
+                        fontWeight: 600,
+                        '&:hover': {
+                          background: 'white',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)'
+                        }
+                      }
+                    }}
                   >
                     {isEditing ? "Save Changes" : "Edit Profile"}
                   </Button>
 
                   <Button 
+                    size="md"
+                    radius="lg"
                     variant="outline"
+                    leftSection={<IconUser size={18} />}
                     onClick={() => {
                       // Preview functionality - could open a modal or navigate to a preview page
                       alert("Preview feature coming soon!");
                     }}
+                    styles={{
+                      root: {
+                        border: '1px solid rgba(255, 255, 255, 0.4)',
+                        color: 'white',
+                        fontWeight: 600,
+                        '&:hover': {
+                          background: 'rgba(255, 255, 255, 0.15)',
+                          borderColor: 'rgba(255, 255, 255, 0.6)',
+                          transform: 'translateY(-2px)'
+                        }
+                      }
+                    }}
                   >
-                    Preview
+                    Preview Profile
                   </Button>
                 </Group>
 

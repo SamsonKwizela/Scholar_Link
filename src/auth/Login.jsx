@@ -8,7 +8,11 @@ import {
   Text,
   Stack,
   Loader,
+  Group,
+  Alert,
+  Divider,
 } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
@@ -62,55 +66,227 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
-      <Paper shadow="md" radius="md" className="login-card">
-        <Title order={2} className="login-title">
-          Sign In to ScholarLink
-        </Title>
+    <div className="login-page" style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, var(--primary-50) 0%, var(--bg-primary) 50%, var(--primary-100) 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '2rem',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Background decoration */}
+      <div style={{
+        position: 'absolute',
+        top: '-50%',
+        right: '-20%',
+        width: '600px',
+        height: '600px',
+        background: 'radial-gradient(circle, var(--primary-200) 0%, transparent 70%)',
+        opacity: 0.4,
+        pointerEvents: 'none'
+      }} />
+      
+      <div style={{
+        position: 'absolute',
+        bottom: '-30%',
+        left: '-10%',
+        width: '400px',
+        height: '400px',
+        background: 'radial-gradient(circle, var(--accent-cyan-light) 0%, transparent 70%)',
+        opacity: 0.2,
+        pointerEvents: 'none'
+      }} />
 
-        <Text className="login-subtitle">
-          Welcome back! Login to continue learning
-        </Text>
+      <Paper 
+        shadow="2xl" 
+        radius="2xl" 
+        className="login-card animate-scale-in"
+        style={{
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--border-color)',
+          padding: '3rem',
+          width: '100%',
+          maxWidth: '440px',
+          position: 'relative',
+          zIndex: 1,
+          boxShadow: 'var(--shadow-2xl)'
+        }}
+      >
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <Group 
+            gap="xs" 
+            justify="center" 
+            mb="md"
+            className="animate-fade-in"
+          >
+            <Title 
+              order={2} 
+              fw={800} 
+              style={{ 
+                background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                letterSpacing: '-0.02em'
+              }}
+            >
+              Scholar
+            </Title>
+            <Title 
+              order={2} 
+              fw={400} 
+              style={{ 
+                color: 'var(--text-secondary)',
+                letterSpacing: '-0.02em'
+              }}
+            >
+              Link
+            </Title>
+          </Group>
+          
+          <Title 
+            order={3} 
+            fw={800}
+            style={{ 
+              letterSpacing: '-0.02em',
+              marginBottom: '8px'
+            }}
+          >
+            Welcome back! 👋
+          </Title>
+          <Text c="dimmed" size="md">
+            Sign in to continue your journey
+          </Text>
+        </div>
 
-        <Stack mt="md">
+        <Stack mt="xl" gap="lg">
           {error && (
-            <Text color="red" size="sm">
-              {error}
-            </Text>
+            <Alert 
+              icon={<IconAlertCircle size={16} />}
+              color="red"
+              variant="light"
+              style={{
+                borderRadius: 'var(--radius-lg)',
+                border: '1px solid var(--error-light)'
+              }}
+            >
+              <Text size="sm" fw={500}>{error}</Text>
+            </Alert>
           )}
 
-          <TextInput
-            label="Email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-          />
+          <div>
+            <Text fw={600} size="sm" mb="xs" style={{ color: 'var(--text-primary)' }}>
+              Email Address
+            </Text>
+            <TextInput
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              size="md"
+              styles={{
+                input: {
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--border-color)',
+                  padding: '12px 16px',
+                  '&:focus': {
+                    borderColor: 'var(--primary-500)',
+                    boxShadow: '0 0 0 3px var(--primary-100)'
+                  }
+                }
+              }}
+            />
+          </div>
 
-          <PasswordInput
-            label="Password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-          />
+          <div>
+            <Text fw={600} size="sm" mb="xs" style={{ color: 'var(--text-primary)' }}>
+              Password
+            </Text>
+            <PasswordInput
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              size="md"
+              styles={{
+                input: {
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--border-color)',
+                  padding: '12px 16px',
+                  '&:focus': {
+                    borderColor: 'var(--primary-500)',
+                    boxShadow: '0 0 0 3px var(--primary-100)'
+                  }
+                }
+              }}
+            />
+          </div>
 
           <Button
             fullWidth
-            className="login-button"
+            size="md"
+            radius="lg"
             onClick={handleLogin}
             disabled={loading}
+            styles={{
+              root: {
+                background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
+                padding: '14px 24px',
+                fontWeight: 600,
+                fontSize: '1rem',
+                marginTop: '0.5rem',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: 'var(--shadow-lg), 0 0 25px rgba(59, 130, 246, 0.4)',
+                },
+                '&:disabled': {
+                  opacity: 0.6,
+                  cursor: 'not-allowed',
+                  transform: 'none'
+                }
+              }
+            }}
           >
-            {loading ? <Loader size="sm" color="white" /> : "Login"}
+            {loading ? (
+              <Group gap="xs" justify="center">
+                <Loader size="sm" color="white" />
+                <Text>Signing in...</Text>
+              </Group>
+            ) : (
+              "Sign In"
+            )}
           </Button>
 
-          <Text size="sm" ta="center" className="login-footer">
+          <Divider 
+            label="OR" 
+            labelPosition="center"
+            style={{ 
+              margin: '1.5rem 0',
+              color: 'var(--text-muted)'
+            }} 
+          />
+
+          <Text size="sm" ta="center" style={{ color: 'var(--text-secondary)' }}>
             Don’t have an account?{" "}
             <span
               className="login-link"
               onClick={() => navigate("/signup")}
+              style={{
+                color: 'var(--primary-600)',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  color: 'var(--primary-700)',
+                  textDecoration: 'underline'
+                }
+              }}
             >
-              Sign up
+              Create an account
             </span>
           </Text>
         </Stack>

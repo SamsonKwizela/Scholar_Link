@@ -128,20 +128,21 @@ function Home() {
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
-      header={{ height: 64 }}
+      header={{ height: 70 }}
       styles={{
         main: {
-          backgroundColor: 'var(--mantine-color-body)',
+          backgroundColor: 'var(--bg-primary)',
           transition: 'background-color 0.3s ease',
         },
         header: {
-          background: 'var(--mantine-color-body)',
-          borderBottom: '1px solid var(--mantine-color-default-border)',
+          background: 'var(--bg-secondary)',
+          borderBottom: '1px solid var(--border-color)',
+          backdropFilter: 'blur(10px)',
           transition: 'background-color 0.3s ease, border-color 0.3s ease',
         },
         navbar: {
-          background: 'var(--mantine-color-body)',
-          borderRight: '1px solid var(--mantine-color-default-border)',
+          background: 'var(--bg-secondary)',
+          borderRight: '1px solid var(--border-color)',
           transition: 'background-color 0.3s ease, border-color 0.3s ease',
         }
       }}
@@ -155,59 +156,107 @@ function Home() {
       <AppShell.Navbar p="md">
         <Stack gap="md">
           {/* User Info Card */}
-          <Card withBorder p="sm" radius="md" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
+          <Card withBorder p="md" radius="lg" style={{ 
+            background: 'linear-gradient(135deg, var(--primary-50) 0%, var(--bg-secondary) 100%)',
+            border: '1px solid var(--border-color)',
+            transition: 'all 0.3s ease' 
+          }}>
             <Group gap="sm">
               <Avatar
-                size="md"
+                size="lg"
                 radius="xl"
                 src={avatar}
                 alt="Profile"
-                style={{ cursor: 'pointer' }}
+                style={{ 
+                  cursor: 'pointer',
+                  border: '3px solid var(--primary-200)',
+                  transition: 'all 0.3s ease'
+                }}
                 onClick={(e) => {
                   e.preventDefault();
                   navigate("/UserProfile");
                 }}
               />
               <div style={{ flex: 1 }}>
-                <Text fw={600} size="sm" lineClamp={1}>{userName}</Text>
-                <Text size="xs" c="dimmed">Student</Text>
+                <Text fw={700} size="sm" lineClamp={1}>{userName}</Text>
+                <Text size="xs" c="dimmed" fw={500}>Student</Text>
               </div>
             </Group>
           </Card>
 
           {/* Statistics Cards */}
-          <SimpleGrid cols={2} gap="xs">
-            <Card withBorder p="xs" radius="sm" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
-              <Text size="xs" c="dimmed">Scholarships</Text>
-              <Text fw={700} size="lg" c="blue">{stats.scholarships}</Text>
+          <SimpleGrid cols={2} gap="sm">
+            <Card withBorder p="sm" radius="lg" style={{ 
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}>
+              <Text size="xs" c="dimmed" fw={500}>Scholarships</Text>
+              <Text fw={800} size="xl" c="blue" style={{ 
+                background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>{stats.scholarships}</Text>
             </Card>
-            <Card withBorder p="xs" radius="sm" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
-              <Text size="xs" c="dimmed">Applications</Text>
-              <Text fw={700} size="lg" c="green">{stats.applications}</Text>
+            <Card withBorder p="sm" radius="lg" style={{ 
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}>
+              <Text size="xs" c="dimmed" fw={500}>Applications</Text>
+              <Text fw={800} size="xl" c="green" style={{ 
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>{stats.applications}</Text>
             </Card>
-            <Card withBorder p="xs" radius="sm" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
-              <Text size="xs" c="dimmed">Assessments</Text>
-              <Text fw={700} size="lg" c="orange">{stats.assessments}</Text>
+            <Card withBorder p="sm" radius="lg" style={{ 
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}>
+              <Text size="xs" c="dimmed" fw={500}>Assessments</Text>
+              <Text fw={800} size="xl" c="orange" style={{ 
+                background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>{stats.assessments}</Text>
             </Card>
-            <Card withBorder p="xs" radius="sm" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
-              <Text size="xs" c="dimmed">Internships</Text>
-              <Text fw={700} size="lg" c="violet">{stats.internships}</Text>
+            <Card withBorder p="sm" radius="lg" style={{ 
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}>
+              <Text size="xs" c="dimmed" fw={500}>Internships</Text>
+              <Text fw={800} size="xl" c="violet" style={{ 
+                background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>{stats.internships}</Text>
             </Card>
           </SimpleGrid>
 
-          <Divider />
+          <Divider my="sm" />
 
           {/* Navigation */}
           <Stack gap="xs">
-            <Text size="sm" fw={600} c="dimmed">MENU</Text>
+            <Text size="xs" fw={700} c="dimmed" tt="uppercase" pl="xs">Menu</Text>
             {navItems.map((item, i) => (
               <NavLink
                 key={i}
                 label={item.label}
-                leftSection={<item.icon size={18} />}
+                leftSection={<item.icon size={20} stroke={1.5} />}
                 rightSection={
                   item.hasBadge && unreadCount > 0 ? (
-                    <Badge size="xs" color="red" variant="filled">
+                    <Badge size="sm" color="red" variant="filled" circle>
                       {unreadCount}
                     </Badge>
                   ) : null
@@ -227,7 +276,18 @@ function Home() {
                     navigate(item.path);
                   }
                 }}
-                style={{ cursor: 'pointer' }}
+                style={{ 
+                  cursor: 'pointer',
+                  borderRadius: 'var(--radius-lg)',
+                  marginBottom: '2px'
+                }}
+                styles={{
+                  root: {
+                    '&:hover': {
+                      background: 'var(--bg-tertiary)',
+                    }
+                  }
+                }}
               />
             ))}
           </Stack>

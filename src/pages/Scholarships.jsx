@@ -179,16 +179,33 @@ export default function Scholarships() {
   return (
     <Container size="xl" py="xl">
       {/* HEADER */}
-      <Group justify="space-between" mb="xl">
+      <Group justify="space-between" mb="xl" className="animate-fade-in">
         <div>
-          <Title order={2}>Available Scholarships</Title>
+          <Title 
+            order={2} 
+            fw={800}
+            style={{ 
+              letterSpacing: '-0.02em',
+              marginBottom: '4px'
+            }}
+          >
+            Available Scholarships
+          </Title>
           <Text c="dimmed" size="sm">
             Discover and apply for scholarships from different providers
           </Text>
         </div>
 
-        <Badge size="lg" color="blue" variant="light">
-          {scholarships.length} Scholarships
+        <Badge 
+          size="lg" 
+          color="blue" 
+          variant="light"
+          style={{ 
+            fontWeight: 600,
+            padding: '8px 16px'
+          }}
+        >
+          {scholarships.length} {scholarships.length === 1 ? 'Scholarship' : 'Scholarships'}
         </Badge>
       </Group>
 
@@ -203,21 +220,48 @@ export default function Scholarships() {
         </Alert>
       ) : (
         <Grid>
-          {scholarships.map((item) => (
-            <Grid.Col key={item._id} span={{ base: 12, sm: 6, lg: 4 }}>
-              <Card shadow="md" radius="lg" padding="lg" withBorder h="100%" style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
+          {scholarships.map((item, index) => (
+            <Grid.Col key={item._id} span={{ base: 12, sm: 6, lg: 4 }} className="animate-fade-in" style={{ animationDelay: `${index * 0.05}s` }}>
+              <Card 
+                shadow="md" 
+                radius="xl" 
+                padding="lg" 
+                withBorder 
+                h="100%"
+                className="card-smooth"
+                style={{ 
+                  transition: 'all 0.3s ease',
+                  overflow: 'hidden'
+                }}
+              >
                 {/* HEADER */}
-                <Group justify="space-between" mb="md">
-                  <Group>
-                    <ThemeIcon size={45} radius="md" variant="light">
+                <Group justify="space-between" mb="md" align="flex-start">
+                  <Group gap="sm" align="center">
+                    <ThemeIcon 
+                      size={50} 
+                      radius="lg" 
+                      variant="light"
+                      style={{
+                        background: 'linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%)',
+                        color: 'white',
+                        boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                      }}
+                    >
                       <IconSchool size={24} />
                     </ThemeIcon>
 
-                    <div>
-                      <Text fw={700} lineClamp={2}>
+                    <div style={{ flex: 1 }}>
+                      <Text 
+                        fw={700} 
+                        lineClamp={2}
+                        style={{ 
+                          letterSpacing: '-0.01em',
+                          lineHeight: 1.3
+                        }}
+                      >
                         {item.title || "Untitled Scholarship"}
                       </Text>
-                      <Text size="sm" c="dimmed">
+                      <Text size="sm" c="dimmed" fw={500}>
                         {item.provider || "Unknown Provider"}
                       </Text>
                     </div>
@@ -226,6 +270,10 @@ export default function Scholarships() {
                   <Badge
                     color={item.isActive ? "green" : "red"}
                     variant="light"
+                    style={{ 
+                      fontWeight: 600,
+                      flexShrink: 0
+                    }}
                   >
                     {item.isActive ? "Active" : "Closed"}
                   </Badge>
@@ -234,30 +282,36 @@ export default function Scholarships() {
                 <Divider my="sm" />
 
                 {/* DESCRIPTION */}
-                <Text size="sm" c="dimmed" lineClamp={3} mb="md">
+                <Text 
+                  size="sm" 
+                  c="dimmed" 
+                  lineClamp={3} 
+                  mb="md"
+                  style={{ lineHeight: 1.6 }}
+                >
                   {item.description || "No description available."}
                 </Text>
 
                 {/* DETAILS */}
-                <Stack gap="xs">
-                  <Group gap="xs">
-                    <IconCategory size={16} />
-                    <Text size="sm">{item.category || "General"}</Text>
+                <Stack gap="xs" mb="md">
+                  <Group gap="xs" align="center">
+                    <IconCategory size={16} style={{ color: 'var(--primary-600)' }} />
+                    <Text size="sm" fw={500}>{item.category || "General"}</Text>
                   </Group>
 
-                  <Group gap="xs">
-                    <IconAward size={16} />
-                    <Text size="sm">{item.level || "All Levels"}</Text>
+                  <Group gap="xs" align="center">
+                    <IconAward size={16} style={{ color: 'var(--accent-gold)' }} />
+                    <Text size="sm" fw={500}>{item.level || "All Levels"}</Text>
                   </Group>
 
-                  <Group gap="xs">
-                    <IconMapPin size={16} />
-                    <Text size="sm">{formatLocation(item.location)}</Text>
+                  <Group gap="xs" align="center">
+                    <IconMapPin size={16} style={{ color: 'var(--accent-cyan)' }} />
+                    <Text size="sm" fw={500}>{formatLocation(item.location)}</Text>
                   </Group>
 
-                  <Group gap="xs">
-                    <IconCalendar size={16} />
-                    <Text size="sm">
+                  <Group gap="xs" align="center">
+                    <IconCalendar size={16} style={{ color: 'var(--accent-teal)' }} />
+                    <Text size="sm" fw={500}>
                       {item.deadline
                         ? new Date(item.deadline).toLocaleDateString()
                         : "No deadline"}
@@ -269,9 +323,13 @@ export default function Scholarships() {
                 {Array.isArray(item.tags) && item.tags.length > 0 && (
                   <>
                     <Divider my="md" />
-                    <Group gap="xs">
+                    <Group gap="xs" mb="md">
                       {item.tags.slice(0, 3).map((tag, i) => (
-                        <Badge key={i} variant="outline">
+                        <Badge 
+                          key={i} 
+                          variant="light"
+                          style={{ fontWeight: 500 }}
+                        >
                           {tag}
                         </Badge>
                       ))}
@@ -280,23 +338,49 @@ export default function Scholarships() {
                 )}
 
                 {/* BUTTONS */}
-                <Group grow mt="xl">
-                  <Button onClick={(e) => {
-                    e.preventDefault();
-                    setSelected(item);
-                  }}>
+                <Group grow mt="xl" gap="sm">
+                  <Button
+                    variant="light"
+                    size="sm"
+                    radius="md"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelected(item);
+                    }}
+                    styles={{
+                      root: {
+                        fontWeight: 600,
+                        '&:hover': {
+                          background: 'var(--bg-tertiary)',
+                        }
+                      }
+                    }}
+                  >
                     View Details
                   </Button>
 
                   <Button
+                    size="sm"
+                    radius="md"
                     loading={applyingId === item._id}
                     disabled={applyingId !== null || !item.isActive}
                     onClick={(e) => {
                       e.preventDefault();
                       openConfirmModal(item._id, item.applicationUrl);
                     }}
+                    styles={{
+                      root: {
+                        background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
+                        fontWeight: 600,
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%)',
+                          transform: 'translateY(-1px)',
+                          boxShadow: 'var(--shadow-md), 0 0 15px rgba(59, 130, 246, 0.3)',
+                        }
+                      }
+                    }}
                   >
-                    Apply
+                    {applyingId === item._id ? 'Applying...' : 'Apply Now'}
                   </Button>
                 </Group>
               </Card>
@@ -309,42 +393,62 @@ export default function Scholarships() {
       <Modal
         opened={!!selected}
         onClose={() => setSelected(null)}
-        title="Scholarship Details"
+        title={
+          <Title order={3} fw={700}>
+            Scholarship Details
+          </Title>
+        }
         centered
         size="lg"
+        styles={{
+          header: {
+            background: 'var(--bg-secondary)',
+            borderBottom: '1px solid var(--border-color)',
+            padding: '1.5rem',
+          },
+          body: {
+            padding: '1.5rem',
+          }
+        }}
       >
         {selected && (
           <Stack gap="md">
             <div>
-              <Title order={3}>{selected.title}</Title>
-              <Text c="dimmed">{selected.provider}</Text>
+              <Title order={3} fw={800} style={{ letterSpacing: '-0.02em' }}>
+                {selected.title}
+              </Title>
+              <Text c="dimmed" fw={500} mt="xs">
+                {selected.provider}
+              </Text>
             </div>
 
             <Divider />
 
-            <Text size="sm">{selected.description}</Text>
+            <Text size="sm" style={{ lineHeight: 1.7 }}>
+              {selected.description}
+            </Text>
 
-            <SimpleGrid cols={2}>
-              <Card withBorder p="sm">
-                <Text fw={600}>Category</Text>
-                <Text size="sm">{selected.category}</Text>
+            <SimpleGrid cols={2} spacing="md">
+              <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
+                <Text fw={600} size="sm" c="dimmed" mb="xs">Category</Text>
+                <Text fw={700} size="md">{selected.category}</Text>
               </Card>
 
-              <Card withBorder p="sm">
-                <Text fw={600}>Level</Text>
-                <Text size="sm">{selected.level}</Text>
+              <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
+                <Text fw={600} size="sm" c="dimmed" mb="xs">Level</Text>
+                <Text fw={700} size="md">{selected.level}</Text>
               </Card>
 
-              <Card withBorder p="sm">
-                <Text fw={600}>Location</Text>
-                <Text size="sm">
+              <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
+                <Text fw={600} size="sm" c="dimmed" mb="xs">Location</Text>
+                <Text fw={700} size="md">
                   {formatLocation(selected.location)}
                 </Text>
               </Card>
 
-              <Card withBorder p="sm">
-                <Text fw={600}>Deadline</Text>
-                <Text size="sm">
+              <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
+                <Text fw={600} size="sm" c="dimmed" mb="xs">Deadline</Text>
+                <Text fw={700} size="md">
                   {selected.deadline
                     ? new Date(selected.deadline).toLocaleDateString()
                     : "N/A"}
@@ -354,33 +458,46 @@ export default function Scholarships() {
 
             <Divider />
 
-            <div>
+            <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
               <Group mb="xs">
-                <IconBook size={18} />
-                <Text fw={700}>Requirements</Text>
+                <IconBook size={18} style={{ color: 'var(--primary-600)' }} />
+                <Text fw={700} size="md">Requirements</Text>
               </Group>
-              <Text size="sm">
+              <Text size="sm" style={{ lineHeight: 1.6 }}>
                 {formatRequirements(selected.requirements)}
               </Text>
-            </div>
+            </Card>
 
-            <div>
+            <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
               <Group mb="xs">
-                <IconAward size={18} />
-                <Text fw={700}>Benefits</Text>
+                <IconAward size={18} style={{ color: 'var(--accent-gold)' }} />
+                <Text fw={700} size="md">Benefits</Text>
               </Group>
-              <Text size="sm">
+              <Text size="sm" style={{ lineHeight: 1.6 }}>
                 {formatBenefits(selected.benefits)}
               </Text>
-            </div>
+            </Card>
 
             <Button
               fullWidth
               mt="md"
+              size="lg"
+              radius="lg"
               rightSection={<IconWorld size={18} />}
               onClick={() =>
                 openConfirmModal(selected._id, selected.applicationUrl)
               }
+              styles={{
+                root: {
+                  background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
+                  fontWeight: 600,
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%)',
+                    transform: 'translateY(-1px)',
+                    boxShadow: 'var(--shadow-lg), 0 0 20px rgba(59, 130, 246, 0.3)',
+                  }
+                }
+              }}
             >
               Apply Now
             </Button>
@@ -395,22 +512,44 @@ export default function Scholarships() {
           setConfirmModalOpened(false);
           setOpportunityToApply(null);
         }}
-        title="Confirm Application"
+        title={
+          <Title order={4} fw={700}>
+            Confirm Application
+          </Title>
+        }
         centered
         size="md"
+        styles={{
+          header: {
+            background: 'var(--bg-secondary)',
+            borderBottom: '1px solid var(--border-color)',
+            padding: '1.5rem',
+          },
+          body: {
+            padding: '1.5rem',
+          }
+        }}
       >
         <Stack gap="md">
-          <Text>
-            Are you sure you want to apply for this scholarship?
+          <Text size="md" style={{ lineHeight: 1.6 }}>
+            Are you sure you want to apply for this scholarship? Your profile information, CV, and documents will be submitted for review.
           </Text>
-          <Group justify="flex-end" gap="sm">
+          <Group justify="flex-end" gap="sm" mt="md">
             <Button
-              variant="default"
+              variant="light"
               onClick={() => {
                 setConfirmModalOpened(false);
                 setOpportunityToApply(null);
               }}
               disabled={applyingId !== null}
+              styles={{
+                root: {
+                  fontWeight: 600,
+                  '&:hover': {
+                    background: 'var(--bg-tertiary)',
+                  }
+                }
+              }}
             >
               Cancel
             </Button>
@@ -418,8 +557,19 @@ export default function Scholarships() {
               onClick={handleApply}
               loading={applyingId !== null}
               disabled={applyingId !== null}
+              styles={{
+                root: {
+                  background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
+                  fontWeight: 600,
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%)',
+                    transform: 'translateY(-1px)',
+                    boxShadow: 'var(--shadow-md), 0 0 15px rgba(59, 130, 246, 0.3)',
+                  }
+                }
+              }}
             >
-              Confirm
+              Confirm Application
             </Button>
           </Group>
         </Stack>

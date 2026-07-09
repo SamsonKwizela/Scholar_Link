@@ -43,14 +43,48 @@ export function UniversalHeader({ opened, setOpened, showBurger = true }) {
             onClick={() => setOpened((o) => !o)}
             hiddenFrom="sm"
             size="sm"
+            styles={{
+              root: {
+                '&:hover': {
+                  background: 'var(--bg-tertiary)',
+                }
+              }
+            }}
           />
         )}
 
-        <Group gap="xs" onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>
-          <Title order={3} c="blue" fw={800}>
+        <Group 
+          gap="xs" 
+          onClick={() => navigate("/")} 
+          style={{ 
+            cursor: 'pointer',
+            padding: '4px 8px',
+            borderRadius: 'var(--radius-lg)',
+            transition: 'all 0.2s ease'
+          }}
+          className="animate-fade-in"
+        >
+          <Title 
+            order={3} 
+            fw={800} 
+            style={{ 
+              background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              letterSpacing: '-0.02em'
+            }}
+          >
             Scholar
           </Title>
-          <Title order={3} c="gray" fw={400}>
+          <Title 
+            order={3} 
+            fw={400} 
+            style={{ 
+              color: 'var(--text-secondary)',
+              letterSpacing: '-0.02em'
+            }}
+          >
             Link
           </Title>
         </Group>
@@ -58,16 +92,23 @@ export function UniversalHeader({ opened, setOpened, showBurger = true }) {
 
       <Group gap="sm">
         <Button
-          variant="light"
+          variant="subtle"
           size="sm"
           onClick={toggleDark}
           leftSection={
             isDark ? (
-              <IconSun size={16} />
+              <IconSun size={18} />
             ) : (
-              <IconMoon size={16} />
+              <IconMoon size={18} />
             )
           }
+          styles={{
+            root: {
+              '&:hover': {
+                background: 'var(--bg-tertiary)',
+              }
+            }
+          }}
         >
           {isDark ? "Light" : "Dark"}
         </Button>
@@ -77,7 +118,12 @@ export function UniversalHeader({ opened, setOpened, showBurger = true }) {
           size="md"
           src={avatar}
           alt="Profile"
-          style={{ cursor: 'pointer' }}
+          style={{ 
+            cursor: 'pointer',
+            border: '2px solid var(--border-color)',
+            transition: 'all 0.3s ease'
+          }}
+          className="animate-scale-in"
           onClick={(e) => {
             e.preventDefault();
             navigate("/UserProfile");

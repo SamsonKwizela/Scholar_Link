@@ -149,18 +149,52 @@ export default function DashboardContent() {
     <Container fluid>
       {/* WELCOME CARD */}
       <Card
-        radius="lg"
+        radius="xl"
         p={{ base: "md", sm: "xl" }}
         mb="xl"
         withBorder
-        className="card-welcome"
-        style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}
+        className="card-welcome animate-fade-in"
+        style={{ 
+          background: 'linear-gradient(135deg, var(--primary-50) 0%, var(--bg-secondary) 100%)',
+          border: '1px solid var(--border-color)',
+          transition: 'all 0.3s ease',
+          overflow: 'hidden',
+          position: 'relative'
+        }}
       >
+        <div style={{
+          position: 'absolute',
+          top: '-50%',
+          right: '-10%',
+          width: '300px',
+          height: '300px',
+          background: 'radial-gradient(circle, var(--primary-200) 0%, transparent 70%)',
+          opacity: 0.3,
+          pointerEvents: 'none'
+        }} />
+        
         <Group justify="space-between" align={{ base: "flex-start", sm: "center" }}>
-          <div style={{ flex: 1 }}>
-            <Title order={{ base: 3, sm: 2 }}>Welcome back 👋</Title>
-            <Text mt="sm" c="dimmed" size={{ base: "sm", sm: "md" }}>
-              Explore scholarships and complete your assessments.
+          <div style={{ flex: 1, position: 'relative', zIndex: 1 }}>
+            <Title 
+              order={{ base: 3, sm: 2 }} 
+              fw={800}
+              style={{ 
+                letterSpacing: '-0.02em',
+                marginBottom: '8px'
+              }}
+            >
+              Welcome back! 👋
+            </Title>
+            <Text 
+              mt="sm" 
+              c="dimmed" 
+              size={{ base: "sm", sm: "md" }}
+              style={{ 
+                lineHeight: 1.6,
+                maxWidth: '500px'
+              }}
+            >
+              Explore scholarships and complete your assessments to achieve your academic goals.
             </Text>
           </div>
 
@@ -170,7 +204,20 @@ export default function DashboardContent() {
               navigate("/scholarships");
             }} 
             mt={{ base: "sm", sm: 0 }}
-            size="sm"
+            size="md"
+            radius="lg"
+            styles={{
+              root: {
+                background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
+                padding: '10px 24px',
+                fontWeight: 600,
+                '&:hover': {
+                  background: 'linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: 'var(--shadow-lg), 0 0 20px rgba(59, 130, 246, 0.3)',
+                }
+              }
+            }}
           >
             Explore Scholarships
           </Button>
@@ -178,21 +225,55 @@ export default function DashboardContent() {
       </Card>
 
       {/* SCHOLARSHIPS */}
-      <Group justify="space-between" mb="md">
-        <Title order={3}>Recommended Scholarships</Title>
+      <Group justify="space-between" mb="lg" mt="xl">
+        <div>
+          <Title 
+            order={3} 
+            fw={800}
+            style={{ 
+              letterSpacing: '-0.02em',
+              marginBottom: '4px'
+            }}
+          >
+            Recommended Scholarships
+          </Title>
+          <Text size="sm" c="dimmed">
+            Discover opportunities tailored for you
+          </Text>
+        </div>
         <Group>
           <TextInput 
-            placeholder="Search scholarship..." 
+            placeholder="Search..." 
             w={{ base: 150, sm: 220 }} 
             leftSection={<IconSearch size={16} />}
             display={{ base: "none", sm: "block" }}
+            styles={{
+              input: {
+                borderRadius: 'var(--radius-lg)',
+                border: '1px solid var(--border-color)',
+                '&:focus': {
+                  borderColor: 'var(--primary-500)',
+                  boxShadow: '0 0 0 3px var(--primary-100)'
+                }
+              }
+            }}
           />
           <Select
-            placeholder="Filter field"
+            placeholder="Filter"
             leftSection={<IconFilter size={16} />}
             data={["Technology", "Engineering", "Business"]}
             w={{ base: 130, sm: 180 }}
             display={{ base: "none", sm: "block" }}
+            styles={{
+              input: {
+                borderRadius: 'var(--radius-lg)',
+                border: '1px solid var(--border-color)',
+                '&:focus': {
+                  borderColor: 'var(--primary-500)',
+                  boxShadow: '0 0 0 3px var(--primary-100)'
+                }
+              }
+            }}
           />
         </Group>
       </Group>
@@ -208,46 +289,115 @@ export default function DashboardContent() {
         </Alert>
       ) : (
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
-          {data.scholarships.map((item) => (
+          {data.scholarships.map((item, index) => (
             <Card
               key={item.id}
-              shadow="sm"
+              shadow="md"
               radius="xl"
               p="0"
               withBorder
-              className="card-smooth"
-              style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}
+              className="card-smooth animate-fade-in"
+              style={{ 
+                transition: 'all 0.3s ease',
+                animationDelay: `${index * 0.05}s`,
+                overflow: 'hidden'
+              }}
             >
-              <Image src={item.image} height={{ base: 140, sm: 180 }} alt={item.title} />
+              <div style={{ 
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <Image 
+                  src={item.image} 
+                  height={{ base: 160, sm: 200 }} 
+                  alt={item.title}
+                  style={{
+                    transition: 'transform 0.3s ease'
+                  }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px'
+                }}>
+                  <Badge 
+                    color={item.status === "Open" ? "green" : "orange"} 
+                    size="sm"
+                    style={{
+                      fontWeight: 600,
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                    }}
+                  >
+                    {item.status}
+                  </Badge>
+                </div>
+              </div>
 
               <Stack p={{ base: "md", sm: "lg" }}>
-                <Group justify="space-between">
-                  <Badge color="blue" size={{ base: "xs", sm: "sm" }}>{item.field}</Badge>
-
-                  <Badge color={item.status === "Open" ? "green" : "orange"} size={{ base: "xs", sm: "sm" }}>
-                    {item.status}
+                <Group justify="space-between" align="flex-start">
+                  <Badge 
+                    color="blue" 
+                    size={{ base: "xs", sm: "sm" }}
+                    variant="light"
+                    style={{ fontWeight: 600 }}
+                  >
+                    {item.field}
                   </Badge>
                 </Group>
 
-                <Title order={{ base: 5, sm: 4 }}>{item.title}</Title>
+                <Title 
+                  order={{ base: 5, sm: 4 }} 
+                  fw={700}
+                  style={{ 
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1.3
+                  }}
+                >
+                  {item.title}
+                </Title>
 
                 <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
                   Deadline: {item.deadline}
                 </Text>
 
-                <Text fw={700} size={{ base: "md", sm: "lg" }}>
+                <Text 
+                  fw={800} 
+                  size={{ base: "md", sm: "lg" }}
+                  style={{
+                    background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                >
                   {item.amount}
                 </Text>
 
-                <Progress value={item.status === "Open" ? 70 : 90} size="sm" />
+                <Progress 
+                  value={item.status === "Open" ? 70 : 90} 
+                  size="sm" 
+                  style={{
+                    borderRadius: 'var(--radius-full)',
+                    overflow: 'hidden'
+                  }}
+                />
 
-                <Group grow mt="sm">
+                <Group grow mt="md" gap="sm">
                   <Button
                     variant="light"
                     size="sm"
+                    radius="md"
                     onClick={(e) => {
                       e.preventDefault();
                       navigate("/scholarships");
+                    }}
+                    styles={{
+                      root: {
+                        fontWeight: 600,
+                        '&:hover': {
+                          background: 'var(--bg-tertiary)',
+                        }
+                      }
                     }}
                   >
                     View Details
@@ -255,14 +405,26 @@ export default function DashboardContent() {
 
                   <Button
                     size="sm"
+                    radius="md"
                     onClick={(e) => {
                       e.preventDefault();
                       handleApply(item);
                     }}
                     loading={applyingFor === item.id}
                     disabled={applyingFor !== null && applyingFor !== item.id}
+                    styles={{
+                      root: {
+                        background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
+                        fontWeight: 600,
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%)',
+                          transform: 'translateY(-1px)',
+                          boxShadow: 'var(--shadow-md), 0 0 15px rgba(59, 130, 246, 0.3)',
+                        }
+                      }
+                    }}
                   >
-                    {applyingFor === item.id ? 'Submitting...' : 'Apply'}
+                    {applyingFor === item.id ? 'Submitting...' : 'Apply Now'}
                   </Button>
                 </Group>
               </Stack>
@@ -274,17 +436,40 @@ export default function DashboardContent() {
 
 
       {/* INTERNSHIPS */}
-      <Group justify="space-between" mb="md" mt="xl">
-        <Title order={3}>Recommended Internships</Title>
+      <Group justify="space-between" mb="lg" mt="xl">
+        <div>
+          <Title 
+            order={3} 
+            fw={800}
+            style={{ 
+              letterSpacing: '-0.02em',
+              marginBottom: '4px'
+            }}
+          >
+            Recommended Internships
+          </Title>
+          <Text size="sm" c="dimmed">
+            Gain real-world experience with top companies
+          </Text>
+        </div>
         <Button
           variant="light"
           size="sm"
+          radius="md"
           onClick={(e) => {
             e.preventDefault();
             navigate("/internships");
           }}
+          styles={{
+            root: {
+              fontWeight: 600,
+              '&:hover': {
+                background: 'var(--bg-tertiary)',
+              }
+            }
+          }}
         >
-          View All Internships
+          View All →
         </Button>
       </Group>
       {data.internships.length === 0 ? (
@@ -299,46 +484,115 @@ export default function DashboardContent() {
         </Alert>
       ) : (
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
-          {data.internships.slice(0, 3).map((item) => (
+          {data.internships.slice(0, 3).map((item, index) => (
             <Card
               key={item.id}
-              shadow="sm"
+              shadow="md"
               radius="xl"
               p="0"
               withBorder
-              className="card-smooth"
-              style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}
+              className="card-smooth animate-fade-in"
+              style={{ 
+                transition: 'all 0.3s ease',
+                animationDelay: `${index * 0.05}s`,
+                overflow: 'hidden'
+              }}
             >
-              <Image src={item.image} height={{ base: 140, sm: 180 }} alt={item.title} />
+              <div style={{ 
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <Image 
+                  src={item.image} 
+                  height={{ base: 160, sm: 200 }} 
+                  alt={item.title}
+                  style={{
+                    transition: 'transform 0.3s ease'
+                  }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px'
+                }}>
+                  <Badge 
+                    color={item.status === "Open" ? "green" : "orange"} 
+                    size="sm"
+                    style={{
+                      fontWeight: 600,
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                    }}
+                  >
+                    {item.status}
+                  </Badge>
+                </div>
+              </div>
 
               <Stack p={{ base: "md", sm: "lg" }}>
-                <Group justify="space-between">
-                  <Badge color="blue" size={{ base: "xs", sm: "sm" }}>{item.field || item.company}</Badge>
-
-                  <Badge color={item.status === "Open" ? "green" : "orange"} size={{ base: "xs", sm: "sm" }}>
-                    {item.status}
+                <Group justify="space-between" align="flex-start">
+                  <Badge 
+                    color="cyan" 
+                    size={{ base: "xs", sm: "sm" }}
+                    variant="light"
+                    style={{ fontWeight: 600 }}
+                  >
+                    {item.field || item.company}
                   </Badge>
                 </Group>
 
-                <Title order={{ base: 5, sm: 4 }}>{item.title}</Title>
+                <Title 
+                  order={{ base: 5, sm: 4 }} 
+                  fw={700}
+                  style={{ 
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1.3
+                  }}
+                >
+                  {item.title}
+                </Title>
 
                 <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
                   Deadline: {item.deadline}
                 </Text>
 
-                <Text fw={700} size={{ base: "md", sm: "lg" }}>
+                <Text 
+                  fw={800} 
+                  size={{ base: "md", sm: "lg" }}
+                  style={{
+                    background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                >
                   {item.stipend || item.amount || "Competitive"}
                 </Text>
 
-                <Progress value={item.status === "Open" ? 70 : 90} size="sm" />
+                <Progress 
+                  value={item.status === "Open" ? 70 : 90} 
+                  size="sm" 
+                  style={{
+                    borderRadius: 'var(--radius-full)',
+                    overflow: 'hidden'
+                  }}
+                />
 
-                <Group grow mt="sm">
+                <Group grow mt="md" gap="sm">
                   <Button
                     variant="light"
                     size="sm"
+                    radius="md"
                     onClick={(e) => {
                       e.preventDefault();
                       navigate("/internships");
+                    }}
+                    styles={{
+                      root: {
+                        fontWeight: 600,
+                        '&:hover': {
+                          background: 'var(--bg-tertiary)',
+                        }
+                      }
                     }}
                   >
                     View Details
@@ -346,12 +600,24 @@ export default function DashboardContent() {
 
                   <Button
                     size="sm"
+                    radius="md"
                     onClick={(e) => {
                       e.preventDefault();
                       navigate("/internships");
                     }}
+                    styles={{
+                      root: {
+                        background: 'linear-gradient(135deg, var(--accent-cyan) 0%, #0891b2 100%)',
+                        fontWeight: 600,
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 100%)',
+                          transform: 'translateY(-1px)',
+                          boxShadow: 'var(--shadow-md), 0 0 15px rgba(6, 182, 212, 0.3)',
+                        }
+                      }
+                    }}
                   >
-                    Apply
+                    Apply Now
                   </Button>
                 </Group>
               </Stack>
@@ -362,16 +628,51 @@ export default function DashboardContent() {
 
             {/* APPLICATIONS */}
       {data.applications.length > 0 && (
-        <Card radius="lg" p={{ base: "md", sm: "lg" }} withBorder style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
-          <Group justify="space-between" mb="md">
-            <Title order={{ base: 5, sm: 4 }}>Application Status</Title>
+        <Card 
+          radius="xl" 
+          p={{ base: "md", sm: "lg" }} 
+          withBorder 
+          className="animate-fade-in"
+          style={{ 
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
+            boxShadow: 'var(--shadow-sm)',
+            transition: 'all 0.3s ease',
+            marginTop: '3rem'
+          }}
+        >
+          <Group justify="space-between" mb="lg">
+            <div>
+              <Title 
+                order={{ base: 5, sm: 4 }} 
+                fw={700}
+                style={{ 
+                  letterSpacing: '-0.01em',
+                  marginBottom: '4px'
+                }}
+              >
+                Application Status
+              </Title>
+              <Text size="sm" c="dimmed">
+                Track your scholarship applications
+              </Text>
+            </div>
+            <Badge 
+              size="lg" 
+              color="blue" 
+              variant="light"
+              style={{ fontWeight: 600 }}
+            >
+              {data.applications.length} {data.applications.length === 1 ? 'Application' : 'Applications'}
+            </Badge>
           </Group>
 
-          <Table striped highlightOnHover>
+          <Table striped highlightOnHover withTableBorder>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>Scholarship</Table.Th>
-                <Table.Th>Status</Table.Th>
+                <Table.Th style={{ fontWeight: 700 }}>Scholarship</Table.Th>
+                <Table.Th style={{ fontWeight: 700 }}>Status</Table.Th>
+                <Table.Th style={{ fontWeight: 700 }}>Date</Table.Th>
               </Table.Tr>
             </Table.Thead>
 
@@ -379,13 +680,16 @@ export default function DashboardContent() {
               {data.applications.map((app, index) => (
                 <Table.Tr 
                   key={app.id || index}
-                  style={{ cursor: 'pointer' }}
+                  style={{ 
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
                   onClick={() => {
                     setSelectedApplication(app);
                     setApplicationModalOpened(true);
                   }}
                 >
-                  <Table.Td>{app.scholarship}</Table.Td>
+                  <Table.Td fw={600}>{app.scholarship}</Table.Td>
                   <Table.Td>
                     <Badge
                       color={
@@ -395,11 +699,14 @@ export default function DashboardContent() {
                           ? "yellow"
                           : "blue"
                       }
-                      size={{ base: "xs", sm: "sm" }}
+                      size="sm"
+                      variant="light"
+                      style={{ fontWeight: 600 }}
                     >
                       {app.status}
                     </Badge>
                   </Table.Td>
+                  <Table.Td c="dimmed">{app.date || 'N/A'}</Table.Td>
                 </Table.Tr>
               ))}
             </Table.Tbody>
@@ -408,19 +715,59 @@ export default function DashboardContent() {
       )}
 
       {/* PROFILE COMPLETION */}
-      <Card radius="lg" p={{ base: "md", sm: "lg" }} withBorder style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
+      <Card 
+        radius="xl" 
+        p={{ base: "md", sm: "lg" }} 
+        withBorder 
+        className="animate-fade-in"
+        style={{ 
+          background: 'linear-gradient(135deg, var(--primary-50) 0%, var(--bg-secondary) 100%)',
+          border: '1px solid var(--border-color)',
+          boxShadow: 'var(--shadow-sm)',
+          transition: 'all 0.3s ease',
+          marginTop: '3rem'
+        }}
+      >
         <Group justify="space-between" mb="md">
           <div>
-            <Title order={{ base: 5, sm: 4 }}>Profile Completion</Title>
+            <Title 
+              order={{ base: 5, sm: 4 }} 
+              fw={700}
+              style={{ 
+                letterSpacing: '-0.01em',
+                marginBottom: '4px'
+              }}
+            >
+              Profile Completion
+            </Title>
             <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
-              Complete your profile to improve matches.
+              Complete your profile to improve matches and opportunities
             </Text>
           </div>
 
-          <Badge size={{ base: "xs", sm: "sm" }}>{calculateProfileCompletion()}%</Badge>
+          <Badge 
+            size="lg" 
+            color="blue" 
+            variant="light"
+            style={{ 
+              fontWeight: 700,
+              fontSize: '1rem',
+              padding: '8px 16px'
+            }}
+          >
+            {calculateProfileCompletion()}%
+          </Badge>
         </Group>
 
-        <Progress value={calculateProfileCompletion()} size="lg" />
+        <Progress 
+          value={calculateProfileCompletion()} 
+          size="xl"
+          style={{
+            borderRadius: 'var(--radius-full)',
+            overflow: 'hidden',
+            height: '12px'
+          }}
+        />
       </Card>
 
       {/* APPLICATION DETAILS MODAL */}

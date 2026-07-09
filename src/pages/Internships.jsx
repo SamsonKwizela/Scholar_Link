@@ -174,16 +174,33 @@ export default function Internships() {
 
   return (
     <Container size="lg" py="xl">
-      <Group justify="space-between" mb="xl" align="flex-start">
+      <Group justify="space-between" mb="xl" align="flex-start" className="animate-fade-in">
         <div>
-          <Title order={2}>Internships</Title>
+          <Title 
+            order={2} 
+            fw={800}
+            style={{ 
+              letterSpacing: '-0.02em',
+              marginBottom: '4px'
+            }}
+          >
+            Available Internships
+          </Title>
           <Text size="sm" c="dimmed">
-            Explore available internship opportunities.
+            Discover and apply for internships from top companies
           </Text>
         </div>
 
-        <Badge size="lg" color="blue" variant="light">
-          {openCount} Open / {internships.length} Total
+        <Badge 
+          size="lg" 
+          color="cyan" 
+          variant="light"
+          style={{ 
+            fontWeight: 600,
+            padding: '8px 16px'
+          }}
+        >
+          {internships.length} {internships.length === 1 ? 'Internship' : 'Internships'}
         </Badge>
       </Group>
 
@@ -231,25 +248,53 @@ export default function Internships() {
         </Alert>
       ) : (
         <Grid>
-          {visibleInternships.map((item) => (
+          {visibleInternships.map((item, index) => (
             <Grid.Col
               key={item._id}
               span={{ base: 12, sm: 6, md: 4 }}
+              className="animate-fade-in"
+              style={{ animationDelay: `${index * 0.05}s` }}
             >
-              <Card shadow="md" radius="lg" padding="lg" withBorder style={{ transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
+              <Card 
+                shadow="md" 
+                radius="xl" 
+                padding="lg" 
+                withBorder 
+                className="card-smooth"
+                style={{ 
+                  transition: 'all 0.3s ease',
+                  overflow: 'hidden'
+                }}
+              >
 
                 {/* ICON + TITLE */}
-                <Group justify="space-between" mb="sm">
-                  <Group>
-                    <ThemeIcon size={45} radius="md" variant="light">
-                      <IconBriefcase size={22} />
+                <Group justify="space-between" mb="md" align="flex-start">
+                  <Group gap="sm" align="center">
+                    <ThemeIcon 
+                      size={50} 
+                      radius="lg" 
+                      variant="light"
+                      style={{
+                        background: 'linear-gradient(135deg, var(--accent-cyan) 0%, #0891b2 100%)',
+                        color: 'white',
+                        boxShadow: '0 4px 12px rgba(6, 182, 212, 0.3)'
+                      }}
+                    >
+                      <IconBriefcase size={24} />
                     </ThemeIcon>
 
-                    <div>
-                      <Text fw={700}>
+                    <div style={{ flex: 1 }}>
+                      <Text 
+                        fw={700} 
+                        lineClamp={2}
+                        style={{ 
+                          letterSpacing: '-0.01em',
+                          lineHeight: 1.3
+                        }}
+                      >
                         {item.title || "Untitled Internship"}
                       </Text>
-                      <Text size="sm" c="dimmed">
+                      <Text size="sm" c="dimmed" fw={500}>
                         {item.company || "Unknown Company"}
                       </Text>
                     </div>
@@ -258,6 +303,10 @@ export default function Internships() {
                   <Badge
                     color={item.isActive ? "green" : "red"}
                     variant="light"
+                    style={{ 
+                      fontWeight: 600,
+                      flexShrink: 0
+                    }}
                   >
                     {item.isActive ? "Open" : "Closed"}
                   </Badge>
@@ -266,20 +315,26 @@ export default function Internships() {
                 <Divider my="sm" />
 
                 {/* DESCRIPTION */}
-                <Text size="sm" c="dimmed" lineClamp={3} mb="md">
+                <Text 
+                  size="sm" 
+                  c="dimmed" 
+                  lineClamp={3} 
+                  mb="md"
+                  style={{ lineHeight: 1.6 }}
+                >
                   {item.description || "No description available."}
                 </Text>
 
                 {/* DETAILS */}
-                <Stack gap="xs">
-                  <Group gap="xs">
-                    <IconMapPin size={16} />
-                    <Text size="sm">{formatLocation(item.location)}</Text>
+                <Stack gap="xs" mb="md">
+                  <Group gap="xs" align="center">
+                    <IconMapPin size={16} style={{ color: 'var(--accent-cyan)' }} />
+                    <Text size="sm" fw={500}>{formatLocation(item.location)}</Text>
                   </Group>
 
-                  <Group gap="xs">
-                    <IconCalendar size={16} />
-                    <Text size="sm">{formatDeadline(item.deadline)}</Text>
+                  <Group gap="xs" align="center">
+                    <IconCalendar size={16} style={{ color: 'var(--accent-teal)' }} />
+                    <Text size="sm" fw={500}>{formatDeadline(item.deadline)}</Text>
                   </Group>
                 </Stack>
 
@@ -287,9 +342,13 @@ export default function Internships() {
                 {Array.isArray(item.tags) && item.tags.length > 0 && (
                   <>
                     <Divider my="md" />
-                    <Group gap="xs">
+                    <Group gap="xs" mb="md">
                       {item.tags.slice(0, 3).map((tag, i) => (
-                        <Badge key={i} variant="outline">
+                        <Badge 
+                          key={i} 
+                          variant="light"
+                          style={{ fontWeight: 500 }}
+                        >
                           {tag}
                         </Badge>
                       ))}
@@ -300,12 +359,25 @@ export default function Internships() {
                 {/* BUTTON */}
                 <Button
                   fullWidth
-                  mt="xl"
+                  size="sm"
+                  radius="md"
+                  mt="md"
                   loading={applyingId === item._id}
                   disabled={!item.isActive || !item.applicationUrl?.trim() || applyingId !== null}
                   onClick={(e) => {
                     e.preventDefault();
                     openConfirmModal(item._id, item.applicationUrl);
+                  }}
+                  styles={{
+                    root: {
+                      background: 'linear-gradient(135deg, var(--accent-cyan) 0%, #0891b2 100%)',
+                      fontWeight: 600,
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 100%)',
+                        transform: 'translateY(-1px)',
+                        boxShadow: 'var(--shadow-md), 0 0 15px rgba(6, 182, 212, 0.3)',
+                      }
+                    }
                   }}
                 >
                   {item.isActive
@@ -328,22 +400,44 @@ export default function Internships() {
           setConfirmModalOpened(false);
           setOpportunityToApply(null);
         }}
-        title="Confirm Application"
+        title={
+          <Title order={4} fw={700}>
+            Confirm Application
+          </Title>
+        }
         centered
         size="md"
+        styles={{
+          header: {
+            background: 'var(--bg-secondary)',
+            borderBottom: '1px solid var(--border-color)',
+            padding: '1.5rem',
+          },
+          body: {
+            padding: '1.5rem',
+          }
+        }}
       >
         <Stack gap="md">
-          <Text>
-            Are you sure you want to apply for this internship?
+          <Text size="md" style={{ lineHeight: 1.6 }}>
+            Are you sure you want to apply for this internship? Your profile information, CV, and documents will be submitted for review.
           </Text>
-          <Group justify="flex-end" gap="sm">
+          <Group justify="flex-end" gap="sm" mt="md">
             <Button
-              variant="default"
+              variant="light"
               onClick={() => {
                 setConfirmModalOpened(false);
                 setOpportunityToApply(null);
               }}
               disabled={applyingId !== null}
+              styles={{
+                root: {
+                  fontWeight: 600,
+                  '&:hover': {
+                    background: 'var(--bg-tertiary)',
+                  }
+                }
+              }}
             >
               Cancel
             </Button>
@@ -351,8 +445,19 @@ export default function Internships() {
               onClick={handleApply}
               loading={applyingId !== null}
               disabled={applyingId !== null}
+              styles={{
+                root: {
+                  background: 'linear-gradient(135deg, var(--accent-cyan) 0%, #0891b2 100%)',
+                  fontWeight: 600,
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 100%)',
+                    transform: 'translateY(-1px)',
+                    boxShadow: 'var(--shadow-md), 0 0 15px rgba(6, 182, 212, 0.3)',
+                  }
+                }
+              }}
             >
-              Confirm
+              Confirm Application
             </Button>
           </Group>
         </Stack>
