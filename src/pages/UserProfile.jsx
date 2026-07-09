@@ -141,38 +141,44 @@ export default function UserProfile() {
 const [activeEdit, setActiveEdit] = useState(null);
 const [cvFile, setCvFile] = useState(null);
 
-const [cvUrl, setCvUrl] = useState(null);
-const handleCvUpload = (file) => {
-  if (!file) return;
+  const [cvUrl, setCvUrl] = useState(null);
+  const handleCvUpload = (file) => {
+    if (!file) return;
 
-  setCvFile(file);
+    setCvFile(file);
 
-  const url = URL.createObjectURL(file);
-  setCvUrl(url);
-  
-  addNotification({
-    title: "CV Uploaded",
-    message: "Your CV has been successfully uploaded.",
-    type: "success",
-  });
-};
+    const url = URL.createObjectURL(file);
+    setCvUrl(url);
+    
+    // Save CV URL to profile
+    setProfile(prev => ({ ...prev, cv: url }));
+    
+    addNotification({
+      title: "CV Uploaded",
+      message: "Your CV has been successfully uploaded.",
+      type: "success",
+    });
+  };
 
 const [coverLetterFile, setCoverLetterFile] = useState(null);
-const [coverLetterUrl, setCoverLetterUrl] = useState(null);
-const handleCoverLetterUpload = (file) => {
-  if (!file) return;
+  const [coverLetterUrl, setCoverLetterUrl] = useState(null);
+  const handleCoverLetterUpload = (file) => {
+    if (!file) return;
 
-  setCoverLetterFile(file);
+    setCoverLetterFile(file);
 
-  const url = URL.createObjectURL(file);
-  setCoverLetterUrl(url);
-  
-  addNotification({
-    title: "Cover Letter Uploaded",
-    message: "Your cover letter has been successfully uploaded.",
-    type: "success",
-  });
-};
+    const url = URL.createObjectURL(file);
+    setCoverLetterUrl(url);
+    
+    // Save cover letter URL to profile
+    setProfile(prev => ({ ...prev, coverLetter: url }));
+    
+    addNotification({
+      title: "Cover Letter Uploaded",
+      message: "Your cover letter has been successfully uploaded.",
+      type: "success",
+    });
+  };
 
   return (
     <Box className="app-page">

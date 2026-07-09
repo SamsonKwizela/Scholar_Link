@@ -77,9 +77,9 @@ export default function OpportunitiesCards() {
       <Box>
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="xl">
           {[1, 2, 3].map((i) => (
-            <Card key={i} radius="xl" padding="xl" withBorder className={classes.card}>
+            <Card key={i} radius="lg" padding="lg" withBorder className={classes.card}>
               <Stack gap="xs">
-                <Box h={58} w={58} bg="var(--surface-strong)" radius="lg" />
+                <Box h={45} w={45} bg="var(--surface-strong)" radius="md" />
                 <Box h={24} w="60%" bg="var(--surface-strong)" radius="sm" />
                 <Box h={16} w="100%" bg="var(--surface-strong)" radius="sm" />
                 <Box h={16} w="80%" bg="var(--surface-strong)" radius="sm" />
@@ -111,16 +111,16 @@ export default function OpportunitiesCards() {
         {opportunities.map((item) => (
           <Card
             key={item.id}
-            radius="xl"
-            padding="xl"
+            radius="lg"
+            padding="lg"
             withBorder
             className={classes.card}
           >
             {/* HEADER */}
-            <Group justify="space-between" mb="lg">
+            <Group justify="space-between" mb="md">
               <ThemeIcon
-                size={58}
-                radius="lg"
+                size={45}
+                radius="md"
                 variant="light"
                 color={getOpportunityColor(item.type)}
               >
@@ -161,7 +161,7 @@ export default function OpportunitiesCards() {
 
             {/* BUTTON */}
             <Button
-              mt="xl"
+              mt="md"
               radius="md"
               variant="light"
               color={getOpportunityColor(item.type)}

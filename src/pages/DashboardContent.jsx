@@ -88,55 +88,40 @@ export default function DashboardContent() {
     setSendingEmail(true);
 
     try {
-      // Collect profile data from localStorage
-      const userProfile = localStorage.getItem('userProfile');
-      const profile = userProfile ? JSON.parse(userProfile) : {};
-
-      // Prepare application data
-      const applicationData = {
+      // Import the applyToOpportunity function
+      const { applyToOpportunity } = await import('../utils/api');
+      
+      // Call the backend API
+      const response = await applyToOpportunity({
         scholarshipId: scholarship.id,
         scholarshipTitle: scholarship.title,
-        scholarshipAmount: scholarship.amount,
-        scholarshipField: scholarship.field,
-        applicant: {
-          name: profile.name || 'Not provided',
-          email: profile.email || 'Not provided',
-          role: profile.role || 'Not provided',
-          location: profile.location || 'Not provided',
-          university: profile.university || 'Not provided',
-          about: profile.about || 'Not provided',
-          avatar: profile.avatar || null,
-          cv: profile.cv || null,
-          coverLetter: profile.coverLetter || null,
-        },
-        applicationDate: new Date().toISOString(),
-        status: 'Pending'
-      };
-
-      // Simulate sending email to admin
-      console.log('📧 SENDING APPLICATION EMAIL TO ADMIN:');
-      console.log('Subject: New Scholarship Application - ' + scholarship.title);
-      console.log('To: admin@scholalink.com');
-      console.log('Application Data:', JSON.stringify(applicationData, null, 2));
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // Add application to localStorage
-      applications.add({
-        scholarship: scholarship.title,
-        status: 'Pending',
-        date: new Date().toISOString().split('T')[0],
-        scholarshipId: scholarship.id,
-        applicationData: applicationData
+        type: 'scholarship'
       });
 
-      // Show success message
-      alert(`Application for ${scholarship.title} submitted successfully! Your profile details have been sent to the admin.`);
+      if (response.success) {
+        // Add application to localStorage for tracking
+        applications.add({
+          scholarship: scholarship.title,
+          status: 'Pending',
+          date: new Date().toISOString().split('T')[0],
+          scholarshipId: scholarship.id,
+        });
+
+        // Show success notification
+        addNotification({
+          title: "Application Submitted Successfully",
+          message: "Your profile information, CV, assessment results, and documents have been sent for review.",
+          type: "success",
+        });
+      }
 
     } catch (error) {
       console.error('Error submitting application:', error);
-      alert('Failed to submit application. Please try again.');
+      addNotification({
+        title: "Application Failed",
+        message: error.message || "Failed to submit application. Please try again.",
+        type: "error",
+      });
     } finally {
       setApplyingFor(null);
       setSendingEmail(false);
@@ -291,8 +276,8 @@ export default function DashboardContent() {
       {/* INTERNSHIPS */}
       <Group justify="space-between" mb="md" mt="xl">
         <Title order={3}>Recommended Internships</Title>
-        <Button 
-          variant="light" 
+        <Button
+          variant="light"
           size="sm"
           onClick={(e) => {
             e.preventDefault();
@@ -314,7 +299,7 @@ export default function DashboardContent() {
         </Alert>
       ) : (
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
-          {data.internships.map((item) => (
+          {data.internships.slice(0, 3).map((item) => (
             <Card
               key={item.id}
               shadow="sm"
@@ -328,7 +313,7 @@ export default function DashboardContent() {
 
               <Stack p={{ base: "md", sm: "lg" }}>
                 <Group justify="space-between">
-                  <Badge color="blue" size={{ base: "xs", sm: "sm" }}>{item.company}</Badge>
+                  <Badge color="blue" size={{ base: "xs", sm: "sm" }}>{item.field || item.company}</Badge>
 
                   <Badge color={item.status === "Open" ? "green" : "orange"} size={{ base: "xs", sm: "sm" }}>
                     {item.status}
@@ -338,12 +323,14 @@ export default function DashboardContent() {
                 <Title order={{ base: 5, sm: 4 }}>{item.title}</Title>
 
                 <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
-                  Location: {item.location}
-                </Text>
-
-                <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
                   Deadline: {item.deadline}
                 </Text>
+
+                <Text fw={700} size={{ base: "md", sm: "lg" }}>
+                  {item.stipend || item.amount || "Competitive"}
+                </Text>
+
+                <Progress value={item.status === "Open" ? 70 : 90} size="sm" />
 
                 <Group grow mt="sm">
                   <Button
@@ -351,14 +338,14 @@ export default function DashboardContent() {
                     size="sm"
                     onClick={(e) => {
                       e.preventDefault();
-                      navigate(`/internship/${item.id}`);
+                      navigate("/internships");
                     }}
                   >
                     View Details
                   </Button>
 
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     onClick={(e) => {
                       e.preventDefault();
                       navigate("/internships");

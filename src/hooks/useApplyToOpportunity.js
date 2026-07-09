@@ -32,7 +32,15 @@ export const useApplyToOpportunity = () => {
       const userProfile = localStorage.getItem('userProfile');
       const profile = userProfile ? JSON.parse(userProfile) : {};
 
-      // Prepare application data
+      // Get assessment results if available
+      const assessmentResults = localStorage.getItem('assessmentResults');
+      const results = assessmentResults ? JSON.parse(assessmentResults) : null;
+
+      // Get certificates if available
+      const certificates = localStorage.getItem('certificates');
+      const certArray = certificates ? JSON.parse(certificates) : [];
+
+      // Prepare application data with all required fields
       const applicationPayload = {
         ...opportunityData,
         applicant: {
@@ -46,6 +54,9 @@ export const useApplyToOpportunity = () => {
           cv: profile.cv || null,
           coverLetter: profile.coverLetter || null,
         },
+        interest: profile.interests ? profile.interests.join(', ') : '',
+        results: results ? JSON.stringify(results) : '',
+        certificates: certArray,
         applicationDate: new Date().toISOString(),
         status: 'Pending',
       };
