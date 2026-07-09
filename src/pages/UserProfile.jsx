@@ -30,6 +30,7 @@ import {
   IconTrophy,
   IconUsersGroup,
   IconCamera,
+  IconUser,
 } from "@tabler/icons-react";
 
 import { useState, useEffect, useRef } from "react";
