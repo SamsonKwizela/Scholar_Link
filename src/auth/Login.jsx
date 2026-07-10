@@ -155,7 +155,7 @@ function Login() {
               marginBottom: '8px'
             }}
           >
-            Welcome back! 👋
+            Welcome back! 
           </Title>
           <Text c="dimmed" size="md">
             Sign in to continue your journey
