@@ -17,6 +17,8 @@ import {
   SegmentedControl,
   Modal,
   Notification,
+  Chip,
+  SimpleGrid,
 } from "@mantine/core";
 
 import {
@@ -28,12 +30,14 @@ import {
   IconWorld,
   IconBook,
   IconAward,
+  IconSearch,
+  IconFilter,
 } from "@tabler/icons-react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useDataManager } from "../utils/dataManager";
 import { useNotifications } from "../context/NotificationContext";
-import { applyToOpportunity } from "../utils/api";
+import { applyToOpportunity, getApiCollection } from "../utils/api";
 
 export default function Scholarships() {
   const { scholarships: scholarshipsManager, applications } = useDataManager();
@@ -44,6 +48,9 @@ export default function Scholarships() {
   const [applyingId, setApplyingId] = useState(null);
   const [confirmModalOpened, setConfirmModalOpened] = useState(false);
   const [opportunityToApply, setOpportunityToApply] = useState(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
 
   // -----------------------------
   // SAFE FORMATTERS
@@ -81,9 +88,9 @@ export default function Scholarships() {
   // FETCH DATA
   // -----------------------------
   useEffect(() => {
-    const loadScholarships = () => {
+    const loadScholarships = async () => {
       try {
-        const data = scholarshipsManager.getAll();
+        const data = await getApiCollection('/scholarships');
         setScholarships(data);
       } catch (error) {
         console.error("Error loading scholarships:", error);
@@ -94,20 +101,40 @@ export default function Scholarships() {
     };
 
     loadScholarships();
-
-    // Listen for data changes
-    const handleDataChange = () => {
-      loadScholarships();
-    };
-
-    window.addEventListener('dataChange', handleDataChange);
-    window.addEventListener('storage', handleDataChange);
-
-    return () => {
-      window.removeEventListener('dataChange', handleDataChange);
-      window.removeEventListener('storage', handleDataChange);
-    };
   }, []);
+
+  // -----------------------------
+  // FILTER LOGIC
+  // -----------------------------
+  const categories = useMemo(() => {
+    const cats = new Set();
+    scholarships.forEach(s => {
+      if (s.category) cats.add(s.category);
+    });
+    return Array.from(cats).sort();
+  }, [scholarships]);
+
+  const filteredScholarships = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    return scholarships.filter((item) => {
+      const searchMatch =
+        !query ||
+        [item?.title, item?.provider, item?.description, item?.category]
+          .filter(Boolean)
+          .some((value) => value.toLowerCase().includes(query));
+
+      const statusMatch =
+        statusFilter === "all" ||
+        (statusFilter === "open" && item?.isActive) ||
+        (statusFilter === "closed" && !item?.isActive);
+
+      const categoryMatch =
+        categoryFilter === "all" || item?.category === categoryFilter;
+
+      return searchMatch && statusMatch && categoryMatch;
+    });
+  }, [scholarships, search, statusFilter, categoryFilter]);
 
  
   // APPLY FUNCTION
@@ -167,7 +194,7 @@ export default function Scholarships() {
   };
 
   // LOADING STATE
- 
+   
   if (loading) {
     return (
       <Center h="70vh">
@@ -205,22 +232,86 @@ export default function Scholarships() {
             padding: '8px 16px'
           }}
         >
-          {scholarships.length} {scholarships.length === 1 ? 'Scholarship' : 'Scholarships'}
+          {filteredScholarships.length} {filteredScholarships.length === 1 ? 'Scholarship' : 'Scholarships'}
         </Badge>
       </Group>
 
+      {/* FILTERS */}
+      <Card 
+        withBorder 
+        radius="lg" 
+        p="md" 
+        mb="xl" 
+        style={{ 
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--border-color)'
+        }}
+      >
+        <Stack gap="md">
+          <Group gap="sm" wrap="wrap">
+            <TextInput
+              value={search}
+              onChange={(event) => setSearch(event.currentTarget.value)}
+              placeholder="Search scholarships..."
+              icon={<IconSearch size={16} />}
+              sx={{ minWidth: 260, flex: "1 1 360px" }}
+            />
+
+            <SegmentedControl
+              value={statusFilter}
+              onChange={setStatusFilter}
+              data={[
+                { label: "All", value: "all" },
+                { label: "Open", value: "open" },
+                { label: "Closed", value: "closed" },
+              ]}
+            />
+          </Group>
+
+          {categories.length > 0 && (
+            <Group gap="xs" wrap="wrap">
+              <Group gap="xs" align="center">
+                <IconFilter size={16} style={{ color: 'var(--primary-600)' }} />
+                <Text size="sm" fw={600}>Categories:</Text>
+              </Group>
+              <Chip
+                checked={categoryFilter === "all"}
+                onChange={() => setCategoryFilter("all")}
+                size="sm"
+                variant="light"
+              >
+                All
+              </Chip>
+              {categories.map((cat) => (
+                <Chip
+                  key={cat}
+                  checked={categoryFilter === cat}
+                  onChange={() => setCategoryFilter(cat)}
+                  size="sm"
+                  variant="light"
+                >
+                  {cat}
+                </Chip>
+              ))}
+            </Group>
+          )}
+        </Stack>
+      </Card>
+
       {/* EMPTY STATE */}
-      {scholarships.length === 0 ? (
+      {filteredScholarships.length === 0 ? (
         <Alert
           icon={<IconAlertCircle size={18} />}
-          title="No Scholarships Available"
+          title={scholarships.length > 0 ? "No matches found" : "No Scholarships Available"}
           color="blue"
         >
-          There are currently no scholarships posted.
+          {scholarships.length > 0
+            ? "Try adjusting your search or filters to see more scholarships."
+            : "There are currently no scholarships posted."}
         </Alert>
       ) : (
         <Grid>
-          {scholarships.map((item, index) => (
+          {filteredScholarships.map((item, index) => (
             <Grid.Col key={item._id} span={{ base: 12, sm: 6, lg: 4 }} className="animate-fade-in" style={{ animationDelay: `${index * 0.05}s` }}>
               <Card 
                 shadow="md" 
@@ -303,6 +394,26 @@ export default function Scholarships() {
                     <IconAward size={16} style={{ color: 'var(--accent-gold)' }} />
                     <Text size="sm" fw={500}>{item.level || "All Levels"}</Text>
                   </Group>
+
+                  {item.fundingType && (
+                    <Group gap="xs" align="center">
+                      <IconAward size={16} style={{ color: 'var(--accent-gold)' }} />
+                      <Badge 
+                        size="sm" 
+                        color={item.fundingType === 'Full Funding' ? 'green' : item.fundingType === 'Partial Funding' ? 'yellow' : 'blue'}
+                        variant="light"
+                      >
+                        {item.fundingType}
+                      </Badge>
+                    </Group>
+                  )}
+
+                  {item.fundingAmount && (
+                    <Group gap="xs" align="center">
+                      <IconAward size={16} style={{ color: 'var(--accent-gold)' }} />
+                      <Text size="sm" fw={500}>{item.fundingAmount}</Text>
+                    </Group>
+                  )}
 
                   <Group gap="xs" align="center">
                     <IconMapPin size={16} style={{ color: 'var(--accent-cyan)' }} />
@@ -431,13 +542,33 @@ export default function Scholarships() {
             <SimpleGrid cols={2} spacing="md">
               <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
                 <Text fw={600} size="sm" c="dimmed" mb="xs">Category</Text>
-                <Text fw={700} size="md">{selected.category}</Text>
+                <Text fw={700} size="md">{selected.category || "General"}</Text>
               </Card>
 
               <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
                 <Text fw={600} size="sm" c="dimmed" mb="xs">Level</Text>
-                <Text fw={700} size="md">{selected.level}</Text>
+                <Text fw={700} size="md">{selected.level || "All Levels"}</Text>
               </Card>
+
+              {selected.fundingType && (
+                <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
+                  <Text fw={600} size="sm" c="dimmed" mb="xs">Funding Type</Text>
+                  <Badge 
+                    color={selected.fundingType === 'Full Funding' ? 'green' : selected.fundingType === 'Partial Funding' ? 'yellow' : 'blue'}
+                    variant="light"
+                    size="lg"
+                  >
+                    {selected.fundingType}
+                  </Badge>
+                </Card>
+              )}
+
+              {selected.fundingAmount && (
+                <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
+                  <Text fw={600} size="sm" c="dimmed" mb="xs">Funding Amount</Text>
+                  <Text fw={700} size="md">{selected.fundingAmount}</Text>
+                </Card>
+              )}
 
               <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
                 <Text fw={600} size="sm" c="dimmed" mb="xs">Location</Text>
@@ -455,6 +586,21 @@ export default function Scholarships() {
                 </Text>
               </Card>
             </SimpleGrid>
+
+            {selected.eligibility && (
+              <>
+                <Divider my="md" />
+                <Card withBorder p="md" radius="lg" style={{ background: 'var(--bg-tertiary)' }}>
+                  <Group mb="xs">
+                    <IconBook size={18} style={{ color: 'var(--primary-600)' }} />
+                    <Text fw={700} size="md">Eligibility Criteria</Text>
+                  </Group>
+                  <Text size="sm" style={{ lineHeight: 1.6 }}>
+                    {selected.eligibility}
+                  </Text>
+                </Card>
+              </>
+            )}
 
             <Divider />
 

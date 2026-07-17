@@ -14,6 +14,7 @@ import {
 } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../utils/api";
 import "./Login.css";
 
 function Login() {
@@ -35,31 +36,14 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
+      const data = await loginUser(email, password);
       console.log(data);
-
-      if (!res.ok) {
-        setError(data.error || "Login failed");
-        setLoading(false);
-        return;
-      }
-
-      // Save token
-      localStorage.setItem("token", data.token);
 
       // Redirect to HOME page
       navigate("/user-dashboard");
     } catch (err) {
       console.error(err);
-      setError("Server error. Please try again.");
+      setError(err.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }

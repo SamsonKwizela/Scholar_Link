@@ -28,7 +28,7 @@ import {
 } from "@tabler/icons-react";
 import { useDataManager } from "../utils/dataManager";
 import { useNotifications } from "../context/NotificationContext";
-import { applyToOpportunity } from "../utils/api";
+import { applyToOpportunity, getInternships } from "../utils/api";
 
 export default function Internships() {
   const { internships: internshipsManager } = useDataManager();
@@ -43,9 +43,9 @@ export default function Internships() {
   const [opportunityToApply, setOpportunityToApply] = useState(null);
 
   useEffect(() => {
-    const loadInternships = () => {
+    const loadInternships = async () => {
       try {
-        const data = internshipsManager.getAll();
+        const data = await getInternships();
         setInternships(data);
         setFetchError("");
       } catch (error) {
@@ -58,19 +58,6 @@ export default function Internships() {
     };
 
     loadInternships();
-
-    // Listen for data changes
-    const handleDataChange = () => {
-      loadInternships();
-    };
-
-    window.addEventListener('dataChange', handleDataChange);
-    window.addEventListener('storage', handleDataChange);
-
-    return () => {
-      window.removeEventListener('dataChange', handleDataChange);
-      window.removeEventListener('storage', handleDataChange);
-    };
   }, []);
 
   const openCount = internships.filter((item) => item.isActive).length;

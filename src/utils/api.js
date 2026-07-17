@@ -287,3 +287,175 @@ export async function applyToOpportunity(data) {
     body: JSON.stringify(data)
   });
 }
+
+// Scholarship API functions
+export async function getScholarships(filters = {}) {
+  const params = new URLSearchParams(filters);
+  return await apiRequest(`/scholarships?${params}`);
+}
+
+export async function getScholarship(id) {
+  return await apiRequest(`/scholarships/${id}`);
+}
+
+export async function createScholarship(data) {
+  return await apiRequest('/scholarships', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+}
+
+export async function updateScholarship(id, data) {
+  return await apiRequest(`/scholarships/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  });
+}
+
+export async function deleteScholarship(id) {
+  return await apiRequest(`/scholarships/${id}`, {
+    method: 'DELETE'
+  });
+}
+
+// Internship API functions
+export async function getInternships(filters = {}) {
+  const params = new URLSearchParams(filters);
+  return await apiRequest(`/internships?${params}`);
+}
+
+export async function getInternship(id) {
+  return await apiRequest(`/internships/${id}`);
+}
+
+export async function createInternship(data) {
+  return await apiRequest('/internships', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+}
+
+export async function updateInternship(id, data) {
+  return await apiRequest(`/internships/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  });
+}
+
+export async function deleteInternship(id) {
+  return await apiRequest(`/internships/${id}`, {
+    method: 'DELETE'
+  });
+}
+
+// Scholar API functions
+export async function getScholars(filters = {}) {
+  const params = new URLSearchParams(filters);
+  return await apiRequest(`/scholars?${params}`);
+}
+
+export async function getScholar(id) {
+  return await apiRequest(`/scholars/${id}`);
+}
+
+export async function createScholar(data) {
+  return await apiRequest('/scholars/create', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+}
+
+export async function updateScholar(id, data) {
+  return await apiRequest(`/scholars/update/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  });
+}
+
+export async function deleteScholar(id) {
+  return await apiRequest(`/scholars/delete/${id}`, {
+    method: 'DELETE'
+  });
+}
+
+// Notification API functions
+export async function getNotifications() {
+  return await apiRequest('/notifications');
+}
+
+export async function markNotificationAsRead(id) {
+  return await apiRequest(`/notifications/${id}/read`, {
+    method: 'PATCH'
+  });
+}
+
+// Profile API functions
+export async function getProfile() {
+  return await apiRequest('/profile');
+}
+
+export async function updateProfile(data) {
+  return await apiRequest('/profile', {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  });
+}
+
+// Dashboard API functions
+export async function getRecommendations() {
+  const payload = await apiRequest('/dashboard/recommendations');
+  return payload.data || payload;
+}
+
+// Upload API function
+export async function uploadFile(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const token = localStorage.getItem('token');
+
+  const response = await fetch(`${API_BASE_URL}/upload`, {
+    method: 'POST',
+    headers: {
+      ...(token && {
+        Authorization: `Bearer ${token}`,
+      }),
+    },
+    body: formData,
+  });
+
+  return parseResponse(response);
+}
+
+// Admin API functions
+export async function registerAdmin(name, email, password) {
+  const data = await apiRequest('/admin/register', {
+    method: 'POST',
+    body: JSON.stringify({ name, email, password }),
+  });
+  return data;
+}
+
+export async function loginAdmin(email, password) {
+  const data = await apiRequest('/admin/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (data.token) {
+    localStorage.setItem('token', data.token);
+  }
+
+  if (data.user) {
+    localStorage.setItem('user', JSON.stringify(data.user));
+  }
+
+  return data;
+}
+
+export async function createUser(data) {
+  return await apiRequest('/admin/create-user', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+}

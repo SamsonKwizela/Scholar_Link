@@ -1,0 +1,237 @@
+// Sample scholarship data with categories, funding types, and eligibility criteria
+// This file can be used to seed the application with demo data
+
+export const sampleScholarships = [
+  {
+    _id: "1",
+    title: "Full Academic Excellence Scholarship",
+    provider: "Global Education Foundation",
+    description: "A comprehensive scholarship covering all tuition fees, accommodation, and living expenses for outstanding students pursuing undergraduate or graduate degrees.",
+    category: "Academic Excellence",
+    level: "Undergraduate",
+    fundingType: "Full Funding",
+    fundingAmount: "$50,000 per year",
+    location: { country: "USA", city: "New York" },
+    deadline: "2025-12-31",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/1",
+    eligibility: "Minimum GPA of 3.5/4.0, demonstrated leadership skills, and community involvement. Open to students from all countries.",
+    requirements: ["Official transcripts", "Letters of recommendation (2)", "Personal statement", "Proof of community service"],
+    benefits: ["Full tuition coverage", "Accommodation provided", "Monthly stipend of $1,500", "Health insurance", "Travel allowance"],
+    tags: ["merit-based", "international", "undergraduate"]
+  },
+  {
+    _id: "2",
+    title: "STEM Innovation Grant",
+    provider: "Tech Future Institute",
+    description: "Supporting the next generation of innovators in Science, Technology, Engineering, and Mathematics fields with partial funding for research and education.",
+    category: "STEM",
+    level: "Graduate",
+    fundingType: "Partial Funding",
+    fundingAmount: "$15,000",
+    location: { country: "UK", city: "London" },
+    deadline: "2025-10-15",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/2",
+    eligibility: "Enrolled in or accepted to a STEM graduate program. Must demonstrate research potential and innovation in chosen field.",
+    requirements: ["Research proposal", "Academic transcripts", "CV/Resume", "Faculty recommendation"],
+    benefits: ["Research funding", "Mentorship program", "Conference attendance grant", "Access to research facilities"],
+    tags: ["research", "stem", "graduate"]
+  },
+  {
+    _id: "3",
+    title: "Women in Leadership Scholarship",
+    provider: "Empower Her Foundation",
+    description: "Dedicated to empowering women leaders worldwide by providing financial support for MBA and leadership programs.",
+    category: "Women Empowerment",
+    level: "Graduate",
+    fundingType: "Full Funding",
+    fundingAmount: "$75,000",
+    location: "Global",
+    deadline: "2025-11-30",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/3",
+    eligibility: "Female students with minimum 2 years of professional experience. Demonstrated leadership potential and commitment to empowering other women.",
+    requirements: ["Professional resume", "Leadership portfolio", "Essays on leadership experience", "References from professional contacts"],
+    benefits: ["Full tuition", "Living expenses covered", "Leadership coaching", "Networking events", "Internship placement support"],
+    tags: ["women", "leadership", "mba", "professional"]
+  },
+  {
+    _id: "4",
+    title: "Community Impact Award",
+    provider: "Local Heroes Organization",
+    description: "Recognizing students who have made significant contributions to their communities through volunteer work and social initiatives.",
+    category: "Community Service",
+    level: "All Levels",
+    fundingType: "Partial Funding",
+    fundingAmount: "$5,000",
+    location: { country: "Canada", city: "Toronto" },
+    deadline: "2025-09-30",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/4",
+    eligibility: "Minimum 100 hours of documented community service in the past 2 years. Open to high school seniors and college students.",
+    requirements: ["Community service verification", "Personal essay", "School transcripts", "Community leader reference"],
+    benefits: ["Tuition assistance", "Community service grant", "Recognition ceremony", "Mentorship opportunities"],
+    tags: ["community", "service", "merit-based"]
+  },
+  {
+    _id: "5",
+    title: "Developing Countries Scholarship",
+    provider: "World Education Alliance",
+    description: "Full scholarship for students from developing countries to pursue higher education in partner universities worldwide.",
+    category: "International",
+    level: "Undergraduate",
+    fundingType: "Full Funding",
+    fundingAmount: "$60,000 per year",
+    location: "Global",
+    deadline: "2026-01-15",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/5",
+    eligibility: "Citizens of eligible developing countries. Strong academic record and financial need demonstrated.",
+    requirements: ["Academic transcripts", "Proof of citizenship", "Financial need statement", "Personal statement", "English proficiency test"],
+    benefits: ["Full tuition", "Accommodation", "Monthly allowance", "Health insurance", "Return airfare", "Language support"],
+    tags: ["international", "developing-countries", "full-ride"]
+  },
+  {
+    _id: "6",
+    title: "Arts and Culture Fellowship",
+    provider: "Creative Arts Foundation",
+    description: "Supporting talented artists, musicians, writers, and cultural practitioners to develop their craft and contribute to cultural enrichment.",
+    category: "Arts & Culture",
+    level: "All Levels",
+    fundingType: "Partial Funding",
+    fundingAmount: "$10,000",
+    location: { country: "France", city: "Paris" },
+    deadline: "2025-11-15",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/6",
+    eligibility: "Demonstrated talent and achievement in arts or culture. Portfolio of work required. Open to all education levels.",
+    requirements: ["Portfolio submission", "Artist statement", "Project proposal", "Letters of recommendation"],
+    benefits: ["Project funding", "Studio/workspace access", "Mentorship from established artists", "Exhibition opportunities"],
+    tags: ["arts", "culture", "creative", "portfolio"]
+  },
+  {
+    _id: "7",
+    title: "Environmental Sustainability Grant",
+    provider: "Green Future Initiative",
+    description: "For students passionate about environmental conservation, sustainability, and climate action. Supporting research and practical projects.",
+    category: "Environmental Science",
+    level: "Graduate",
+    fundingType: "Full Funding",
+    fundingAmount: "$45,000",
+    location: { country: "Germany", city: "Berlin" },
+    deadline: "2025-10-30",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/7",
+    eligibility: "Graduate students in environmental science, sustainability, or related fields. Must have a research project focused on environmental solutions.",
+    requirements: ["Research proposal", "Academic transcripts", "Environmental project portfolio", "Faculty endorsement"],
+    benefits: ["Full research funding", "Field work expenses", "Publication support", "International conference participation"],
+    tags: ["environment", "sustainability", "research", "graduate"]
+  },
+  {
+    _id: "8",
+    title: "First Generation Student Scholarship",
+    provider: "Education for All Foundation",
+    description: "Supporting first-generation college students who demonstrate academic promise and financial need to achieve their educational dreams.",
+    category: "Need-Based",
+    level: "Undergraduate",
+    fundingType: "Partial Funding",
+    fundingAmount: "$12,000 per year",
+    location: "Global",
+    deadline: "2026-02-28",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/8",
+    eligibility: "First-generation college students (parents did not complete a 4-year degree). Demonstrated financial need and academic potential.",
+    requirements: ["FAFSA or financial need form", "High school transcripts", "Personal essay", "Letter of recommendation"],
+    benefits: ["Tuition assistance", "Book allowance", "Academic support services", "Peer mentoring program"],
+    tags: ["first-generation", "need-based", "undergraduate"]
+  },
+  {
+    _id: "9",
+    title: "Sports Excellence Scholarship",
+    provider: "Athletic Achievement Fund",
+    description: "For student-athletes who excel in their sport while maintaining strong academic performance. Supporting both athletic and academic excellence.",
+    category: "Sports",
+    level: "Undergraduate",
+    fundingType: "Full Funding",
+    fundingAmount: "$35,000 per year",
+    location: { country: "USA", city: "California" },
+    deadline: "2025-12-01",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/9",
+    eligibility: "Outstanding athletic achievement in NCAA-recognized sports. Minimum GPA of 3.0. Must be recruited by university athletic department.",
+    requirements: ["Athletic portfolio", "Video highlights", "Coach recommendation", "Academic transcripts", "Medical clearance"],
+    benefits: ["Full athletic scholarship", "Housing", "Meal plan", "Training facilities access", "Academic tutoring"],
+    tags: ["sports", "athletics", "undergraduate", "full-ride"]
+  },
+  {
+    _id: "10",
+    title: "Healthcare Heroes Scholarship",
+    provider: "Medical Future Foundation",
+    description: "Supporting future healthcare professionals including doctors, nurses, and allied health workers to pursue their medical education.",
+    category: "Healthcare",
+    level: "Graduate",
+    fundingType: "Full Funding",
+    fundingAmount: "$80,000",
+    location: { country: "USA", city: "Boston" },
+    deadline: "2026-01-30",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/10",
+    eligibility: "Students accepted to or enrolled in accredited medical, nursing, or healthcare programs. Commitment to serving underserved communities.",
+    requirements: ["Program acceptance letter", "Academic transcripts", "Personal statement", "Healthcare experience documentation", "Background check"],
+    benefits: ["Full tuition coverage", "Living stipend", "Books and supplies", "Clinical rotation support", "Licensing exam fees"],
+    tags: ["healthcare", "medical", "nursing", "graduate"]
+  },
+  {
+    _id: "11",
+    title: "Entrepreneurship Challenge Grant",
+    provider: "Business Innovation Hub",
+    description: "For aspiring entrepreneurs with innovative business ideas. Funding and mentorship to turn ideas into successful ventures.",
+    category: "Business & Entrepreneurship",
+    level: "All Levels",
+    fundingType: "Partial Funding",
+    fundingAmount: "$20,000",
+    location: "Global",
+    deadline: "2025-11-20",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/11",
+    eligibility: "Students with a viable business plan or startup idea. Can be at any stage of education. Must demonstrate entrepreneurial spirit.",
+    requirements: ["Business plan", "Pitch deck", "Market research", "Financial projections", "Video pitch"],
+    benefits: ["Startup funding", "Business mentorship", "Co-working space access", "Networking events", "Legal support"],
+    tags: ["entrepreneurship", "business", "startup", "innovation"]
+  },
+  {
+    _id: "12",
+    title: "Minority Achievement Scholarship",
+    provider: "Diversity in Education Alliance",
+    description: "Promoting educational equity by supporting underrepresented minority students in achieving their academic goals.",
+    category: "Diversity & Inclusion",
+    level: "All Levels",
+    fundingType: "Partial Funding",
+    fundingAmount: "$8,000",
+    location: "Global",
+    deadline: "2026-03-15",
+    isActive: true,
+    applicationUrl: "https://example.com/apply/12",
+    eligibility: "Students from underrepresented minority groups. Demonstrated academic achievement and commitment to diversity and inclusion.",
+    requirements: ["Academic transcripts", "Personal essay on diversity", "Letters of recommendation", "Community involvement proof"],
+    benefits: ["Tuition support", "Leadership development program", "Networking opportunities", "Career counseling"],
+    tags: ["minority", "diversity", "inclusion", "equity"]
+  }
+];
+
+// Function to seed localStorage with sample data
+export const seedScholarships = () => {
+  // Always seed in development to ensure fresh data
+  localStorage.setItem('scholarships', JSON.stringify(sampleScholarships));
+  console.log('Sample scholarships seeded successfully!');
+  window.dispatchEvent(new CustomEvent('dataChange', { detail: { key: 'scholarships' } }));
+  return true;
+};
+
+// Function to clear and reseed data
+export const reseedScholarships = () => {
+  localStorage.setItem('scholarships', JSON.stringify(sampleScholarships));
+  console.log('Scholarships reseeded successfully!');
+  window.dispatchEvent(new CustomEvent('dataChange', { detail: { key: 'scholarships' } }));
+};

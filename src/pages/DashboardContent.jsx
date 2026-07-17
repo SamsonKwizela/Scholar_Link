@@ -22,6 +22,7 @@ import { useTheme } from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDataManager } from "../utils/dataManager";
+import { getApiCollection, getDashboardStats } from "../utils/api";
 
 export default function DashboardContent() {
   const navigate = useNavigate();
@@ -47,25 +48,33 @@ export default function DashboardContent() {
   const [applyingFor, setApplyingFor] = useState(null);
   const [sendingEmail, setSendingEmail] = useState(false);
 
-  const loadData = () => {
-    const scholarshipsData = scholarships.getAll();
-    const applicationsData = applications.getAll();
-    const assessmentsData = assessments.getAll();
-    const internshipsData = internships.getAll();
+  const loadData = async () => {
+    try {
+      const [scholarshipsData, internshipsData, statsData] = await Promise.all([
+        getApiCollection('/scholarships'),
+        getApiCollection('/internships'),
+        getDashboardStats()
+      ]);
 
-    setData({
-      scholarships: scholarshipsData,
-      applications: applicationsData,
-      assessments: assessmentsData,
-      internships: internshipsData,
-    });
+      const applicationsData = applications.getAll();
+      const assessmentsData = assessments.getAll();
 
-    setStats({
-      scholarships: scholarshipsData.length,
-      applications: applicationsData.length,
-      assessments: assessmentsData.length,
-      internships: internshipsData.length,
-    });
+      setData({
+        scholarships: scholarshipsData,
+        applications: applicationsData,
+        assessments: assessmentsData,
+        internships: internshipsData,
+      });
+
+      setStats({
+        scholarships: statsData.scholarships || scholarshipsData.length,
+        applications: statsData.applications || applicationsData.length,
+        assessments: statsData.assessments || assessmentsData.length,
+        internships: statsData.internships || internshipsData.length,
+      });
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
   };
 
   const calculateProfileCompletion = () => {
@@ -130,18 +139,6 @@ export default function DashboardContent() {
 
   useEffect(() => {
     loadData();
-
-    const handleDataChange = () => {
-      loadData();
-    };
-
-    window.addEventListener('dataChange', handleDataChange);
-    window.addEventListener('storage', handleDataChange);
-
-    return () => {
-      window.removeEventListener('dataChange', handleDataChange);
-      window.removeEventListener('storage', handleDataChange);
-    };
   }, []);
 
 

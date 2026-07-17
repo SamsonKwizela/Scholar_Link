@@ -35,6 +35,7 @@ import { useNotifications } from "../context/NotificationContext";
 import { useDataManager } from "../utils/dataManager";
 import { UniversalHeader } from "../components/UniversalHeader";
 import { UniversalFooter } from "../components/UniversalFooter";
+import { getApiCollection, getDashboardStats } from "../utils/api";
 
 function Home() {
   const navigate = useNavigate();
@@ -65,13 +66,26 @@ function Home() {
   });
 
   // Load statistics from real data
-  const loadStats = useCallback(() => {
-    setStats({
-      scholarships: dataManager.scholarships.getCount(),
-      applications: dataManager.applications.getCount(),
-      assessments: dataManager.assessments.getCount(),
-      internships: dataManager.internships.getCount(),
-    });
+  const loadStats = useCallback(async () => {
+    try {
+      const [scholarships, internships, assessments, statsData] = await Promise.all([
+        getApiCollection('/scholarships'),
+        getApiCollection('/internships'),
+        getApiCollection('/assessments'),
+        getDashboardStats()
+      ]);
+
+      const applications = dataManager.applications.getAll();
+
+      setStats({
+        scholarships: statsData.scholarships || scholarships.length,
+        applications: statsData.applications || applications.length,
+        assessments: statsData.assessments || assessments.length,
+        internships: statsData.internships || internships.length,
+      });
+    } catch (error) {
+      console.error("Error loading stats:", error);
+    }
   }, [dataManager]);
 
   // Update avatar and user data when localStorage changes or profile is updated

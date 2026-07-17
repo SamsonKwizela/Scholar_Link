@@ -22,38 +22,37 @@ import {
 
 import { Link } from "react-router-dom";
 import classes from "./OpportunitiesCards.module.css";
-import { scholarshipsManager, internshipsManager } from "../utils/dataManager";
+import { getApiCollection } from "../utils/api";
 
 export default function OpportunitiesCards() {
   const [opportunities, setOpportunities] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load real data from database
-    const loadOpportunities = () => {
-      const scholarships = scholarshipsManager.getAll();
-      const internships = internshipsManager.getAll();
+    // Load real data from API
+    const loadOpportunities = async () => {
+      try {
+        const [scholarships, internships] = await Promise.all([
+          getApiCollection('/scholarships'),
+          getApiCollection('/internships')
+        ]);
 
-      // Combine and sort by creation date (most recent first)
-      const combined = [
-        ...scholarships.map(item => ({ ...item, type: 'scholarship' })),
-        ...internships.map(item => ({ ...item, type: 'internship' }))
-      ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        // Combine and sort by creation date (most recent first)
+        const combined = [
+          ...scholarships.map(item => ({ ...item, type: 'scholarship' })),
+          ...internships.map(item => ({ ...item, type: 'internship' }))
+        ].sort((a, b) => new Date(b.createdAt || b._id) - new Date(a.createdAt || a._id));
 
-      // Take only the first 3 items
-      setOpportunities(combined.slice(0, 3));
-      setLoading(false);
+        // Take only the first 3 items
+        setOpportunities(combined.slice(0, 3));
+      } catch (error) {
+        console.error("Error loading opportunities:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadOpportunities();
-
-    // Listen for data changes
-    const handleDataChange = () => {
-      loadOpportunities();
-    };
-
-    window.addEventListener('dataChange', handleDataChange);
-    return () => window.removeEventListener('dataChange', handleDataChange);
   }, []);
 
   const getOpportunityIcon = (type) => {
