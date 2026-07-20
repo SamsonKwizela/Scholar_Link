@@ -14,8 +14,7 @@ import {
 import { useForm } from "@mantine/form";
 import "./Register.css";
 import { useNavigate } from "react-router-dom";
-
-  const API_URL = "http://localhost:8000/api/auth/register"
+import { registerUser } from "../utils/api";
 
 
 
@@ -75,32 +74,8 @@ const handleSubmit = async (values) => {
   setError("");
 
   try {
-  
-
-    const userData = {
-      firstName: values.user.firstName,
-      lastName: values.user.lastName,
-      email: values.email,
-      phoneNumber: values.phoneNumber,
-      password: values.password,
-    };
-
-    const res = await fetch("http://localhost:8000/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-
-    const data = await res.json();
-    console.log("login",data)
-
-    if (!res.ok) {
-      throw new Error(data.error || data.message || "Failed to create user");
-    }
-
-    console.log("User created:", data);
+    const name = `${values.user.firstName} ${values.user.lastName}`;
+    await registerUser(name, values.email, values.password);
 
     form.reset();
     navigate("/login");

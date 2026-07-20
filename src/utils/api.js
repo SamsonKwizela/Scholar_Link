@@ -16,10 +16,39 @@ async function parseResponse(response) {
     : await response.text();
 
   if (!response.ok) {
-    const message =
-      payload?.message ||
-      payload?.error ||
-      `HTTP Error ${response.status}`;
+    // Handle authentication and authorization errors
+    if (response.status === 401) {
+      // Clear invalid token
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      
+      // Redirect to login if not already on login page
+      if (window.location.pathname !== "/login" && window.location.pathname !== "/signup") {
+        window.location.href = "/login";
+      }
+      
+      throw new Error("Your session has expired. Please log in again.");
+    }
+    
+    if (response.status === 403) {
+      throw new Error("You do not have permission to access this resource.");
+    }
+
+    // Provide specific error messages based on status code
+    let message;
+    switch (response.status) {
+      case 400:
+        message = payload?.message || payload?.error || "Validation error. Please check your input.";
+        break;
+      case 404:
+        message = "API endpoint not found.";
+        break;
+      case 500:
+        message = "Internal server error. Please try again later.";
+        break;
+      default:
+        message = payload?.message || payload?.error || `HTTP Error ${response.status}`;
+    }
 
     throw new Error(message);
   }
@@ -41,7 +70,8 @@ export async function apiRequest(
       headers: {
         ...defaultHeaders,
 
-        // Send JWT token automatically
+        // Send Authorization header if token exists
+        // Backend will validate if the endpoint requires authentication
         ...(token && {
           Authorization: `Bearer ${token}`,
         }),
@@ -97,18 +127,21 @@ export async function getDashboardStats() {
       "/dashboard/stats"
     );
 
+  // Backend returns { success: true, data: { scholarships, internships, ... } }
+  const stats = payload?.data || payload;
+
   return {
     scholarships: Number(
-      payload?.scholarships ?? 0
+      stats?.scholarships ?? 0
     ),
     applications: Number(
-      payload?.applications ?? 0
+      stats?.applications ?? 0
     ),
     assessments: Number(
-      payload?.assessments ?? 0
+      stats?.assessments ?? 0
     ),
     internships: Number(
-      payload?.internships ?? 0
+      stats?.internships ?? 0
     ),
   };
 }

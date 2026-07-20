@@ -25,6 +25,7 @@ import StudentAssessments from "./pages/StudentAssessments";
 import AssessmentTaking from "./pages/AssessmentTaking";
 import AssessmentResult from "./pages/AssessmentResult";
 import AdminNotifications from "./pages/AdminNotifications";
+import InternshipAdmin from "./pages/InternshipAdmin";
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
             <Route path="/assessment-result/:attemptId" element={<AssessmentResult />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/admin-notifications" element={<AdminNotifications />} />
+            <Route path="/admin-internships" element={<InternshipAdmin />} />
             <Route path="/UserProfile" element={<UserProfile />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/internships" element={<Internships />} />
