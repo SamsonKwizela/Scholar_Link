@@ -20,9 +20,67 @@ import {
 import { IconAlertCircle, IconSearch, IconFilter } from "@tabler/icons-react";
 import { useTheme } from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useDataManager } from "../utils/dataManager";
 import { getApiCollection, getDashboardStats } from "../utils/api";
+
+// Dynamically import all images from the photos folder
+const photosContext = import.meta.glob('/src/photos/*', { eager: true });
+const photosArray = Object.values(photosContext).map(photo => photo.default || photo);
+
+// Default placeholder image if no photos available
+const DEFAULT_PLACEHOLDER = 'https://via.placeholder.com/400x200?text=No+Image+Available';
+
+// Custom hook for managing rotating images
+const useRotatingImages = (items, photos) => {
+  const [currentImages, setCurrentImages] = useState({});
+
+  // Initialize random images for each item
+  useEffect(() => {
+    if (items.length === 0) return;
+
+    const initialImages = {};
+    items.forEach(item => {
+      const itemId = item._id || item.id;
+      if (photos.length > 0) {
+        initialImages[itemId] = photos[Math.floor(Math.random() * photos.length)];
+      } else {
+        initialImages[itemId] = DEFAULT_PLACEHOLDER;
+      }
+    });
+    setCurrentImages(initialImages);
+  }, [items, photos]);
+
+  // Rotate images every 10 seconds
+  useEffect(() => {
+    if (items.length === 0 || photos.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentImages(prevImages => {
+        const newImages = { ...prevImages };
+        items.forEach(item => {
+          const itemId = item._id || item.id;
+          // Get a different random image
+          let newImage;
+          do {
+            newImage = photos[Math.floor(Math.random() * photos.length)];
+          } while (newImage === prevImages[itemId] && photos.length > 1);
+          newImages[itemId] = newImage;
+        });
+        return newImages;
+      });
+    }, 10000); // 10 seconds
+
+    return () => clearInterval(interval);
+  }, [items, photos]);
+
+  const getImageForItem = useCallback((item) => {
+    const itemId = item._id || item.id;
+    return currentImages[itemId] || DEFAULT_PLACEHOLDER;
+  }, [currentImages]);
+
+  return { getImageForItem };
+};
 
 export default function DashboardContent() {
   const navigate = useNavigate();
@@ -47,6 +105,15 @@ export default function DashboardContent() {
   const [applicationModalOpened, setApplicationModalOpened] = useState(false);
   const [applyingFor, setApplyingFor] = useState(null);
   const [sendingEmail, setSendingEmail] = useState(false);
+
+  // Memoize photos array to prevent unnecessary re-renders
+  const photos = useMemo(() => photosArray, []);
+
+  // Initialize rotating images for scholarships
+  const { getImageForItem: getScholarshipImage } = useRotatingImages(data.scholarships, photos);
+
+  // Initialize rotating images for internships
+  const { getImageForItem: getInternshipImage } = useRotatingImages(data.internships, photos);
 
   const loadData = async () => {
     try {
@@ -141,6 +208,179 @@ export default function DashboardContent() {
     loadData();
   }, []);
 
+  // Image Card Component with rotation animation
+  const ImageCard = ({ item, imageSrc, index, type }) => {
+    const [imageKey, setImageKey] = useState(0);
+    const [isTransitioning, setIsTransitioning] = useState(false);
+
+    // Update image key when source changes
+    useEffect(() => {
+      setIsTransitioning(true);
+      const timer = setTimeout(() => {
+        setImageKey(prev => prev + 1);
+        setIsTransitioning(false);
+      }, 300); // Match CSS transition duration
+
+      return () => clearTimeout(timer);
+    }, [imageSrc]);
+
+    return (
+      <Card
+        key={item._id || item.id}
+        shadow="md"
+        radius="xl"
+        p="0"
+        withBorder
+        className="card-smooth animate-fade-in"
+        style={{ 
+          transition: 'all 0.3s ease',
+          animationDelay: `${index * 0.05}s`,
+          overflow: 'hidden'
+        }}
+      >
+        <div style={{ 
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <Image 
+            key={imageKey}
+            src={imageSrc} 
+            height={{ base: 160, sm: 200 }} 
+            alt={item.title}
+            style={{
+              transition: 'opacity 0.3s ease, transform 0.3s ease',
+              opacity: isTransitioning ? 0.5 : 1,
+              transform: isTransitioning ? 'scale(1.05)' : 'scale(1)'
+            }}
+          />
+          <div style={{
+            position: 'absolute',
+            top: '12px',
+            right: '12px'
+          }}>
+            <Badge 
+              color={item.status === "Open" ? "green" : "orange"} 
+              size="sm"
+              style={{
+                fontWeight: 600,
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+              }}
+            >
+              {item.status}
+            </Badge>
+          </div>
+        </div>
+
+        <Stack p={{ base: "md", sm: "lg" }}>
+          <Group justify="space-between" align="flex-start">
+            <Badge 
+              color={type === 'scholarship' ? "blue" : "cyan"} 
+              size={{ base: "xs", sm: "sm" }}
+              variant="light"
+              style={{ fontWeight: 600 }}
+            >
+              {type === 'scholarship' ? item.field : (item.field || item.company)}
+            </Badge>
+          </Group>
+
+          <Title 
+            order={{ base: 5, sm: 4 }} 
+            fw={700}
+            style={{ 
+              letterSpacing: '-0.01em',
+              lineHeight: 1.3
+            }}
+          >
+            {item.title}
+          </Title>
+
+          <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
+            Deadline: {item.deadline}
+          </Text>
+
+          <Text 
+            fw={800} 
+            size={{ base: "md", sm: "lg" }}
+            style={{
+              background: type === 'scholarship' 
+                ? 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)'
+                : 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}
+          >
+            {type === 'scholarship' ? item.amount : (item.stipend || item.amount || "Competitive")}
+          </Text>
+
+          <Progress 
+            value={item.status === "Open" ? 70 : 90} 
+            size="sm" 
+            style={{
+              borderRadius: 'var(--radius-full)',
+              overflow: 'hidden'
+            }}
+          />
+
+          <Group grow mt="md" gap="sm">
+            <Button
+              variant="light"
+              size="sm"
+              radius="md"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate(type === 'scholarship' ? "/scholarships" : "/internships");
+              }}
+              styles={{
+                root: {
+                  fontWeight: 600,
+                  '&:hover': {
+                    background: 'var(--bg-tertiary)',
+                  }
+                }
+              }}
+            >
+              View Details
+            </Button>
+
+            <Button
+              size="sm"
+              radius="md"
+              onClick={(e) => {
+                e.preventDefault();
+                if (type === 'scholarship') {
+                  handleApply(item);
+                } else {
+                  navigate("/internships");
+                }
+              }}
+              loading={type === 'scholarship' && applyingFor === item.id}
+              disabled={type === 'scholarship' && applyingFor !== null && applyingFor !== item.id}
+              styles={{
+                root: {
+                  background: type === 'scholarship'
+                    ? 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)'
+                    : 'linear-gradient(135deg, var(--accent-cyan) 0%, #0891b2 100%)',
+                  fontWeight: 600,
+                  '&:hover': {
+                    background: type === 'scholarship'
+                      ? 'linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%)'
+                      : 'linear-gradient(135deg, #0891b2 0%, #0e7490 100%)',
+                    transform: 'translateY(-1px)',
+                    boxShadow: type === 'scholarship'
+                      ? 'var(--shadow-md), 0 0 15px rgba(59, 130, 246, 0.3)'
+                      : 'var(--shadow-md), 0 0 15px rgba(6, 182, 212, 0.3)',
+                  }
+                }
+              }}
+            >
+              {type === 'scholarship' && applyingFor === item.id ? 'Submitting...' : 'Apply Now'}
+            </Button>
+          </Group>
+        </Stack>
+      </Card>
+    );
+  };
 
   return (
     <Container fluid>
@@ -287,145 +527,13 @@ export default function DashboardContent() {
       ) : (
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
           {data.scholarships.map((item, index) => (
-            <Card
-              key={item.id}
-              shadow="md"
-              radius="xl"
-              p="0"
-              withBorder
-              className="card-smooth animate-fade-in"
-              style={{ 
-                transition: 'all 0.3s ease',
-                animationDelay: `${index * 0.05}s`,
-                overflow: 'hidden'
-              }}
-            >
-              <div style={{ 
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
-                <Image 
-                  src={item.image} 
-                  height={{ base: 160, sm: 200 }} 
-                  alt={item.title}
-                  style={{
-                    transition: 'transform 0.3s ease'
-                  }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  top: '12px',
-                  right: '12px'
-                }}>
-                  <Badge 
-                    color={item.status === "Open" ? "green" : "orange"} 
-                    size="sm"
-                    style={{
-                      fontWeight: 600,
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
-                    }}
-                  >
-                    {item.status}
-                  </Badge>
-                </div>
-              </div>
-
-              <Stack p={{ base: "md", sm: "lg" }}>
-                <Group justify="space-between" align="flex-start">
-                  <Badge 
-                    color="blue" 
-                    size={{ base: "xs", sm: "sm" }}
-                    variant="light"
-                    style={{ fontWeight: 600 }}
-                  >
-                    {item.field}
-                  </Badge>
-                </Group>
-
-                <Title 
-                  order={{ base: 5, sm: 4 }} 
-                  fw={700}
-                  style={{ 
-                    letterSpacing: '-0.01em',
-                    lineHeight: 1.3
-                  }}
-                >
-                  {item.title}
-                </Title>
-
-                <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
-                  Deadline: {item.deadline}
-                </Text>
-
-                <Text 
-                  fw={800} 
-                  size={{ base: "md", sm: "lg" }}
-                  style={{
-                    background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                  }}
-                >
-                  {item.amount}
-                </Text>
-
-                <Progress 
-                  value={item.status === "Open" ? 70 : 90} 
-                  size="sm" 
-                  style={{
-                    borderRadius: 'var(--radius-full)',
-                    overflow: 'hidden'
-                  }}
-                />
-
-                <Group grow mt="md" gap="sm">
-                  <Button
-                    variant="light"
-                    size="sm"
-                    radius="md"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate("/scholarships");
-                    }}
-                    styles={{
-                      root: {
-                        fontWeight: 600,
-                        '&:hover': {
-                          background: 'var(--bg-tertiary)',
-                        }
-                      }
-                    }}
-                  >
-                    View Details
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    radius="md"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleApply(item);
-                    }}
-                    loading={applyingFor === item.id}
-                    disabled={applyingFor !== null && applyingFor !== item.id}
-                    styles={{
-                      root: {
-                        background: 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)',
-                        fontWeight: 600,
-                        '&:hover': {
-                          background: 'linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%)',
-                          transform: 'translateY(-1px)',
-                          boxShadow: 'var(--shadow-md), 0 0 15px rgba(59, 130, 246, 0.3)',
-                        }
-                      }
-                    }}
-                  >
-                    {applyingFor === item.id ? 'Submitting...' : 'Apply Now'}
-                  </Button>
-                </Group>
-              </Stack>
-            </Card>
+            <ImageCard
+              key={item._id || item.id}
+              item={item}
+              imageSrc={getScholarshipImage(item)}
+              index={index}
+              type="scholarship"
+            />
           ))}
         </SimpleGrid>
       )}
@@ -482,143 +590,13 @@ export default function DashboardContent() {
       ) : (
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
           {data.internships.slice(0, 3).map((item, index) => (
-            <Card
-              key={item.id}
-              shadow="md"
-              radius="xl"
-              p="0"
-              withBorder
-              className="card-smooth animate-fade-in"
-              style={{ 
-                transition: 'all 0.3s ease',
-                animationDelay: `${index * 0.05}s`,
-                overflow: 'hidden'
-              }}
-            >
-              <div style={{ 
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
-                <Image 
-                  src={item.image} 
-                  height={{ base: 160, sm: 200 }} 
-                  alt={item.title}
-                  style={{
-                    transition: 'transform 0.3s ease'
-                  }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  top: '12px',
-                  right: '12px'
-                }}>
-                  <Badge 
-                    color={item.status === "Open" ? "green" : "orange"} 
-                    size="sm"
-                    style={{
-                      fontWeight: 600,
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
-                    }}
-                  >
-                    {item.status}
-                  </Badge>
-                </div>
-              </div>
-
-              <Stack p={{ base: "md", sm: "lg" }}>
-                <Group justify="space-between" align="flex-start">
-                  <Badge 
-                    color="cyan" 
-                    size={{ base: "xs", sm: "sm" }}
-                    variant="light"
-                    style={{ fontWeight: 600 }}
-                  >
-                    {item.field || item.company}
-                  </Badge>
-                </Group>
-
-                <Title 
-                  order={{ base: 5, sm: 4 }} 
-                  fw={700}
-                  style={{ 
-                    letterSpacing: '-0.01em',
-                    lineHeight: 1.3
-                  }}
-                >
-                  {item.title}
-                </Title>
-
-                <Text size={{ base: "xs", sm: "sm" }} c="dimmed">
-                  Deadline: {item.deadline}
-                </Text>
-
-                <Text 
-                  fw={800} 
-                  size={{ base: "md", sm: "lg" }}
-                  style={{
-                    background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                  }}
-                >
-                  {item.stipend || item.amount || "Competitive"}
-                </Text>
-
-                <Progress 
-                  value={item.status === "Open" ? 70 : 90} 
-                  size="sm" 
-                  style={{
-                    borderRadius: 'var(--radius-full)',
-                    overflow: 'hidden'
-                  }}
-                />
-
-                <Group grow mt="md" gap="sm">
-                  <Button
-                    variant="light"
-                    size="sm"
-                    radius="md"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate("/internships");
-                    }}
-                    styles={{
-                      root: {
-                        fontWeight: 600,
-                        '&:hover': {
-                          background: 'var(--bg-tertiary)',
-                        }
-                      }
-                    }}
-                  >
-                    View Details
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    radius="md"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate("/internships");
-                    }}
-                    styles={{
-                      root: {
-                        background: 'linear-gradient(135deg, var(--accent-cyan) 0%, #0891b2 100%)',
-                        fontWeight: 600,
-                        '&:hover': {
-                          background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 100%)',
-                          transform: 'translateY(-1px)',
-                          boxShadow: 'var(--shadow-md), 0 0 15px rgba(6, 182, 212, 0.3)',
-                        }
-                      }
-                    }}
-                  >
-                    Apply Now
-                  </Button>
-                </Group>
-              </Stack>
-            </Card>
+            <ImageCard
+              key={item._id || item.id}
+              item={item}
+              imageSrc={getInternshipImage(item)}
+              index={index}
+              type="internship"
+            />
           ))}
         </SimpleGrid>
       )}
@@ -676,7 +654,7 @@ export default function DashboardContent() {
             <Table.Tbody>
               {data.applications.map((app, index) => (
                 <Table.Tr 
-                  key={app.id || index}
+                  key={app._id || app.id || index}
                   style={{ 
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
@@ -845,7 +823,7 @@ export default function DashboardContent() {
       
     </Container>
   );
- 
- 
+  
+  
     
 }
