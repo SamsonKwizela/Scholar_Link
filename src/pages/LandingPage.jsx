@@ -179,10 +179,10 @@ function LandingPage() {
               <Button
                 radius="md"
                 component={Link}
-                to="/signup"
+                to="/login"
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate("/signup");
+                  navigate("/login");
                 }}
                 styles={{
                   root: {
@@ -195,7 +195,7 @@ function LandingPage() {
                   }
                 }}
               >
-                Sign Up
+                Sign In
               </Button>
 
             </Group>
@@ -301,10 +301,10 @@ function LandingPage() {
                   radius="lg"
                   variant="outline"
                   component={Link}
-                  to="/about"
+                  to="/learn-more"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate("/about");
+                    navigate("/learn-more");
                   }}
                   styles={{
                     root: {
@@ -571,10 +571,10 @@ function LandingPage() {
                 size="xl"
                 radius="lg"
                 component={Link}
-                to="/signup"
+                to="/login"
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate("/signup");
+                  navigate("/login");
                 }}
                 styles={{
                   root: {
@@ -591,7 +591,7 @@ function LandingPage() {
                   }
                 }}
               >
-                Create Account
+                Get Started
               </Button>
 
             </Group>

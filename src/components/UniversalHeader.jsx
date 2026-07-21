@@ -3,6 +3,7 @@ import { Group, Title, Text, Avatar, Button, Burger } from "@mantine/core";
 import { IconSun, IconMoon } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import NotificationBell from "./NotificationBell";
 
 export function UniversalHeader({ opened, setOpened, showBurger = true }) {
   const navigate = useNavigate();
@@ -91,6 +92,8 @@ export function UniversalHeader({ opened, setOpened, showBurger = true }) {
       </Group>
 
       <Group gap="sm">
+        <NotificationBell />
+        
         <Button
           variant="subtle"
           size="sm"

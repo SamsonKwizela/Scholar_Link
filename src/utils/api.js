@@ -321,6 +321,45 @@ export async function applyToOpportunity(data) {
   });
 }
 
+export async function submitProfileApplication(data) {
+  return await apiRequest('/applications/submit-profile', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+}
+
+export async function getUserApplications() {
+  return await apiRequest('/applications/user/me');
+}
+
+export async function getApplication(id) {
+  return await apiRequest(`/applications/${id}`);
+}
+
+export async function updateApplicationStatus(id, status, adminResponse) {
+  return await apiRequest(`/applications/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({ status, adminResponse })
+  });
+}
+
+export async function downloadApplicationPDF(id) {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_BASE_URL}/applications/${id}/pdf`, {
+    headers: {
+      ...(token && {
+        Authorization: `Bearer ${token}`,
+      }),
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to download PDF');
+  }
+
+  return response.blob();
+}
+
 // Scholarship API functions
 export async function getScholarships(filters = {}) {
   const params = new URLSearchParams(filters);

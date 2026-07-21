@@ -20,13 +20,14 @@ import {
   IconAlertCircle,
 } from "@tabler/icons-react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import classes from "./OpportunitiesCards.module.css";
 import { getApiCollection } from "../utils/api";
 
 export default function OpportunitiesCards() {
   const [opportunities, setOpportunities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Load real data from API
@@ -68,8 +69,8 @@ export default function OpportunitiesCards() {
   };
 
   const getOpportunityLink = (item) => {
-    return item.type === 'scholarship' ? `/scholarship/details?id=${item.id}` : `/internships`;
-  };
+    return item.type === 'scholarship' ? `/scholarship/details?id=${item._id}` : `/internships`;
+
 
   if (loading) {
     return (
@@ -107,9 +108,9 @@ export default function OpportunitiesCards() {
   return (
     <Box>
       <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="xl">
-        {opportunities.map((item) => (
+        {opportunities.map((item, index) => (
           <Card
-            key={item.id}
+            key={`${item.type}-${item._id || item.id || `index-${index}`}`}
             radius="lg"
             padding="lg"
             withBorder
@@ -151,9 +152,9 @@ export default function OpportunitiesCards() {
                 {item.description || item.about || 'No description available.'}
               </Text>
 
-              {item.amount && (
+              {item.fundingAmount && (
                 <Text size="xs" fw={600} c="blue">
-                  {item.amount}
+                  {item.fundingAmount}
                 </Text>
               )}
             </Stack>
@@ -166,8 +167,10 @@ export default function OpportunitiesCards() {
               color={getOpportunityColor(item.type)}
               rightSection={<IconArrowRight size={16} />}
               fullWidth
-              component={Link}
-              to={getOpportunityLink(item)}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/login");
+              }}
             >
               View Details
             </Button>

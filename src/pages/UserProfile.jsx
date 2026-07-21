@@ -18,6 +18,8 @@ import {
   Select,
   ActionIcon,
   Tooltip,
+  Modal,
+  Alert,
 } from "@mantine/core";
 
 import {
@@ -31,10 +33,14 @@ import {
   IconUsersGroup,
   IconCamera,
   IconUser,
+  IconSend,
+  IconCheck,
+  IconX,
 } from "@tabler/icons-react";
 
 import { useState, useEffect, useRef } from "react";
 import { useNotifications } from "../context/NotificationContext";
+import { submitProfileApplication } from "../utils/api";
 
 export default function UserProfile() {
   /* ================= STATE ================= */
@@ -161,7 +167,7 @@ const [cvFile, setCvFile] = useState(null);
     });
   };
 
-const [coverLetterFile, setCoverLetterFile] = useState(null);
+  const [coverLetterFile, setCoverLetterFile] = useState(null);
   const [coverLetterUrl, setCoverLetterUrl] = useState(null);
   const handleCoverLetterUpload = (file) => {
     if (!file) return;
@@ -179,6 +185,57 @@ const [coverLetterFile, setCoverLetterFile] = useState(null);
       message: "Your cover letter has been successfully uploaded.",
       type: "success",
     });
+  };
+
+  // Application submission state
+  const [submitModalOpened, setSubmitModalOpened] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+
+  const handleSubmitApplication = async () => {
+    if (!selectedOpportunity) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const profileData = {
+        ...profile,
+        experience: [], // You can expand this to include actual experience data
+        projects: [], // You can expand this to include actual project data
+        certifications: [], // You can expand this to include actual certifications
+        socialLinks: {}, // You can expand this to include actual social links
+        skills: [], // You can expand this to include actual skills
+        interests: profile.interests || [],
+        cv: profile.cv || '',
+        coverLetter: profile.coverLetter || '',
+        otherDocuments: []
+      };
+
+      const response = await submitProfileApplication({
+        opportunityId: selectedOpportunity.id,
+        opportunityType: selectedOpportunity.type,
+        opportunityTitle: selectedOpportunity.title,
+        profileData: profileData
+      });
+
+      if (response.success) {
+        addNotification({
+          title: "Application Submitted Successfully",
+          message: "Your profile has been submitted. You will receive a confirmation email shortly.",
+          type: "success",
+        });
+        setSubmitModalOpened(false);
+        setSelectedOpportunity(null);
+      }
+    } catch (error) {
+      addNotification({
+        title: "Submission Failed",
+        message: error.message || "Failed to submit application. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -501,6 +558,27 @@ const [coverLetterFile, setCoverLetterFile] = useState(null);
                   >
                     Preview Profile
                   </Button>
+
+                  <Button 
+                    size="md"
+                    radius="lg"
+                    leftSection={<IconSend size={18} />}
+                    onClick={() => setSubmitModalOpened(true)}
+                    styles={{
+                      root: {
+                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                        color: 'white',
+                        fontWeight: 600,
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 8px 20px rgba(16, 185, 129, 0.4)'
+                        }
+                      }
+                    }}
+                  >
+                    Submit Application
+                  </Button>
                 </Group>
 
               </Stack>
@@ -511,6 +589,60 @@ const [coverLetterFile, setCoverLetterFile] = useState(null);
         {/* ================= REST OF YOUR UI (UNCHANGED) ================= */}
         {/* You can keep Skills, Stats, etc exactly as they are */}
         
+      {/* SUBMIT APPLICATION MODAL */}
+      <Modal
+        opened={submitModalOpened}
+        onClose={() => {
+          setSubmitModalOpened(false);
+          setSelectedOpportunity(null);
+        }}
+        title="Submit Application"
+        size="md"
+        centered
+      >
+        <Stack gap="md">
+          <Alert 
+            icon={<IconSend size={16} />} 
+            title="Are you sure you want to submit your profile application?"
+            color="blue"
+          >
+            This will generate a professional PDF of your profile and send it to the admin for review.
+          </Alert>
+
+          <Text size="sm" c="dimmed">
+            Please ensure your profile information is complete and accurate before submitting.
+          </Text>
+
+          <Group justify="flex-end" gap="sm">
+            <Button
+              variant="light"
+              onClick={() => {
+                setSubmitModalOpened(false);
+                setSelectedOpportunity(null);
+              }}
+              leftSection={<IconX size={16} />}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSubmitApplication}
+              loading={isSubmitting}
+              leftSection={<IconCheck size={16} />}
+              styles={{
+                root: {
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+                  }
+                }
+              }}
+            >
+              Confirm Submission
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
       </Container>
       {/* ================= PROFESSIONAL PROFILE ================= */}
 <Card radius="xl" shadow="sm" withBorder p="xl" mt="xl">

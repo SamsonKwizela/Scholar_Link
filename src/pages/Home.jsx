@@ -26,6 +26,7 @@ import {
   IconSun,
   IconMoon,
   IconBriefcase,
+  IconMail,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -127,8 +128,10 @@ function Home() {
     { label: "Scholarships", icon: IconSchool, path: "/scholarships" },
     { label: "Internships", icon: IconBriefcase, path: "/internships" },
     { label: "Applications", icon: IconFileText, path: "/filed-applications" },
+    { label: "My Applications", icon: IconFileText, path: "/my-applications" },
     { label: "Assessments", icon: IconChecklist, path: "/assessments" },
     { label: "Notifications", icon: IconBell, path: "/notifications", hasBadge: true },
+    { label: "Email Settings", icon: IconMail, path: "/email-settings" },
     { label: "Profile", icon: IconUser, path: "/UserProfile" },
     { label: "Settings", icon: IconSettings, path: "/settings" },
     { label: "Logout", icon: IconLogout, path: "/login", isLogout: true },

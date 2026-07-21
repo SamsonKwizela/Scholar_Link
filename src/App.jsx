@@ -6,6 +6,7 @@ import { FooterCentered } from "./components/Footer";
 import Login from "./auth/Login";
 import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
+import LearnMore from "./pages/LearnMore";
 import ScholarshipDetails from "./pages/ScholarshipDetails";
 import ApplicationSuccess from "./pages/ApplicationSuccess";
 import ScholarshipAssessment from "./pages/ScholarshipAssessment";
@@ -26,6 +27,9 @@ import AssessmentTaking from "./pages/AssessmentTaking";
 import AssessmentResult from "./pages/AssessmentResult";
 import AdminNotifications from "./pages/AdminNotifications";
 import InternshipAdmin from "./pages/InternshipAdmin";
+import MyApplications from "./pages/MyApplications";
+import EmailNotificationSettings from "./pages/EmailNotificationSettings";
+import AdminNotificationsPage from "./pages/admin/AdminNotifications";
 
 function App() {
   return (
@@ -43,6 +47,7 @@ function App() {
         />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/learn-more" element={<LearnMore />} />
         <Route path="/scholarship/details" element={<ScholarshipDetails />} />
 
         {/* Guest-only routes — redirect to dashboard if already logged in */}
@@ -67,9 +72,11 @@ function App() {
             <Route path="/assessment/:attemptId" element={<AssessmentTaking />} />
             <Route path="/assessment-result/:attemptId" element={<AssessmentResult />} />
             <Route path="/notifications" element={<Notifications />} />
-            <Route path="/admin-notifications" element={<AdminNotifications />} />
+            <Route path="/email-settings" element={<EmailNotificationSettings />} />
+            <Route path="/admin-notifications" element={<AdminNotificationsPage />} />
             <Route path="/admin-internships" element={<InternshipAdmin />} />
             <Route path="/UserProfile" element={<UserProfile />} />
+            <Route path="/my-applications" element={<MyApplications />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/internships" element={<Internships />} />
           </Route>
